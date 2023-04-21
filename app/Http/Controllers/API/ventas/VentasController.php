@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Exports\VentasExport;
 use App\Imports\VentasImport;
 use App\Exports\RegistrosExport;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -145,10 +146,13 @@ class VentasController extends Controller
             if ($venta->UGestion === 'PREVENTA') {
                 return response()->json([
                         'code' => 400,
-                        'message' => 'No se puede modificar el campo UGestion'
+                        'message' => 'Éste registro ya fue marcado como PREVENTA.'
                     ]);
+            } elseif ($request->UGestion == 'RENOVACION' && $venta->UGestion == 'RENOVACION'){
+                    // No hacemos nada, ya que queremos actualizar UGestion con el valor RENOVADA . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd
+
             } else {
-                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud
+                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud, Si es renovacion no actualiza el campo UGestion
                 $venta->update(['UGestion' => $request->UGestion]);
             }
         } else {
@@ -161,7 +165,7 @@ class VentasController extends Controller
 
         // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
         $ventaExistente = Venta::where('nSerie', $request->nSerie)
-                                ->where('tVenta', 'VENTA')
+                                ->where('tVenta', 'VENTA NUEVA')
                                 ->first();
 
         // Validación de la solicitud y actualización del recibo de pago (Módulo Cobranza)
@@ -191,7 +195,7 @@ class VentasController extends Controller
             } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
                 $venta->tVenta = 'PREVENTA';
             } else {
-                $venta->tVenta = 'RENOVACIÓN';
+                $venta->tVenta = 'RENOVACION';
             }
         } else {
             // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
@@ -213,12 +217,7 @@ class VentasController extends Controller
         $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
                                 ->where('tVenta', 'RENOVACION')
                                 ->first();
-                        
-        // Si existe una venta de renovación
-        if ($ventaRenovacion) {
-            // Actualiza la UGestion con 'RENOVADA', MESBDD y AÑOBDD
-            $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MESBDD . $ventaRenovacion->AÑOBDD;
-        }
+        
 
         // Verifica si la codificación es 'PROMESA DE PAGO'
         if ($request->Codificacion === 'PROMESA DE PAGO') {
@@ -232,11 +231,17 @@ class VentasController extends Controller
         // Guardamos todos los campos de una sola vez usando request all
         $venta->fill($request->all());
 
+        if ($ventaRenovacion) {
+            $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
+        }
+
         // Guarda la venta en la base de datos
         $venta->save();
 
         // Mandamos la informacion al metodo para crear los recibos de pago (Módulo Cobranza)
-        $this->crearRecibosPago($venta);
+        if($request->UGestion == 'PREVENTA' || $request->UGestion == 'VENTA'){
+            $this->crearRecibosPago($venta);
+        }
 
         // Devuelve la venta creada o actualizada en formato JSON
         return response()->json([
