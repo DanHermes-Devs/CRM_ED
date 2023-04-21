@@ -91,5 +91,18 @@ class SeederUser extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ])->assignRole('Supervisor');
+        
+        User::create([
+            'usuario' => 'sup01',
+            'name' => 'Supervisor 1',
+            'apellido_paterno' => '',
+            'apellido_materno' => '',
+            'email' => 'supervisor@exponentedigital.mx',
+            'password' => bcrypt('sup01'),
+            'estatus' => 1,
+            'fecha_ultimo_login' => now(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ])->assignRole('Supervisor');
     }
 }
