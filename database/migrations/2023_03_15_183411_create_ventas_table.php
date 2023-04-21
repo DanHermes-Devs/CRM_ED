@@ -15,7 +15,7 @@ class CreateVentasTable extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
-            $table->text('contactId');
+            $table->text('contactId')->nullable();
             $table->string('UGestion')->nullable();
             $table->dateTime('Fpreventa')->nullable();
             $table->string('campana')->nullable();

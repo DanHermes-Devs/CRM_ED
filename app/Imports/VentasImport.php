@@ -5,8 +5,10 @@ namespace App\Imports;
 use Carbon\Carbon;
 use App\Models\Venta;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Carbon\Exceptions\InvalidFormatException;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class VentasImport implements ToModel
+class VentasImport implements ToModel, WithValidation
 {
     /**
     * @param array $row
@@ -15,11 +17,18 @@ class VentasImport implements ToModel
     */
     public function model(array $row)
     {
+        // Verifica si el ID ya existe en la base de datos
+        $ventaExistente = Venta::find($row[0]);
+        if ($ventaExistente) {
+            // Si el ID ya existe, no importa el registro y devuelve null
+            return null;
+        }
+
         return new Venta([
             'id' => $row[0],
             'contactId' => $row[1],
             'UGestion' => $row[2],
-            'Fpreventa' => !empty($row[3]) ? Carbon::createFromFormat('d/m/Y H:i', $row[3])->format('Y-m-d H:i:s') : null,
+            'Fpreventa' => $this->parseDateTime($row[3], 'd/m/Y H:i'),
             'campana' => $row[4],
             'LoginOcm' => $row[5],
             'LoginIntranet' => $row[6],
@@ -29,7 +38,7 @@ class VentasImport implements ToModel
             'Nombre' => $row[10],
             'ApePaterno' => $row[11],
             'ApeMaterno' => $row[12],
-            'fNacimiento' => !empty($row[13]) ? Carbon::createFromFormat('d/m/Y', $row[13])->format('Y-m-d') : null,
+            'fNacimiento' => $this->parseDate($row[13], 'd/m/Y'),
             'Edad' => $row[14],
             'Genero' => $row[15],
             'RFC' => $row[16],
@@ -55,9 +64,9 @@ class VentasImport implements ToModel
             'Segmento' => $row[36],
             'Legalizado' => $row[37],
             'nCotizacion' => $row[38],
-            'FinVigencia' => !empty($row[39]) ? Carbon::createFromFormat('d/m/Y H:i', $row[39])->format('Y-m-d H:i:s') : null,
+            'FinVigencia' => $this->parseDateTime($row[39], 'd/m/Y H:i'),
             'FfVigencia' => $row[40],
-            'tPoliza' => !empty($row[41]) ? Carbon::createFromFormat('d/m/Y H:i', $row[41])->format('Y-m-d H:i:s') : null,
+            'tPoliza' => $this->parseDateTime($row[41], 'd/m/Y H:i'),
             'Paquete' => $row[42],
             'nPoliza' => $row[43],
             'Aseguradora' => $row[44],
@@ -72,13 +81,42 @@ class VentasImport implements ToModel
             'MesBdd' => $row[53],
             'AnioBdd' => $row[54],
             'noPago' => $row[55],
-            'FechaProximoPago' => !empty($row[56]) ? Carbon::createFromFormat('d/m/Y', $row[56])->format('Y-m-d') : null,
-            'FechaPagoReal' => !empty($row[57]) ? Carbon::createFromFormat('d/m/Y', $row[57])->format('Y-m-d') : null,
+            'FechaProximoPago' => $this->parseDate($row[56] ?? null, 'd/m/Y'),
+            'FechaPagoReal' => $this->parseDate($row[57] ?? null, 'd/m/Y'),
             'PrimaNetaCobrada' => $row[58],
             'AgenteCob' => $row[59],
             'TipoPago' => $row[60],
             'EstadoDePago' => $row[61],
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now()
         ]);
     }
+
+    /**
+    * @return array
+    */
+    public function rules(): array
+    {
+        return [
+            '0' => 'unique:ventas,id', // Asegura que el ID sea único en la tabla 'ventas'
+        ];
+    }
+
+    private function parseDate($value, $format)
+    {
+        try {
+            return Carbon::createFromFormat($format, $value)->format('Y-m-d');
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
+    }
+
+    private function parseDateTime($value, $format)
+    {
+        try {
+            return Carbon::createFromFormat($format, $value)->format('Y-m-d H:i:s');
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
+    }
+
 }

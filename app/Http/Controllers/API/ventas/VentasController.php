@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class VentasController extends Controller
 {
@@ -329,7 +330,8 @@ class VentasController extends Controller
     }
     
     // Método para importar ventas desde excel
-    public function importVentas(Request $request){
+    public function importVentas(Request $request)
+    {
         $rules = [
             'ventas_csv' => 'required|mimes:xlsx,xls,csv'
         ];
@@ -350,12 +352,22 @@ class VentasController extends Controller
 
         $file = $request->file('ventas_csv');
 
-        Excel::import(new VentasImport, $file);
+        try {
+            Excel::import(new VentasImport, $file);
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'Ventas importadas correctamente'
-        ]);
+            // Puedes devolver los errores en un mensaje flash personalizado o como prefieras manejarlos
+            $errorMessage = "Se encontraron registros duplicados: ";
+            foreach ($failures as $failure) {
+                $errorMessage .= "Fila " . $failure->row() . ", ID " . $failure->values()[0] . "; ";
+            }
+
+            return redirect()->route('ventas.formImportVentas')->with('error', $errorMessage);
+        }
+
+        // Mandamos a la vista el mensaje de que se importaron correctamente las ventas hacia la vista crm.modulos.ventas.form_import
+        return redirect()->route('ventas.formImportVentas')->with('success', 'Ventas/Renovaciones importadas correctamente');
     }
 
     // Metodo para Crear Recibos de Pago (Módulo Cobranza)
