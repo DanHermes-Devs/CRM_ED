@@ -1,0 +1,62 @@
+.auth-bg-cover {
+    background: #4A4D56;
+}
+
+.auth-one-bg .bg-overlay {
+    background: -webkit-gradient(linear,left top,right top,from(#AB121C),to(#405189));
+    background: linear-gradient(to right,#AB121C,#405189);
+    opacity: .9;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #AB121C;
+    border-color: #AB121C;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #4A4D56;
+    border-color: #4A4D56;
+}
+
+[data-layout=vertical][data-sidebar=dark] .navbar-menu {
+    background: #AB121C;
+    border-right: 1px solid #AB121C;
+}
+
+[data-layout=vertical][data-sidebar=dark] .menu-title {
+    color: #FFF;
+}
+
+[data-layout=vertical][data-sidebar=dark] .navbar-nav .nav-link {
+    color: #FFF;
+}
+
+[data-layout=vertical][data-sidebar=dark] .navbar-nav .nav-sm .nav-link {
+    color: #fff;
+}
+
+[data-layout=vertical][data-sidebar=dark][data-sidebar-size=sm] .navbar-brand-box {
+    background: #4A4D56;
+}
+
+[data-sidebar-size=sm] div#scrollbar {
+    padding-top: 2rem;
+}
+
+[data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item:hover>a.menu-link {
+    background-color: #ab121c;
+}
+
+[data-layout=vertical][data-sidebar=dark][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item:hover>.menu-dropdown {
+    background: #ab121c;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #ab121c;
+    border-color: #ab121c;
+}
+/*# sourceMappingURL=custom.min.css.map */
