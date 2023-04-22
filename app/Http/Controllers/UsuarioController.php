@@ -70,7 +70,7 @@ class UsuarioController extends Controller
             'apellido_paterno' => 'required|string',
             'apellido_materno' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'password' => 'required',
             'estatus' => 'required',
             'roles' => 'required',
         ], [
