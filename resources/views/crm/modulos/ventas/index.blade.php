@@ -126,7 +126,7 @@
                                         <select name="tipo_venta" id="tipo_venta" class="form-select">
                                             <option value="">-- Selecciona --</option>
                                             <option value="VENTA NUEVA">Venta nueva</option>
-                                            <option value="RENOVACIONES">Renovaciones</option>
+                                            <option value="RENOVACION">Renovaciones</option>
                                             <option value="POSIBLE DUPLICIDAD">Posible Duplicidad</option>
                                         </select>
                                     </div>
@@ -169,7 +169,7 @@
                                     <div class="col-12 col-md-4">
                                         <div class="mb-3">
                                             <label for="mes_bdd">Mes:</label>
-                                            <input type="number" name="mes_bdd" id="mes_bdd" min="1" max="12" class="form-control" disabled>
+                                            <input type="text" name="mes_bdd" id="mes_bdd" class="form-control" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
@@ -207,7 +207,7 @@
         $('#tipo_venta').on('change', function() {
             var selectedValue = $(this).val();
 
-            if (selectedValue === 'RENOVACIONES') {
+            if (selectedValue === 'RENOVACION') {
                 $('#mes_bdd').prop('disabled', false);
                 $('#anio_bdd').prop('disabled', false);
             } else {

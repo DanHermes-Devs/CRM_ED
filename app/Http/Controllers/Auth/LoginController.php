@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -43,6 +45,7 @@ class LoginController extends Controller
         $loginValue = request('usuario');
         $username = filter_var($loginValue, FILTER_VALIDATE_EMAIL) ? 'email' : 'usuario';
         request()->merge([$username => $loginValue]);
+
 
         return $username;
     }

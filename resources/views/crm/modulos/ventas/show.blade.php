@@ -6,13 +6,13 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">{{ $venta->NombreDeCliente }}</h4>
+                <h4 class="mb-sm-0">{{ $venta->Nombre . ' ' . $venta->ApeMaterno . ' ' . $venta->ApePaterno }}</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">DASHBOARD</a></li>
                         <li class="breadcrumb-item">VENTAS</li>
-                        <li class="breadcrumb-item active text-uppercase">{{ $venta->NombreDeCliente }}</li>
+                        <li class="breadcrumb-item active text-uppercase">{{ $venta->Nombre . ' ' . $venta->ApeMaterno . ' ' . $venta->ApePaterno }}</li>
                     </ol>
                 </div>
 
@@ -26,7 +26,7 @@
             <div class="card crm-widget py-4 px-3">
                 <div class="card-body">
                     <div class="d-flex mb-3 align-items-center">
-                        <h2>Datos del cliente: <b>{{ $venta->NombreDeCliente }}</b></h2>
+                        <h2>Datos del cliente: <b>{{ $venta->Nombre . ' ' . $venta->ApeMaterno . ' ' . $venta->ApePaterno }}</b></h2>
                         <div class="ms-auto">
                             <a href="{{ route('ventas.index') }}" class="btn btn-primary d-flex align-items-center gap-1">
                                 <i class="ri-arrow-left-line"></i>

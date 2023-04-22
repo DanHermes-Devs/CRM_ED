@@ -48,6 +48,26 @@ return [
     */
 
     'channels' => [
+        'registerUsers' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/registerUsers.log'),
+            'level' => 'info',
+        ],
+
+        'login' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/login.log'),
+            'level' => 'info',
+            'days' => 7,
+        ],
+
+        'importVentas' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/importVentas.log'),
+            'level' => 'info',
+            'days' => 7,
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

@@ -9,6 +9,7 @@ use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Validator;
@@ -92,6 +93,8 @@ class UsuarioController extends Controller
             'password' => bcrypt($request->password),
             'estatus' => $request->estatus,
         ])->assignRole($request->input('roles'));
+
+        Log::channel('registerUsers')->info('Nuevo usuario registrado: ' . $request->name);
 
         return redirect()->route('usuarios')
             ->with('success', 'Usuario creado con éxito.');
