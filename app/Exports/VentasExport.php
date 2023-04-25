@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit', '256M');
+
 namespace App\Exports;
 
 use App\Models\Venta;
