@@ -169,7 +169,21 @@
                                     <div class="col-12 col-md-4">
                                         <div class="mb-3">
                                             <label for="mes_bdd">Mes:</label>
-                                            <input type="text" name="mes_bdd" id="mes_bdd" class="form-control" disabled>
+                                            <select name="mes_bdd" id="mes_bdd" class="form-select" disabled>
+                                                <option value="">-- Selecciona --</option>
+                                                <option value="ENERO">Enero</option>
+                                                <option value="FEBRERO">Febrero</option>
+                                                <option value="MARZO">Marzo</option>
+                                                <option value="ABRIL">Abril</option>
+                                                <option value="MAYO">Mayo</option>
+                                                <option value="JUNIO">Junio</option>
+                                                <option value="JULIO">Julio</option>
+                                                <option value="AGOSTO">Agosto</option>
+                                                <option value="SEPTIEMBRE">Septiembre</option>
+                                                <option value="OCTUBRE">Octubre</option>
+                                                <option value="NOVIEMBRE">Noviembre</option>
+                                                <option value="DICIEMBRE">Diciembre</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
