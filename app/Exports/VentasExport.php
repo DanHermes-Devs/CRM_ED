@@ -32,76 +32,81 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
         // Mostarmos en un dd los $resultados
         // dd($this->resultados);
         // Traemos todas las ventas
-        $ventas = $this->resultados;
+        // $ventas = $this->resultados;
+
+        $ventas = Venta::whereBetween('created_at', [$this->start_date, $this->end_date])
+                ->orderBy('created_at', 'ASC');
 
         // Creamos un array vacío
         $ventasArray = [];
 
         // Recorremos cada venta
-        foreach ($ventas as $venta) {
+        $ventas->chunk(200, function ($chunkedVentas) use (&$ventasArray) {
+            foreach ($chunkedVentas as $venta) {
 
-            // Creamos un array vacío
-            $ventaArray = [];
+                // Creamos un array vacío
+                $ventaArray = [];
 
-            // Agregamos los datos de la venta al array
-            $ventaArray['ID'] = $venta->id;
-            $ventaArray['UGestion'] = $venta->UGestion;
-            $ventaArray['Fpreventa'] = $venta->Fpreventa;
-            $ventaArray['campana'] = $venta->campana;
-            $ventaArray['LoginOcm'] = $venta->LoginOcm;
-            $ventaArray['LoginIntranet'] = $venta->LoginIntranet;
-            $ventaArray['NombreAgente'] = $venta->NombreAgente;
-            $ventaArray['Supervisor'] = $venta->Supervisor;
-            $ventaArray['Codificacion'] = $venta->Codificacion;
-            $ventaArray['Nombre'] = $venta->Nombre;
-            $ventaArray['ApePaterno'] = $venta->ApePaterno;
-            $ventaArray['ApeMaterno'] = $venta->ApeMaterno;
-            $ventaArray['fNacimiento'] = $venta->fNacimiento;
-            $ventaArray['Edad'] = $venta->Edad;
-            $ventaArray['Genero'] = $venta->Genero;
-            $ventaArray['RFC'] = $venta->RFC;
-            $ventaArray['Homoclave'] = $venta->Homoclave;
-            $ventaArray['CURP'] = $venta->CURP;
-            $ventaArray['Calle'] = $venta->Calle;
-            $ventaArray['NumExt'] = $venta->NumExt;
-            $ventaArray['NumInt'] = $venta->NumInt;
-            $ventaArray['Colonia'] = $venta->Colonia;
-            $ventaArray['AlMun'] = $venta->AlMun;
-            $ventaArray['Estado'] = $venta->Estado;
-            $ventaArray['CP'] = $venta->CP;
-            $ventaArray['Marca'] = $venta->Marca;
-            $ventaArray['SubMarca'] = $venta->SubMarca;
-            $ventaArray['Modelo'] = $venta->Modelo;
-            $ventaArray['nSerie'] = $venta->nSerie;
-            $ventaArray['nMotor'] = $venta->nMotor;
-            $ventaArray['nPlacas'] = $venta->nPlacas;
-            $ventaArray['Segmento'] = $venta->Segmento;
-            $ventaArray['Legalizado'] = $venta->Legalizado;
-            $ventaArray['nCotizacion'] = $venta->nCotizacion;
-            $ventaArray['FinVigencia'] = $venta->FinVigencia;
-            $ventaArray['FfVigencia'] = $venta->FfVigencia;
-            $ventaArray['tPoliza'] = $venta->tPoliza;
-            $ventaArray['Paquete'] = $venta->Paquete;
-            $ventaArray['nPoliza'] = $venta->nPoliza;
-            $ventaArray['Aseguradora'] = $venta->Aseguradora;
-            $ventaArray['fPago'] = $venta->fPago;
-            $ventaArray['FrePago'] = $venta->FrePago;
-            $ventaArray['PncTotal'] = $venta->PncTotal;
-            $ventaArray['NombreDeCliente'] = $venta->NombreDeCliente;
-            $ventaArray['tVenta'] = $venta->tVenta;
-            $ventaArray['MesBdd'] = $venta->MesBdd;
-            $ventaArray['AnioBdd'] = $venta->AnioBdd;
-            $ventaArray['noPago'] = $venta->noPago;
-            $ventaArray['FechaProximoPago'] = $venta->FechaProximoPago;
-            $ventaArray['FechaPagoReal'] = $venta->FechaPagoReal;
-            $ventaArray['PrimaNetaCobrada'] = $venta->PrimaNetaCobrada;
-            $ventaArray['AgenteCob'] = $venta->AgenteCob;
-            $ventaArray['TipoPago'] = $venta->TipoPago;
-            $ventaArray['EstadoDePago'] = $venta->EstadoDePago;
-            $ventaArray['created_at'] = $venta->created_at;
-            
-            $ventasArray[] = $ventaArray;
-        }
+                // Agregamos los datos de la venta al array
+                $ventaArray['ID'] = $venta->id;
+                $ventaArray['UGestion'] = $venta->UGestion;
+                $ventaArray['Fpreventa'] = $venta->Fpreventa;
+                $ventaArray['campana'] = $venta->campana;
+                $ventaArray['LoginOcm'] = $venta->LoginOcm;
+                $ventaArray['LoginIntranet'] = $venta->LoginIntranet;
+                $ventaArray['NombreAgente'] = $venta->NombreAgente;
+                $ventaArray['Supervisor'] = $venta->Supervisor;
+                $ventaArray['Codificacion'] = $venta->Codificacion;
+                $ventaArray['Nombre'] = $venta->Nombre;
+                $ventaArray['ApePaterno'] = $venta->ApePaterno;
+                $ventaArray['ApeMaterno'] = $venta->ApeMaterno;
+                $ventaArray['fNacimiento'] = $venta->fNacimiento;
+                $ventaArray['Edad'] = $venta->Edad;
+                $ventaArray['Genero'] = $venta->Genero;
+                $ventaArray['RFC'] = $venta->RFC;
+                $ventaArray['Homoclave'] = $venta->Homoclave;
+                $ventaArray['CURP'] = $venta->CURP;
+                $ventaArray['Calle'] = $venta->Calle;
+                $ventaArray['NumExt'] = $venta->NumExt;
+                $ventaArray['NumInt'] = $venta->NumInt;
+                $ventaArray['Colonia'] = $venta->Colonia;
+                $ventaArray['AlMun'] = $venta->AlMun;
+                $ventaArray['Estado'] = $venta->Estado;
+                $ventaArray['CP'] = $venta->CP;
+                $ventaArray['Marca'] = $venta->Marca;
+                $ventaArray['SubMarca'] = $venta->SubMarca;
+                $ventaArray['Modelo'] = $venta->Modelo;
+                $ventaArray['nSerie'] = $venta->nSerie;
+                $ventaArray['nMotor'] = $venta->nMotor;
+                $ventaArray['nPlacas'] = $venta->nPlacas;
+                $ventaArray['Segmento'] = $venta->Segmento;
+                $ventaArray['Legalizado'] = $venta->Legalizado;
+                $ventaArray['nCotizacion'] = $venta->nCotizacion;
+                $ventaArray['FinVigencia'] = $venta->FinVigencia;
+                $ventaArray['FfVigencia'] = $venta->FfVigencia;
+                $ventaArray['tPoliza'] = $venta->tPoliza;
+                $ventaArray['Paquete'] = $venta->Paquete;
+                $ventaArray['nPoliza'] = $venta->nPoliza;
+                $ventaArray['Aseguradora'] = $venta->Aseguradora;
+                $ventaArray['fPago'] = $venta->fPago;
+                $ventaArray['FrePago'] = $venta->FrePago;
+                $ventaArray['PncTotal'] = $venta->PncTotal;
+                $ventaArray['NombreDeCliente'] = $venta->NombreDeCliente;
+                $ventaArray['tVenta'] = $venta->tVenta;
+                $ventaArray['MesBdd'] = $venta->MesBdd;
+                $ventaArray['AnioBdd'] = $venta->AnioBdd;
+                $ventaArray['noPago'] = $venta->noPago;
+                $ventaArray['FechaProximoPago'] = $venta->FechaProximoPago;
+                $ventaArray['FechaPagoReal'] = $venta->FechaPagoReal;
+                $ventaArray['PrimaNetaCobrada'] = $venta->PrimaNetaCobrada;
+                $ventaArray['AgenteCob'] = $venta->AgenteCob;
+                $ventaArray['TipoPago'] = $venta->TipoPago;
+                $ventaArray['EstadoDePago'] = $venta->EstadoDePago;
+                $ventaArray['created_at'] = $venta->created_at;
+                
+                $ventasArray[] = $ventaArray;
+            }
+        });
 
         // Retornamos el array
         return collect($ventasArray);
@@ -109,7 +114,7 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
 
     public function chunkSize(): int
     {
-        return 500; // Número de registros por chunk, ajusta este valor según tus necesidades
+        return 200; // Número de registros por chunk, ajusta este valor según tus necesidades
     }
 
     public function headings(): array
