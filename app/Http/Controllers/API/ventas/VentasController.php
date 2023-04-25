@@ -269,8 +269,6 @@ class VentasController extends Controller
             $this->crearRecibosPago($venta);
         }
 
-        Log::channel('importVentas')->info('El usuario ' . Auth::user()->name . ' ha guardado la venta con el contactId ' . $request->contactId . '.');
-
         // Devuelve la venta creada o actualizada en formato JSON
         return response()->json([
             'code' => 200,
