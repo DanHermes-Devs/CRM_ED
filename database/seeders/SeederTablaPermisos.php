@@ -52,6 +52,7 @@ class SeederTablaPermisos extends Seeder
             'crear-grupos',
             'editar-grupos',
             'borrar-grupos',
+            'exportar-ventas',
         ];
 
         foreach ($permisos as $permiso) {
