@@ -22,8 +22,8 @@ class VentasController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-ventas|crear-ventas|editar-ventas|borrar-ventas|ver-campos',['only' => ['index','show']]);
-        $this->middleware('permission:editar-ventas', ['only' => ['edit','update']]);
+        $this->middleware('permission:ver-ventas|crear-ventas|editar-ventas|borrar-ventas|ver-campos', ['only' => ['index', 'show']]);
+        $this->middleware('permission:editar-ventas', ['only' => ['edit', 'update']]);
         $this->middleware('permission:borrar-ventas', ['only' => ['destroy']]);
 
         $this->middleware('auth')->except('store');
@@ -83,7 +83,7 @@ class VentasController extends Controller
             $query->where('LoginIntranet', $usuario->usuario);
         } else {
             $rol = $request->rol;
-    
+
             if (in_array($rol, ['Agente Ventas Nuevas', 'Agente Renovaciones', 'Agente Preventa', 'Agente Cobranza'])) {
                 $query = $this->applyRoleFilters($query, $rol);
                 $query->where('LoginIntranet', Auth::user()->usuario);
@@ -104,9 +104,9 @@ class VentasController extends Controller
             // Implementa la lógica para buscar por mes y año de BDD
             $mes = $request->mes_bdd;
             $anio = $request->anio_bdd;
-        
+
             $query->where('AnioBdd', $anio)
-                  ->where('MesBdd', $mes);
+                ->where('MesBdd', $mes);
         }
 
         Log::info('Query: ' . $query->toSql());
@@ -117,21 +117,21 @@ class VentasController extends Controller
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
-        if($rol == 'Agente Ventas Nuevas'){
+        if ($rol == 'Agente Ventas Nuevas') {
             $resultados = $resultados->where('tVenta', 'VENTA NUEVA')
-                                     ->where('UGestion', 'PREVENTA');
-        }elseif($rol == 'Agente Renovaciones'){
+                ->where('UGestion', 'PREVENTA');
+        } elseif ($rol == 'Agente Renovaciones') {
             $resultados = $resultados->where('tVenta', 'RENOVACION')
-                                     ->where(function ($q) {
-                                         $q->where('UGestion', '')->orWhereNull('UGestion');
-                                     });
-        }elseif($rol == 'Supervisor' || $rol == 'Coordinador'){
+                ->where(function ($q) {
+                    $q->where('UGestion', '')->orWhereNull('UGestion');
+                });
+        } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
-        }else{
+        } else {
             // No aplicar filtros adicionales para administradores
         }
 
-        if(request()->ajax()){
+        if (request()->ajax()) {
             return DataTables()
                 ->of($resultados)
                 ->addColumn('action', 'crm.modulos.ventas.actions')
@@ -171,14 +171,14 @@ class VentasController extends Controller
             // Si la última gestión es 'PREVENTA', no permite modificar el campo UGestion
             if ($venta->UGestion === 'PREVENTA') {
                 return response()->json([
-                        'code' => 400,
-                        'message' => 'Éste registro ya fue marcado como PREVENTA.'
-                    ]);
-            } elseif ($request->UGestion == 'RENOVACION' && $venta->UGestion == 'RENOVACION'){
-                    // No hacemos nada, ya que queremos actualizar UGestion con el valor RENOVADA . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd
+                    'code' => 400,
+                    'message' => 'Éste registro ya fue marcado como PREVENTA.'
+                ]);
+            } elseif ($request->UGestion == 'RENOVACION' && $venta->UGestion == 'RENOVACION') {
+                // No hacemos nada, ya que queremos actualizar UGestion con el valor RENOVADA . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd
 
             } else {
-                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud, Si es renovacion no actualiza el campo UGestion
+                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud, Si el tVenta es renovacion no actualiza el campo UGestion
                 $venta->update(['UGestion' => $request->UGestion]);
             }
         } else {
@@ -191,19 +191,19 @@ class VentasController extends Controller
 
         // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
         $ventaExistente = Venta::where('nSerie', $request->nSerie)
-                                ->where('tVenta', 'VENTA NUEVA')
-                                ->first();
+            ->where('tVenta', 'VENTA NUEVA')
+            ->first();
 
         // Validación de la solicitud y actualización del recibo de pago (Módulo Cobranza)
         if ($request->estado_pago === 'CANCELADO') {
             $subsequentReceipts = Receipt::where('venta_id', $request->venta_id)
-                                        ->where('num_pago', '>', $request->num_pago)
-                                        ->get();
-    
+                ->where('num_pago', '>', $request->num_pago)
+                ->get();
+
             foreach ($subsequentReceipts as $subsequentReceipt) {
                 $subsequentReceipt->update(['estado_pago' => 'CANCELADO']);
             }
-    
+
             $venta = $request->venta;
             $venta->update(['estado_venta' => 'PAGO CANCELADO']);
         }
@@ -230,20 +230,20 @@ class VentasController extends Controller
 
         // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
         $ventaCoincidente = Venta::where('RFC', $request->RFC)
-                                    ->where('TelCelular', $request->TelCelular)
-                                    ->where('NombreDeCliente', $request->NombreDeCliente)
-                                    ->first();
+            ->where('TelCelular', $request->TelCelular)
+            ->where('NombreDeCliente', $request->NombreDeCliente)
+            ->first();
 
-        // Si se encuentra una coincidencia, asigna 'POSIBLE DUPLICIDAD' al campo tVenta
-        if ($ventaCoincidente) {
+        // Si se encuentra una coincidencia y tVenta no es 'RENOVACION' ni 'VENTA NUEVA', asigna 'POSIBLE DUPLICIDAD' al campo tVenta
+        if ($ventaCoincidente && $venta->tVenta != 'RENOVACION' && $venta->tVenta != 'VENTA NUEVA') {
             $venta->tVenta = 'POSIBLE DUPLICIDAD';
         }
 
         // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
         $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
-                                ->where('tVenta', 'RENOVACION')
-                                ->first();
-        
+            ->where('tVenta', 'RENOVACION')
+            ->first();
+
 
         // Verifica si la codificación es 'PROMESA DE PAGO'
         if ($request->Codificacion === 'PROMESA DE PAGO') {
@@ -265,7 +265,7 @@ class VentasController extends Controller
         $venta->save();
 
         // Mandamos la informacion al metodo para crear los recibos de pago (Módulo Cobranza)
-        if($request->UGestion == 'PREVENTA' || $request->UGestion == 'VENTA'){
+        if ($request->UGestion == 'PREVENTA' || $request->UGestion == 'VENTA') {
             $this->crearRecibosPago($venta);
         }
 
@@ -321,25 +321,25 @@ class VentasController extends Controller
             // Implementa la lógica para buscar por mes y año de BDD
             $mes = $request->mes_bdd;
             $anio = $request->anio_bdd;
-        
+
             $query->where('AnioBdd', $anio)
-                  ->where('MesBdd', $mes);
+                ->where('MesBdd', $mes);
         }
-        
+
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
-        if($rol == 'Agente Ventas Nuevas'){
+        if ($rol == 'Agente Ventas Nuevas') {
             $query->where('tVenta', 'VENTA NUEVA')
-                  ->where('UGestion', 'PREVENTA');
-        }elseif($rol == 'Agente Renovaciones'){
+                ->where('UGestion', 'PREVENTA');
+        } elseif ($rol == 'Agente Renovaciones') {
             $query->where('tVenta', 'RENOVACION')
-                  ->where(function ($q) {
-                      $q->where('UGestion', '')->orWhereNull('UGestion');
-                  });
-        }elseif($rol == 'Supervisor' || $rol == 'Coordinador'){
+                ->where(function ($q) {
+                    $q->where('UGestion', '')->orWhereNull('UGestion');
+                });
+        } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
-        }else{
+        } else {
             // No aplicar filtros adicionales para administradores
         }
 
@@ -351,7 +351,7 @@ class VentasController extends Controller
     {
         return view('crm.modulos.ventas.form_import');
     }
-    
+
     // Método para importar ventas desde excel
     public function importVentas(Request $request)
     {
@@ -409,22 +409,22 @@ class VentasController extends Controller
                 'Cuatrimestral' => 3,
                 'Mensual' => 12
             ];
-            
+
             $numRecibos = $frecuenciaPagos[$venta->FrePago];
             $usuario = User::where('usuario', $venta->LoginOcm)->first();
-    
-            if(!$usuario){
+
+            if (!$usuario) {
                 // Mandamos un mensaje de error en el que digamos que el usuario no existe
                 return response()->json([
                     'code' => 500,
                     'message' => 'El usuario no existe'
                 ]);
             }
-        
+
             for ($i = 1; $i <= $numRecibos; $i++) {
                 $finVigencia = Carbon::parse($venta->FinVigencia);
                 $fechaProximoPago = $finVigencia->addMonths($i);
-        
+
                 $receipt = new Receipt([
                     'venta_id' => $venta->id,
                     'num_pago' => $i,
@@ -436,7 +436,7 @@ class VentasController extends Controller
                     'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
                     'estado_pago' => 'PENDIENTE'
                 ]);
-    
+
                 $receipt->save();
             }
         }
