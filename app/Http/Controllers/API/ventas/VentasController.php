@@ -321,9 +321,9 @@ class VentasController extends Controller
             // Implementa la lógica para buscar por mes y año de BDD
             $mes = $request->mes_bdd;
             $anio = $request->anio_bdd;
-
-            $query->whereYear('AnioBdd', $anio)
-                ->whereMonth('MesBdd', $mes);
+        
+            $query->where('AnioBdd', $anio)
+                  ->where('MesBdd', $mes);
         }
         
         // Filtros por perfil de usuario
