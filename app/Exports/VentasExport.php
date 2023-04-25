@@ -11,8 +11,9 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 // WhitStyles
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings, shouldAutoSize, WithStyles
+class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings, shouldAutoSize, WithStyles, WithChunkReading
 {
 
     public function __construct($start_date, $end_date, $resultados)
@@ -102,6 +103,11 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
 
         // Retornamos el array
         return collect($ventasArray);
+    }
+
+    public function chunkSize(): int
+    {
+        return 500; // Número de registros por chunk, ajusta este valor según tus necesidades
     }
 
     public function headings(): array
