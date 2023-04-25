@@ -1,6 +1,10 @@
 <?php
 
-ini_set('memory_limit', '256M');
+declare(ticks=1) {
+    ini_set('memory_limit', '256M');
+    ini_set('max_execution_time', 300);
+}
+
 
 namespace App\Exports;
 
