@@ -322,8 +322,8 @@ class VentasController extends Controller
             $mes = $request->mes_bdd;
             $anio = $request->anio_bdd;
 
-            $query->whereYear('AnioBDD', $anio)
-                ->whereMonth('MesBDD', $mes);
+            $query->whereYear('AnioBdd', $anio)
+                ->whereMonth('MesBdd', $mes);
         }
         
         // Filtros por perfil de usuario
