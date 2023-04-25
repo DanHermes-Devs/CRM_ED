@@ -1,7 +1,7 @@
 <?php
 
 declare(ticks=1) {
-    ini_set('memory_limit', '256M');
+    ini_set('memory_limit', '512M');
     ini_set('max_execution_time', 300);
 }
 
@@ -22,30 +22,21 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings, shouldAutoSize, WithStyles, WithChunkReading
 {
 
-    public function __construct($start_date, $end_date, $resultados)
+    public function __construct($start_date, $end_date, $query)
     {
         $this->start_date = $start_date;
         $this->end_date = $end_date;
-        $this->resultados = $resultados;
+        $this->query = $query;
     }
 
 
     public function collection()
     {
-
-        // Mostarmos en un dd los $resultados
-        // dd($this->resultados);
-        // Traemos todas las ventas
-        // $ventas = $this->resultados;
-
-        $ventas = Venta::whereBetween('created_at', [$this->start_date, $this->end_date])
-                ->orderBy('created_at', 'ASC');
-
         // Creamos un array vacío
         $ventasArray = [];
 
         // Recorremos cada venta
-        $ventas->chunk(200, function ($chunkedVentas) use (&$ventasArray) {
+        $this->query->chunk(200, function ($chunkedVentas) use (&$ventasArray) {
             foreach ($chunkedVentas as $venta) {
 
                 // Creamos un array vacío

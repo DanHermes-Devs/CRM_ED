@@ -325,27 +325,25 @@ class VentasController extends Controller
             $query->whereYear('AnioBDD', $anio)
                 ->whereMonth('MesBDD', $mes);
         }
-
-        $resultados = $query->get();
         
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
         if($rol == 'Agente Ventas Nuevas'){
-            $resultados = $resultados->where('tVenta', 'VENTA NUEVA')
-                                     ->where('UGestion', 'PREVENTA');
+            $query->where('tVenta', 'VENTA NUEVA')
+                  ->where('UGestion', 'PREVENTA');
         }elseif($rol == 'Agente Renovaciones'){
-            $resultados = $resultados->where('tVenta', 'RENOVACIONES')
-                                     ->where(function ($q) {
-                                         $q->where('UGestion', '')->orWhereNull('UGestion');
-                                     });
+            $query->where('tVenta', 'RENOVACION')
+                  ->where(function ($q) {
+                      $q->where('UGestion', '')->orWhereNull('UGestion');
+                  });
         }elseif($rol == 'Supervisor' || $rol == 'Coordinador'){
             // No aplicar filtros adicionales para supervisores y coordinadores
         }else{
             // No aplicar filtros adicionales para administradores
         }
 
-        return Excel::download(new VentasExport($start_date, $end_date, $resultados), 'ventas.xlsx');
+        return Excel::download(new VentasExport($start_date, $end_date, $query), 'ventas.xlsx');
     }
 
     // Vista formulario para importar ventas desde excel
