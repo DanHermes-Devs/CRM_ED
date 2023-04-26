@@ -162,20 +162,17 @@ class VentasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-
-        Log::info($request->all());
-        
+    {   
         // Busca si ya existe una venta con el mismo contactId
         $venta = Venta::where('contactId', $request->contactId)->first();
 
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
             // Si la última gestión es 'PREVENTA', no permite modificar el campo UGestion
-            if ($venta->UGestion === 'VENTA') {
+            if ($venta->UGestion === 'VENTA' || $venta->UGestion === 'RENOVACION') {
                 return response()->json([
                     'code' => 400,
-                    'message' => 'Éste registro ya fue marcado como PREVENTA.'
+                    'message' => 'Éste registro ya fue marcado como ' . $venta->UGestion,
                 ]);
             }
         } else {
@@ -184,6 +181,8 @@ class VentasController extends Controller
             $venta->contactId = $request->contactId;
             $venta->UGestion = $request->UGestion;
             $venta->Fpreventa = Carbon::now();
+
+            $venta->fill($request->all());
 
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
@@ -199,13 +198,14 @@ class VentasController extends Controller
                     $diasDiferencia = $fpreventa->diffInDays($hoy, false);
 
                     // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
-                    if ($diasDiferencia <= 31) {
+                    if ($diasDiferencia <= 30) {
                         $venta->tVenta = 'VENTA DUPLICADA';
                     } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
                         $venta->tVenta = 'VENTA NUEVA';
                     } else {
                         $venta->tVenta = 'RENOVACION';
                     }
+
                 } else {
                     // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
                     $ventaCoincidente = Venta::where('RFC', $request->RFC)
@@ -221,9 +221,17 @@ class VentasController extends Controller
                         $venta->tVenta = 'VENTA NUEVA';
                     }
                 }
-            }
+            } elseif ($request->Codificacion === 'RENOVACION') {
+                // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
+                $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
+                    ->where('tVenta', 'RENOVACION')
+                    ->first();
 
-            $venta->fill($request->all());
+                if ($ventaRenovacion) {
+                    $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
+                    $venta->tVenta = 'RENOVACION';
+                }
+            }
         }
 
         // Validación de la solicitud y actualización del recibo de pago (Módulo Cobranza)
@@ -251,22 +259,10 @@ class VentasController extends Controller
             }
         }
 
-        // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
-        $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
-                ->where('tVenta', 'RENOVACION')
-                ->first();
-
-        if ($ventaRenovacion) {
-            $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
-        }
-
         // Guarda la venta en la base de datos
         $venta->save();
 
-        // Mandamos la informacion al metodo para crear los recibos de pago (Módulo Cobranza)
-        if ($request->UGestion == 'VENTA' || $request->Codificacion == 'RENOVACION') {
-            $this->crearRecibosPago($venta);
-        }
+        $this->crearRecibosPago($venta);
 
         // Devuelve la venta creada o actualizada en formato JSON
         return response()->json([
@@ -411,7 +407,9 @@ class VentasController extends Controller
                 'MENSUAL' => 12
             ];
 
-            $numRecibos = $frecuenciaPagos[$venta->FrePago];
+            // Convertimos FrePago en Mayusculas
+            $frecuenciaPago = strtoupper($venta->FrePago);
+            $numRecibos = $frecuenciaPagos[$frecuenciaPago];
             $usuario = User::where('usuario', $venta->LoginOcm)->first();
 
             if (!$usuario) {
