@@ -180,10 +180,7 @@ class VentasController extends Controller
                 $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
                                         ->where('tVenta', 'RENOVACION')
                                         ->first();
-
-                // Guardamos todos los campos de una sola vez usando request all
-                $venta->fill($request->all());
-
+                
                 if ($ventaRenovacion) {
                     $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                 }
@@ -259,6 +256,11 @@ class VentasController extends Controller
                 }
             }
         }
+
+        // Guardamos todos los campos de una sola vez usando request all
+        $venta->fill($request->all());
+
+        // Mandamos el request FrePago a CrearRecibosPago
 
         // Guarda la venta en la base de datos
         $venta->save();
