@@ -163,31 +163,29 @@ class VentasController extends Controller
      */
     public function store(Request $request)
     {
+
+        Log::info($request->all());
+        
         // Busca si ya existe una venta con el mismo contactId
         $venta = Venta::where('contactId', $request->contactId)->first();
 
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
             // Si la última gestión es 'PREVENTA', no permite modificar el campo UGestion
-            if ($venta->UGestion === 'PREVENTA') {
+            if ($venta->UGestion === 'VENTA') {
                 return response()->json([
                     'code' => 400,
                     'message' => 'Éste registro ya fue marcado como PREVENTA.'
                 ]);
-            } elseif ($request->UGestion == 'RENOVACION') {
-                // No hacemos nada, ya que queremos actualizar UGestion con el valor RENOVADA . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd
-                // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
-                $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
-                                        ->where('tVenta', 'RENOVACION')
-                                        ->first();
-                
-                if ($ventaRenovacion) {
-                    $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
-                }
-            } else {
-                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud, Si es renovacion no actualiza el campo UGestion
-                $venta->update(['UGestion' => $request->UGestion]);
+            }
+        } else {
+            // Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta
+            $venta = new Venta;
+            $venta->contactId = $request->contactId;
+            $venta->UGestion = $request->UGestion;
+            $venta->Fpreventa = Carbon::now();
 
+            if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
                 $ventaExistente = Venta::where('nSerie', $request->nSerie)
                     ->where('tVenta', 'VENTA NUEVA')
@@ -204,32 +202,28 @@ class VentasController extends Controller
                     if ($diasDiferencia <= 31) {
                         $venta->tVenta = 'VENTA DUPLICADA';
                     } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
-                        $venta->tVenta = 'PREVENTA';
+                        $venta->tVenta = 'VENTA NUEVA';
                     } else {
                         $venta->tVenta = 'RENOVACION';
                     }
                 } else {
-                    // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
-                    $venta->tVenta = $request->tVenta;
-                }
+                    // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
+                    $ventaCoincidente = Venta::where('RFC', $request->RFC)
+                        ->where('TelCelular', $request->TelCelular)
+                        ->where('NombreDeCliente', $request->NombreDeCliente)
+                        ->first();
 
-                // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
-                $ventaCoincidente = Venta::where('RFC', $request->RFC)
-                    ->where('TelCelular', $request->TelCelular)
-                    ->where('NombreDeCliente', $request->NombreDeCliente)
-                    ->first();
-
-                // Si se encuentra una coincidencia, asigna 'POSIBLE DUPLICIDAD' al campo tVenta
-                if ($ventaCoincidente) {
-                    $venta->tVenta = 'POSIBLE DUPLICIDAD';
+                    // Si se encuentra una coincidencia, asigna 'POSIBLE DUPLICIDAD' al campo tVenta
+                    if ($ventaCoincidente) {
+                        $venta->tVenta = 'POSIBLE DUPLICIDAD';
+                    } else {
+                        // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
+                        $venta->tVenta = 'VENTA NUEVA';
+                    }
                 }
             }
-        } else {
-            // Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta
-            $venta = new Venta;
-            $venta->contactId = $request->contactId;
-            $venta->UGestion = $request->UGestion;
-            $venta->Fpreventa = Carbon::now();
+
+            $venta->fill($request->all());
         }
 
         // Validación de la solicitud y actualización del recibo de pago (Módulo Cobranza)
@@ -257,16 +251,20 @@ class VentasController extends Controller
             }
         }
 
-        // Guardamos todos los campos de una sola vez usando request all
-        $venta->fill($request->all());
+        // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
+        $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
+                ->where('tVenta', 'RENOVACION')
+                ->first();
 
-        // Mandamos el request FrePago a CrearRecibosPago
+        if ($ventaRenovacion) {
+            $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
+        }
 
         // Guarda la venta en la base de datos
         $venta->save();
 
         // Mandamos la informacion al metodo para crear los recibos de pago (Módulo Cobranza)
-        if ($request->UGestion == 'PREVENTA' || $request->UGestion == 'RENOVACION') {
+        if ($request->UGestion == 'VENTA' || $request->Codificacion == 'RENOVACION') {
             $this->crearRecibosPago($venta);
         }
 
@@ -406,11 +404,11 @@ class VentasController extends Controller
         if ($recibos === 0) {
             // Creamos un arreglo con las frecuencias de pago
             $frecuenciaPagos = [
-                'Anual' => 1,
-                'Semestral' => 2,
-                'Trimestral' => 4,
-                'Cuatrimestral' => 3,
-                'Mensual' => 12
+                'ANUAL' => 1,
+                'SEMESTRAL' => 2,
+                'TRIMESTRAL' => 4,
+                'CUATRIMESTRAL' => 3,
+                'MENSUAL' => 12
             ];
 
             $numRecibos = $frecuenciaPagos[$venta->FrePago];
