@@ -174,12 +174,58 @@ class VentasController extends Controller
                     'code' => 400,
                     'message' => 'Éste registro ya fue marcado como PREVENTA.'
                 ]);
-            } elseif ($request->UGestion == 'RENOVACION' && $venta->UGestion == 'RENOVACION') {
+            } elseif ($request->UGestion == 'RENOVACION') {
                 // No hacemos nada, ya que queremos actualizar UGestion con el valor RENOVADA . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd
+                // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
+                $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
+                                        ->where('tVenta', 'RENOVACION')
+                                        ->first();
 
+                // Guardamos todos los campos de una sola vez usando request all
+                $venta->fill($request->all());
+
+                if ($ventaRenovacion) {
+                    $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
+                }
             } else {
-                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud, Si el tVenta es renovacion no actualiza el campo UGestion
+                // Si no es 'PREVENTA', actualiza el campo UGestion con el valor enviado en la solicitud, Si es renovacion no actualiza el campo UGestion
                 $venta->update(['UGestion' => $request->UGestion]);
+
+                // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
+                $ventaExistente = Venta::where('nSerie', $request->nSerie)
+                    ->where('tVenta', 'VENTA NUEVA')
+                    ->first();
+
+                // Obtiene la fecha actual
+                $hoy = Carbon::now();
+                if ($ventaExistente) {
+                    // Calcula la diferencia en días entre la fecha actual y Fpreventa
+                    $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
+                    $diasDiferencia = $fpreventa->diffInDays($hoy, false);
+
+                    // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
+                    if ($diasDiferencia <= 31) {
+                        $venta->tVenta = 'VENTA DUPLICADA';
+                    } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
+                        $venta->tVenta = 'PREVENTA';
+                    } else {
+                        $venta->tVenta = 'RENOVACION';
+                    }
+                } else {
+                    // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
+                    $venta->tVenta = $request->tVenta;
+                }
+
+                // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
+                $ventaCoincidente = Venta::where('RFC', $request->RFC)
+                    ->where('TelCelular', $request->TelCelular)
+                    ->where('NombreDeCliente', $request->NombreDeCliente)
+                    ->first();
+
+                // Si se encuentra una coincidencia, asigna 'POSIBLE DUPLICIDAD' al campo tVenta
+                if ($ventaCoincidente) {
+                    $venta->tVenta = 'POSIBLE DUPLICIDAD';
+                }
             }
         } else {
             // Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta
@@ -188,11 +234,6 @@ class VentasController extends Controller
             $venta->UGestion = $request->UGestion;
             $venta->Fpreventa = Carbon::now();
         }
-
-        // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
-        $ventaExistente = Venta::where('nSerie', $request->nSerie)
-            ->where('tVenta', 'VENTA NUEVA')
-            ->first();
 
         // Validación de la solicitud y actualización del recibo de pago (Módulo Cobranza)
         if ($request->estado_pago === 'CANCELADO') {
@@ -208,64 +249,22 @@ class VentasController extends Controller
             $venta->update(['estado_venta' => 'PAGO CANCELADO']);
         }
 
-        // Obtiene la fecha actual
-        $hoy = Carbon::now();
-        if ($ventaExistente) {
-            // Calcula la diferencia en días entre la fecha actual y Fpreventa
-            $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
-            $diasDiferencia = $fpreventa->diffInDays($hoy, false);
-
-            // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
-            if ($diasDiferencia <= 31) {
-                $venta->tVenta = 'VENTA DUPLICADA';
-            } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
-                $venta->tVenta = 'PREVENTA';
-            } else {
-                $venta->tVenta = 'RENOVACION';
-            }
-        } else {
-            // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
-            $venta->tVenta = $request->tVenta;
-        }
-
-        // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
-        $ventaCoincidente = Venta::where('RFC', $request->RFC)
-            ->where('TelCelular', $request->TelCelular)
-            ->where('NombreDeCliente', $request->NombreDeCliente)
-            ->first();
-
-        // Si se encuentra una coincidencia y tVenta no es 'RENOVACION' ni 'VENTA NUEVA', asigna 'POSIBLE DUPLICIDAD' al campo tVenta
-        if ($ventaCoincidente && $venta->tVenta != 'RENOVACION' && $venta->tVenta != 'VENTA NUEVA') {
-            $venta->tVenta = 'POSIBLE DUPLICIDAD';
-        }
-
-        // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
-        $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
-            ->where('tVenta', 'RENOVACION')
-            ->first();
-
-
         // Verifica si la codificación es 'PROMESA DE PAGO'
-        if ($request->Codificacion === 'PROMESA DE PAGO') {
-            // Si el LoginOcm en el request es diferente del LoginIntranet en la venta existente
-            if ($request->LoginOcm !== $venta->LoginIntranet) {
-                // Asigna el LoginOcm del request al LoginIntranet de la venta
-                $venta->LoginIntranet = $request->LoginOcm;
+        if($request->Codificacion === 'PREVENTA' || $request->Codificacion === 'RENOVACION'){
+            if ($venta->UGestion === 'PROMESA DE PAGO') {
+                // Si el LoginOcm en el request es diferente del LoginIntranet en la venta existente
+                if ($request->LoginOcm !== $venta->LoginIntranet) {
+                    // Asigna el LoginOcm del request al LoginIntranet de la venta
+                    $venta->LoginIntranet = $request->LoginOcm;
+                }
             }
-        }
-
-        // Guardamos todos los campos de una sola vez usando request all
-        $venta->fill($request->all());
-
-        if ($ventaRenovacion) {
-            $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
         }
 
         // Guarda la venta en la base de datos
         $venta->save();
 
         // Mandamos la informacion al metodo para crear los recibos de pago (Módulo Cobranza)
-        if ($request->UGestion == 'PREVENTA' || $request->UGestion == 'VENTA') {
+        if ($request->UGestion == 'PREVENTA' || $request->UGestion == 'RENOVACION') {
             $this->crearRecibosPago($venta);
         }
 
@@ -342,6 +341,8 @@ class VentasController extends Controller
         } else {
             // No aplicar filtros adicionales para administradores
         }
+
+        dd($query->get());
 
         return Excel::download(new VentasExport($start_date, $end_date, $query), 'ventas.xlsx');
     }
