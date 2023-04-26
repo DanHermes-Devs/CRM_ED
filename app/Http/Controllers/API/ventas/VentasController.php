@@ -262,7 +262,10 @@ class VentasController extends Controller
         // Guarda la venta en la base de datos
         $venta->save();
 
-        $this->crearRecibosPago($venta);
+        // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada
+        if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION'){
+            $this->crearRecibosPago($venta);
+        }
 
         // Devuelve la venta creada o actualizada en formato JSON
         return response()->json([
