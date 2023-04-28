@@ -11,6 +11,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CobranzaController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\API\ventas\VentasController;
+use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\LogController;
 
 /*
@@ -54,6 +55,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'cancelarRecibo'])->name('cobranza.cancelar');
     
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    Route::get('/cronjobs', [CronJobController::class, 'index'])->name('cronjobs.index');
+    Route::get('/crear-cronjob', [CronJobController::class, 'create'])->name('crear-cronjob');
+    Route::post('/crear-cronjob', [CronJobController::class, 'store'])->name('store-cronjob');
+    Route::get('/editar-cronjob/{id}', [CronJobController::class, 'edit'])->name('editar-cronjob');
+    Route::put('/editar-cronjob/{id}', [CronJobController::class, 'update'])->name('actualizar-cronjob');
+    Route::delete('/eliminar-cronjob/{id}', [CronJobController::class, 'destroy'])->name('eliminar-cronjob');
 });
 
 Route::get('/ventas', [VentasController::class, 'index'])->name('ventas.index');

@@ -221,6 +221,11 @@
                                         <i class="ri-group-line"></i> <span data-key="t-dashboards">Grupos</span>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" href="{{ route('cronjobs.index') }}">
+                                        <i class="ri-settings-6-line"></i> <span data-key="t-dashboards">Tareas Automáticas</span>
+                                    </a>
+                                </li>
                             @endif
                         </ul>
                     </div>
