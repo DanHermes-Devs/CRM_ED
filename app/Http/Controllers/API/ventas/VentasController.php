@@ -262,8 +262,8 @@ class VentasController extends Controller
         // Guarda la venta en la base de datos
         $venta->save();
 
-        // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada
-        if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION'){
+        // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
+        if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION' || $request->FrePago !== null){
             $this->crearRecibosPago($venta);
         }
 
@@ -340,8 +340,6 @@ class VentasController extends Controller
         } else {
             // No aplicar filtros adicionales para administradores
         }
-
-        dd($query->get());
 
         return Excel::download(new VentasExport($start_date, $end_date, $query), 'ventas.xlsx');
     }
