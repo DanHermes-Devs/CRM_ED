@@ -36,7 +36,7 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
         $ventasArray = [];
 
         // Recorremos cada venta
-        $this->query->chunk(200, function ($chunkedVentas) use (&$ventasArray) {
+        $this->query->chunk(50, function ($chunkedVentas) use (&$ventasArray) {
             foreach ($chunkedVentas as $venta) {
 
                 // Creamos un array vacío
@@ -109,7 +109,7 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
 
     public function chunkSize(): int
     {
-        return 200; // Número de registros por chunk, ajusta este valor según tus necesidades
+        return 50; // Número de registros por chunk, ajusta este valor según tus necesidades
     }
 
     public function headings(): array
