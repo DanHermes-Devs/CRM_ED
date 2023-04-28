@@ -1,5 +1,5 @@
 <div class="hstack gap-3 fs-20">
-    @can('ver-usuario')
+    @can('ver-ventas')
         <a href="{{ route('ver-usuario', $id) }}" class="link-success">
             <i class="ri-eye-line"></i>
         </a>
