@@ -97,7 +97,7 @@
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Cargando...</span>
                                 </div>
-                                El proceso de importación puede demorar unos minutos. Por favor, espera.
+                                El proceso de exportacion puede demorar unos minutos. Por favor, espera.
                             </div>
                         </div>
 
@@ -253,8 +253,7 @@
 
 <script>
     $(document).ready(function() {
-        $('body').on('clicl', '#exportVentas', function(){
-            alert('hola');
+        $('body').on('click', '#exportVentas', function(){
             $('#loader').removeClass('d-none');
             $('#alert').removeClass('d-none');
 

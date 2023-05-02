@@ -164,12 +164,21 @@ class VentasController extends Controller
     public function store(Request $request)
     {   
         // Busca si ya existe una venta con el mismo contactId
-        $venta = Venta::where('contactId', $request->contactId)->first();
+        $venta = Venta::where('contactId', $request->contactId)->latest('created_at')->first();
 
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
-            // Si la última gestión es 'PREVENTA', no permite modificar el campo UGestion
-            if ($venta->UGestion === 'VENTA' || $venta->UGestion === 'RENOVACION') {
+            // Si la última gestión es 'VENTA', no permite modificar el campo UGestion
+            if ($venta->UGestion !== 'VENTA' || $venta->UGestion !== 'RENOVACION' || $venta->UGestion == null){
+
+                $venta->contactId = $request->contactId;
+                $venta->UGestion = $request->UGestion;
+                $venta->Fpreventa = Carbon::now();
+                $venta->MesBdd = $venta->MesBdd;
+                $venta->AnioBdd = $venta->AnioBdd;
+    
+                $venta->fill($request->all());
+            } else {
                 return response()->json([
                     'code' => 400,
                     'message' => 'Éste registro ya fue marcado como ' . $venta->UGestion,
@@ -177,6 +186,7 @@ class VentasController extends Controller
             }
         } else {
             // Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta
+            Log::info('Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta');
             $venta = new Venta;
             $venta->contactId = $request->contactId;
             $venta->UGestion = $request->UGestion;
@@ -186,6 +196,7 @@ class VentasController extends Controller
 
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
+                Log::info('Busca si existe una venta con el mismo nSerie y tVenta VENTA NUEVA');
                 $ventaExistente = Venta::where('nSerie', $request->nSerie)
                     ->where('tVenta', 'VENTA NUEVA')
                     ->first();
@@ -194,6 +205,7 @@ class VentasController extends Controller
                 $hoy = Carbon::now();
                 if ($ventaExistente) {
                     // Calcula la diferencia en días entre la fecha actual y Fpreventa
+                    Log::info('Calcula la diferencia en días entre la fecha actual y Fpreventa');
                     $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
                     $diasDiferencia = $fpreventa->diffInDays($hoy, false);
 
@@ -207,6 +219,7 @@ class VentasController extends Controller
                     }
 
                 } else {
+                    Log::info('Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente');
                     // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
                     $ventaCoincidente = Venta::where('RFC', $request->RFC)
                         ->where('TelCelular', $request->TelCelular)
@@ -215,21 +228,35 @@ class VentasController extends Controller
 
                     // Si se encuentra una coincidencia, asigna 'POSIBLE DUPLICIDAD' al campo tVenta
                     if ($ventaCoincidente) {
+                        Log::info('Si se encuentra una coincidencia, asigna POSIBLE DUPLICIDAD al campo tVenta');
                         $venta->tVenta = 'POSIBLE DUPLICIDAD';
                     } else {
                         // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
+                        Log::info('Si no hay una venta existente con el mismo nSerie y tVenta VENTA NUEVA, asigna tVenta enviado en la solicitud');
                         $venta->tVenta = 'VENTA NUEVA';
                     }
                 }
             } elseif ($request->Codificacion === 'RENOVACION') {
                 // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
+                Log::info('Busca si existe una venta de renovación con el mismo nPoliza y tVenta RENOVACION');
                 $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
                     ->where('tVenta', 'RENOVACION')
                     ->first();
+                Log::info('ventaRenovacion');
 
                 if ($ventaRenovacion) {
+                    Log::info('Entro en la renovacion');
                     $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                     $venta->tVenta = 'RENOVACION';
+                } else {
+                    Log::info('No entro en la renovacion');
+                    $venta = new Venta;
+                    $venta->contactId = $request->contactId;
+                    $venta->UGestion = 'RENOVADA';
+                    $venta->Fpreventa = Carbon::now();
+                    $venta->tVenta = 'RENOVACION';
+
+                    $venta->fill($request->all());
                 }
             }
         }
@@ -262,9 +289,12 @@ class VentasController extends Controller
         // Guarda la venta en la base de datos
         $venta->save();
 
+        Log::info("La frecuencia de pago es: " . $request->FrePago . " La codificacion es: " . $request->Codificacion);
+
         // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
         if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION' || $venta->FrePago !== null){
-            $this->crearRecibosPago($venta);
+            $frecuenciaPago = $request->input('FrePago');
+            $this->crearRecibosPago($venta, $frecuenciaPago);
         }
 
         // Devuelve la venta creada o actualizada en formato JSON
@@ -293,7 +323,7 @@ class VentasController extends Controller
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
         }
-
+        
         // Búsquedas exactas
         $camposExactos = [
             'ContactID' => 'lead',
@@ -302,18 +332,18 @@ class VentasController extends Controller
             'TelCelular' => 'telefono',
             'NombreDeCliente' => 'nombre_cliente',
         ];
-
+        
         foreach ($camposExactos as $campoDb => $campoReq) {
             if ($request->filled($campoReq)) {
                 $query->where($campoDb, $request->$campoReq);
             }
         }
-
+        
         // Búsqueda por tipo de venta
         if ($request->filled('tipo_venta')) {
             $query->where('tVenta', $request->tipo_venta);
         }
-
+         
         // Búsqueda por mes y año de BDD de renovaciones
         if ($request->filled(['mes_bdd', 'anio_bdd'])) {
             // Implementa la lógica para buscar por mes y año de BDD
@@ -392,7 +422,7 @@ class VentasController extends Controller
     }
 
     // Metodo para Crear Recibos de Pago (Módulo Cobranza)
-    public function crearRecibosPago($venta)
+    public function crearRecibosPago($venta, $frecuenciaPago)
     {
         // Verificamos si ya existen recibos de pago para la venta
         $recibos = Receipt::where('venta_id', $venta->id)->count();
@@ -408,8 +438,17 @@ class VentasController extends Controller
                 'MENSUAL' => 12
             ];
 
-            // Convertimos FrePago en Mayusculas
-            $frecuenciaPago = strtoupper($venta->FrePago);
+            // Convertimos frecuenciaPago en Mayusculas
+            $frecuenciaPago = strtoupper($frecuenciaPago);
+
+            // Verificar si la frecuencia de pago es válida
+            if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => 'Frecuencia de pago inválida'
+                ]);
+            }
+            
             $numRecibos = $frecuenciaPagos[$frecuenciaPago];
             $usuario = User::where('usuario', $venta->LoginOcm)->first();
 
