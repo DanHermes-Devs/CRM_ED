@@ -174,10 +174,11 @@ class VentasController extends Controller
                 $venta->contactId = $request->contactId;
                 $venta->UGestion = $request->UGestion;
                 $venta->Fpreventa = Carbon::now();
-                $venta->MesBdd = $venta->MesBdd;
-                $venta->AnioBdd = $venta->AnioBdd;
     
                 $venta->fill($request->all());
+
+                $venta->MesBdd = $venta->MesBdd;
+                $venta->AnioBdd = $venta->AnioBdd;
             } else {
                 return response()->json([
                     'code' => 400,
