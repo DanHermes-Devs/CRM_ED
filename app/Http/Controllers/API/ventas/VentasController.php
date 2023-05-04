@@ -169,16 +169,21 @@ class VentasController extends Controller
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
             // Si la última gestión es 'VENTA', no permite modificar el campo UGestion
-            if ($venta->UGestion !== 'VENTA' || $venta->UGestion !== 'RENOVACION' || $venta->UGestion == null){
-
-                $venta->contactId = $request->contactId;
-                $venta->UGestion = $request->UGestion;
+            if (($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION' && $venta->UGestion == null) || $venta->UGestion === 'RENOVACION') {
+                if ($venta->UGestion !== 'RENOVACION') {
+                    $venta->UGestion = $request->UGestion;
+                }
                 $venta->Fpreventa = Carbon::now();
     
+                // Guarda los valores actuales de MesBdd y AnioBdd antes de actualizar el registro
+                $currentMesBdd = $venta->MesBdd;
+                $currentAnioBdd = $venta->AnioBdd;
+
                 $venta->fill($request->all());
 
-                $venta->MesBdd = $venta->MesBdd;
-                $venta->AnioBdd = $venta->AnioBdd;
+                // Restaura los valores de MesBdd y AnioBdd que se guardaron previamente
+                $venta->MesBdd = $currentMesBdd;
+                $venta->AnioBdd = $currentAnioBdd;
             } else {
                 return response()->json([
                     'code' => 400,
@@ -277,7 +282,7 @@ class VentasController extends Controller
         }
 
         // Verifica si la codificación es 'PROMESA DE PAGO'
-        if($request->Codificacion === 'PREVENTA' || $request->Codificacion === 'RENOVACION'){
+        if($request->Codificacion === 'VENTA' || $request->Codificacion === 'RENOVACION'){
             if ($venta->UGestion === 'PROMESA DE PAGO') {
                 // Si el LoginOcm en el request es diferente del LoginIntranet en la venta existente
                 if ($request->LoginOcm !== $venta->LoginIntranet) {
@@ -384,7 +389,7 @@ class VentasController extends Controller
         // Muestra la consulta SQL completa con valores
         // dd('query: ', $sqlWithBindings);
 
-        return Excel::download(new VentasExport($start_date, $end_date, $query), 'ventas.xlsx');
+        return Excel::download(new VentasExport($start_date, $end_date, $query, Auth::user()), 'ventas.xlsx');
     }
 
     // Vista formulario para importar ventas desde excel

@@ -20,12 +20,14 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
     private $start_date;
     private $end_date;
     private $query;
+    private $user;
 
-    public function __construct($start_date, $end_date, $query)
+    public function __construct($start_date, $end_date, $query, $user)
     {
         $this->start_date = $start_date;
         $this->end_date = $end_date;
         $this->query = $query;
+        $this->user = $user;
     }
 
     public function collection()
@@ -59,6 +61,10 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
                 $ventaArray['RFC'] = $venta->RFC;
                 $ventaArray['Homoclave'] = $venta->Homoclave;
                 $ventaArray['CURP'] = $venta->CURP;
+                if ($this->user->hasRole('Coordinador') || $this->user->hasRole('Supervisor') || $this->user->hasRole('Administrador')) {
+                    $ventaArray['TelFijo'] = $venta->TelFijo;
+                    $ventaArray['TelCelular'] = $venta->TelCelular;
+                }
                 $ventaArray['Calle'] = $venta->Calle;
                 $ventaArray['NumExt'] = $venta->NumExt;
                 $ventaArray['NumInt'] = $venta->NumInt;
@@ -112,7 +118,7 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
 
     public function headings(): array
     {
-        return [
+        $headings = [
             'ID',
             'contactId',
             'UGestion',
@@ -132,6 +138,14 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
             'RFC',
             'Homoclave',
             'CURP',
+        ];
+
+        if ($this->user->hasRole('Coordinador') || $this->user->hasRole('Supervisor') || $this->user->hasRole('Administrador')) {
+            $headings[] = 'TelFijo';
+            $headings[] = 'TelCelular';
+        }
+
+        $headings = array_merge($headings, [
             'Calle',
             'NumExt',
             'NumInt',
@@ -169,7 +183,9 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
             'TipoPago',
             'EstadoDePago',
             'created_at'
-        ];
+        ]);
+
+        return $headings;
     }
 
     public function title(): string
