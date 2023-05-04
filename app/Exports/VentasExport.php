@@ -1,26 +1,25 @@
 <?php
 
 declare(ticks=1) {
-    ini_set('memory_limit', '512M');
-    ini_set('max_execution_time', 300);
+    ini_set('memory_limit', '-1');
+    ini_set('max_execution_time', 30);
 }
 
 
 namespace App\Exports;
 
-use App\Models\Venta;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
-// WhitStyles
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings, shouldAutoSize, WithStyles, WithChunkReading
+class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings, shouldAutoSize, WithChunkReading
 {
+
+    private $start_date;
+    private $end_date;
+    private $query;
 
     public function __construct($start_date, $end_date, $query)
     {
@@ -29,21 +28,20 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
         $this->query = $query;
     }
 
-
     public function collection()
     {
         // Creamos un array vacío
         $ventasArray = [];
 
         // Recorremos cada venta
-        $this->query->chunk(50, function ($chunkedVentas) use (&$ventasArray) {
+        $this->query->chunk(10000, function ($chunkedVentas) use (&$ventasArray) {
             foreach ($chunkedVentas as $venta) {
-
                 // Creamos un array vacío
                 $ventaArray = [];
 
                 // Agregamos los datos de la venta al array
                 $ventaArray['ID'] = $venta->id;
+                $ventaArray['contactId'] = $venta->contactId;
                 $ventaArray['UGestion'] = $venta->UGestion;
                 $ventaArray['Fpreventa'] = $venta->Fpreventa;
                 $ventaArray['campana'] = $venta->campana;
@@ -109,13 +107,14 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
 
     public function chunkSize(): int
     {
-        return 50; // Número de registros por chunk, ajusta este valor según tus necesidades
+        return 10000; // Número de registros por chunk, ajusta este valor según tus necesidades
     }
 
     public function headings(): array
     {
         return [
             'ID',
+            'contactId',
             'UGestion',
             'Fpreventa',
             'campana',
@@ -181,45 +180,5 @@ class VentasExport implements FromCollection, WithCustomStartCell, WithHeadings,
     public function startCell(): string
     {
         return 'A1';
-    }
-
-    public function styles(Worksheet $sheet)
-    {
-        // Cambiar el nombre de la hoja
-        $sheet = $sheet->setTitle('Ventas');
-
-        // Cambiar la fuentes de la hoja
-        $sheet->getStyle('A1:BJ1')->applyFromArray([
-            'font' => [
-                'name' => 'Arial',
-                'size' => 14,
-                'bold' => true,
-                // Color de letra blanco
-                'color' => ['argb' => 'FFFFFFFF'],
-            ],
-            'alignment' => [
-                'horizontal' => 'center',
-            ],
-            'fill' => [
-                'fillType' => 'solid',
-                // Color de fondo negro
-                'startColor' => ['argb' => 'FF000000'],
-            ],
-        ]);
-
-        $sheet->getStyle('A1:BJ1' . $sheet->getHighestRow())->applyFromArray([
-            'font' => [
-                'name' => 'Arial',
-                'size' => 12,
-            ],
-            'alignment' => [
-                'horizontal' => 'center',
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => 'thin',
-                ],
-            ]
-        ]);
     }
 }

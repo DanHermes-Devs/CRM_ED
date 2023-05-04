@@ -371,6 +371,18 @@ class VentasController extends Controller
             // No aplicar filtros adicionales para administradores
         }
 
+        // Obtén la consulta SQL sin valores
+        // $sql = $query->toSql();
+
+        // Obtén los valores de los parámetros
+        // $bindings = $query->getBindings();
+
+        // Reemplaza los marcadores de posición con los valores
+        // $sqlWithBindings = vsprintf(str_replace('?', '%s', $sql), $bindings);
+
+        // Muestra la consulta SQL completa con valores
+        // dd('query: ', $sqlWithBindings);
+
         return Excel::download(new VentasExport($start_date, $end_date, $query), 'ventas.xlsx');
     }
 
