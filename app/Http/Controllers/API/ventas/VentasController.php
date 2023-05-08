@@ -168,11 +168,8 @@ class VentasController extends Controller
 
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
-            // Si la última gestión es 'VENTA', no permite modificar el campo UGestion
-            if (($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION' && $venta->UGestion == null) || $venta->UGestion === 'RENOVACION') {
-                if ($venta->UGestion !== 'RENOVACION') {
-                    $venta->UGestion = $request->UGestion;
-                }
+            // Si la última gestión es 'VENTA'y 'RENOVACION', no permite modificar el campo UGestion
+            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION') {
                 $venta->Fpreventa = Carbon::now();
     
                 // Guarda los valores actuales de MesBdd y AnioBdd antes de actualizar el registro
@@ -185,10 +182,30 @@ class VentasController extends Controller
                 $venta->MesBdd = $currentMesBdd;
                 $venta->AnioBdd = $currentAnioBdd;
             } else {
-                return response()->json([
-                    'code' => 400,
-                    'message' => 'Éste registro ya fue marcado como ' . $venta->UGestion,
-                ]);
+                if ($request->Codificacion === 'RENOVACION') {
+                    // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
+                    $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
+                        ->where('tVenta', 'RENOVACION')
+                        ->first();
+    
+                    if ($ventaRenovacion) {
+                        $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
+                        $venta->tVenta = 'RENOVACION';
+                    } else {
+                        $venta = new Venta;
+                        $venta->contactId = $request->contactId;
+                        $venta->UGestion = 'RENOVADA';
+                        $venta->Fpreventa = Carbon::now();
+                        $venta->tVenta = 'RENOVACION';
+    
+                        $venta->fill($request->all());
+                    }
+                } else {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Éste registro ya fue marcado como ' . $venta->UGestion,
+                    ]);
+                }
             }
         } else {
             // Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta
@@ -241,28 +258,6 @@ class VentasController extends Controller
                         Log::info('Si no hay una venta existente con el mismo nSerie y tVenta VENTA NUEVA, asigna tVenta enviado en la solicitud');
                         $venta->tVenta = 'VENTA NUEVA';
                     }
-                }
-            } elseif ($request->Codificacion === 'RENOVACION') {
-                // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
-                Log::info('Busca si existe una venta de renovación con el mismo nPoliza y tVenta RENOVACION');
-                $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
-                    ->where('tVenta', 'RENOVACION')
-                    ->first();
-                Log::info('ventaRenovacion');
-
-                if ($ventaRenovacion) {
-                    Log::info('Entro en la renovacion');
-                    $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
-                    $venta->tVenta = 'RENOVACION';
-                } else {
-                    Log::info('No entro en la renovacion');
-                    $venta = new Venta;
-                    $venta->contactId = $request->contactId;
-                    $venta->UGestion = 'RENOVADA';
-                    $venta->Fpreventa = Carbon::now();
-                    $venta->tVenta = 'RENOVACION';
-
-                    $venta->fill($request->all());
                 }
             }
         }
