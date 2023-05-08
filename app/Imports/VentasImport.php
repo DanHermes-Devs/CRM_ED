@@ -3,7 +3,12 @@
 namespace App\Imports;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Venta;
+use App\Models\Receipt;
+use Illuminate\Support\Facades\Log;
+
+// Agrega estas dos líneas al comienzo del archivo
 use Maatwebsite\Excel\Concerns\ToModel;
 use Carbon\Exceptions\InvalidFormatException;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -24,7 +29,7 @@ class VentasImport implements ToModel, WithValidation
             return null;
         }
 
-        return new Venta([
+        $venta = new Venta([
             'id' => $row[0],
             'contactId' => $row[1],
             'UGestion' => $row[2],
@@ -89,6 +94,58 @@ class VentasImport implements ToModel, WithValidation
             'EstadoDePago' => $row[61],
             'created_at' => Carbon::now()
         ]);
+
+        $venta->save();
+
+        // Verificamos si ya existen recibos de pago para la venta
+        $recibos = Receipt::where('venta_id', $venta->id)->count();
+
+        // Si no hay recibos existentes, crea nuevos recibos
+        if ($recibos === 0) {
+            // Creamos un arreglo con las frecuencias de pago
+            $frecuenciaPagos = [
+                'ANUAL' => 1,
+                'SEMESTRAL' => 2,
+                'TRIMESTRAL' => 4,
+                'CUATRIMESTRAL' => 3,
+                'MENSUAL' => 12
+            ];
+
+            // Convertimos frecuenciaPago en Mayusculas
+            $frecuenciaPago = strtoupper($venta->FrePago);
+
+            // Verificar si la frecuencia de pago es válida
+            if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => 'Frecuencia de pago inválida'
+                ]);
+            }
+            
+            $numRecibos = $frecuenciaPagos[$frecuenciaPago];
+
+            for ($i = 1; $i <= $numRecibos; $i++) {
+                $finVigencia = Carbon::parse($venta->FinVigencia);
+                $fechaProximoPago = $finVigencia->addMonths($i);
+
+                $receipt = new Receipt([
+                    'venta_id' => $venta->id,
+                    'num_pago' => $i,
+                    'fre_pago' => $venta->FrePago,
+                    'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
+                    'fecha_pago_real' => $venta->Fpreventa,
+                    'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
+                    'agente_cob_id' => null,
+                    'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
+                    'estado_pago' => 'PENDIENTE'
+                ]);
+
+                $receipt->save();
+            }
+        }
+
+        // Devuelve la instancia de Venta
+        return $venta;
     }
 
     /**
