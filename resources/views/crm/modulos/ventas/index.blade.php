@@ -59,7 +59,7 @@
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
-                            @if (!auth()->user()->hasRole('Agente Ventas Nuevas'))
+                            @if (!auth()->user()->hasRole('Agente de Ventas'))
                                 <div class="form-group">
                                     <label for="fecha_inicio">Fecha inicio:</label>
                                     <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control">
@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (!auth()->user()->hasRole('Agente Ventas Nuevas'))
+                            @if (!auth()->user()->hasRole('Agente de Ventas'))
                                 <div class="row">
                                     <div class="col-12 col-md-4">
                                         <div class="mb-3">
