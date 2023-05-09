@@ -165,7 +165,7 @@ class CreateReceiptsForSpecificSales extends Command
                         'fre_pago' => $venta->FrePago,
                         'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
                         'fecha_pago_real' => $venta->Fpreventa,
-                        'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
+                        'prima_neta_cobrada' => $venta->PncTotal,
                         'agente_cob_id' => null,
                         'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
                         'estado_pago' => 'PENDIENTE'
