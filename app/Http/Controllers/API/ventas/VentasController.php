@@ -130,7 +130,10 @@ class VentasController extends Controller
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
             // Si la última gestión es 'VENTA'y 'RENOVACION', no permite modificar el campo UGestion
-            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION') {
+            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION' && $venta->UGestion === null) {
+                if ($venta->UGestion !== 'RENOVACION') {
+                    $venta->UGestion = $request->UGestion;
+                }
                 $venta->Fpreventa = Carbon::now();
     
                 // Guarda los valores actuales de MesBdd y AnioBdd antes de actualizar el registro
@@ -415,42 +418,40 @@ class VentasController extends Controller
             // Convertimos frecuenciaPago en Mayusculas
             $frecuenciaPago = strtoupper($frecuenciaPago);
 
-            // Verificar si la frecuencia de pago es válida
             if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
-                return response()->json([
-                    'code' => 400,
-                    'message' => 'Frecuencia de pago inválida'
-                ]);
-            }
-            
-            $numRecibos = $frecuenciaPagos[$frecuenciaPago];
-            $usuario = User::where('usuario', $venta->LoginOcm)->first();
-
-            if (!$usuario) {
-                // Mandamos un mensaje de error en el que digamos que el usuario no existe
-                return response()->json([
-                    'code' => 500,
-                    'message' => 'El usuario no existe'
-                ]);
+                $frecuenciaPago = null;
             }
 
-            for ($i = 1; $i <= $numRecibos; $i++) {
-                $finVigencia = Carbon::parse($venta->FinVigencia);
-                $fechaProximoPago = $finVigencia->addMonths($i);
+            if ($frecuenciaPago !== null) {
+                $numRecibos = $frecuenciaPagos[$frecuenciaPago];
+                $usuario = User::where('usuario', $venta->LoginOcm)->first();
 
-                $receipt = new Receipt([
-                    'venta_id' => $venta->id,
-                    'num_pago' => $i,
-                    'fre_pago' => $venta->FrePago,
-                    'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
-                    'fecha_pago_real' => $venta->Fpreventa,
-                    'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
-                    'agente_cob_id' => $i == 1 ? $usuario->id : null,
-                    'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                    'estado_pago' => 'PENDIENTE'
-                ]);
+                if (!$usuario) {
+                    // Mandamos un mensaje de error en el que digamos que el usuario no existe
+                    return response()->json([
+                        'code' => 500,
+                        'message' => 'El usuario no existe'
+                    ]);
+                }
 
-                $receipt->save();
+                for ($i = 1; $i <= $numRecibos; $i++) {
+                    $finVigencia = Carbon::parse($venta->FinVigencia);
+                    $fechaProximoPago = $finVigencia->addMonths($i);
+
+                    $receipt = new Receipt([
+                        'venta_id' => $venta->id,
+                        'num_pago' => $i,
+                        'fre_pago' => $venta->FrePago,
+                        'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
+                        'fecha_pago_real' => $venta->Fpreventa,
+                        'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
+                        'agente_cob_id' => $i == 1 ? $usuario->id : null,
+                        'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
+                        'estado_pago' => 'PENDIENTE'
+                    ]);
+
+                    $receipt->save();
+                }      
             }
         }
     }

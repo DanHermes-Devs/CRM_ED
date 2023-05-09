@@ -61,7 +61,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <form class="d-flex align-items-center gap-2">
+                        <form class="d-flex align-items-center flex-column flex-md-row gap-2">
                             <div class="mb-3">
                                 <label for="tipo_recibos">Tipo de recibos:</label>
                                 <select name="tipo_recibos" id="tipo_recibos" class="form-select">
@@ -69,6 +69,19 @@
                                         recibos</option>
                                     <option value="MIS_RECIBOS" {{ $tipoRecibos === 'MIS_RECIBOS' ? 'selected' : '' }}>Mis
                                         recibos</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecha_pago">Fecha de Pago:</label>
+                                <input type="date" name="fecha_pago" class="form-control" id="fecha_pago">
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado_pago">Estado de Pago:</label>
+                                <select name="estado_pago" id="estado_pago" class="form-select">
+                                    <option>-- Selecciona una opción --</option>
+                                    <option value="PAGADO" {{ $tipoRecibos === 'TODOS' ? 'selected' : '' }}>PAGADO</option>
+                                    <option value="PENDIENTE" {{ $tipoRecibos === 'MIS_RECIBOS' ? 'selected' : '' }}>PENDIENTE</option>
+                                    <option value="LIQUIDADO" {{ $tipoRecibos === 'MIS_RECIBOS' ? 'selected' : '' }}>LIQUIDADO</option>
                                 </select>
                             </div>
                             <button type="submit" id="buscarDatos" class="btn btn-primary mt-2">Filtrar</button>
@@ -160,6 +173,8 @@
                 $('#tabla_cobranza').show();
 
                 let tipoRecibos = $('#tipo_recibos').val();
+                let fecha_pago = $('#fecha_pago').val();
+                let estado_pago = $('#estado_pago').val();
 
                 $('#tabla_cobranza').DataTable({
                     processing: true,
@@ -170,7 +185,9 @@
                         url: "{{ route('cobranza.index') }}",
                         type: 'GET',
                         data: {
-                            tipo_recibos: tipoRecibos
+                            tipo_recibos: tipoRecibos,
+                            fecha_pago: fecha_pago,
+                            estado_pago: estado_pago
                         }
                     },
                     columns: [{

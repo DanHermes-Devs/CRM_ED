@@ -180,24 +180,9 @@
                                         </div>
                                     </div>
                                 </div>
-<<<<<<< Updated upstream
-                                <div class="col-12 col-md-4">
-                                    <div class="mb-3">
-                                        <label for="agente">Agente:</label>
-                                        {{-- Mostramos un select con los usuarios que tienen rol agente --}}
-                                        <select name="agente" id="agente" class="form-select">
-                                            <option value="">-- Selecciona --</option>
-                                            @foreach ($agentes as $agente)
-                                                <option value="{{ $agente->id }}">{{ $agente->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
+
                             @if (!auth()->user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones']))
-=======
-                            
->>>>>>> Stashed changes
                                 <div class="row">
                                     <div class="col-12 col-md-4">
                                         <div class="mb-3">

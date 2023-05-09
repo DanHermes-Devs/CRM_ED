@@ -21,10 +21,12 @@ class CobranzaController extends Controller
         $agentes_ventas = User::whereHas('roles', function ($q) {
             $q->where('name', 'Agente de Cobranza')
               ->orWhere('name', 'Supervisor');
-        })->get();        
+        })->get();
 
         $tipoRecibos = $request->get('tipo_recibos', 'TODOS');
-        $recibos = $this->filtrarRecibos($tipoRecibos);
+        $estado_pago = $request->get('estado_pago');
+        $fecha_pago = $request->get('fecha_pago');
+        $recibos = $this->filtrarRecibos($tipoRecibos, $estado_pago, $fecha_pago);
 
         // Relacionamos los recibos con los usuarios para sacar el nombre del agente
         $recibos->load('venta');
@@ -69,10 +71,11 @@ class CobranzaController extends Controller
         return view('crm.modulos.cobranza.index', compact('recibos', 'tipoRecibos', 'agentes_ventas'));
     }
 
-    private function filtrarRecibos($tipoRecibos)
+    private function filtrarRecibos($tipoRecibos, $estado_pago, $fecha_pago)
     {
         $query = Receipt::with('agente_cob')
-                        ->where('estado_pago', 'PENDIENTE')
+                        ->where('estado_pago', $estado_pago)
+                        ->where('fecha_proximo_pago', $fecha_pago)
                         ->orderBy('fecha_proximo_pago', 'asc');
 
         if ($tipoRecibos === 'MIS_RECIBOS') {
