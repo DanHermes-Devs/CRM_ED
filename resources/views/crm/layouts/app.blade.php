@@ -178,11 +178,13 @@
                                                 Ventas
                                             </a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
-                                                Cobranza
-                                            </a>
-                                        </li>
+                                        @if (Auth::user()->hasRole('Agente de Cobranza'))
+                                            <li class="nav-item">
+                                                <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
+                                                    Cobranza
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>
