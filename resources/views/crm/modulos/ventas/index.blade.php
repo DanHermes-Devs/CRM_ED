@@ -48,12 +48,14 @@
         <div class="col-xl-12">
             <div class="card crm-widget py-4 px-3">
                 <div class="card-body">
-                    <div class="d-flex justify-content-end">
-                        <a href="{{ route('ventas.formImportVentas') }}" class="btn btn-warning d-flex align-items-center justify-content-center gap-1 fs-5">
-                            <i class="ri-file-excel-2-line"></i>
-                            Importar CSV
-                        </a>
-                    </div>
+                    @if (Auth::user()->hasRole('Administrador'))
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('ventas.formImportVentas') }}" class="btn btn-warning d-flex align-items-center justify-content-center gap-1 fs-5">
+                                <i class="ri-file-excel-2-line"></i>
+                                Importar CSV
+                            </a>
+                        </div>
+                    @endif
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
