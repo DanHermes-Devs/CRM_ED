@@ -18,9 +18,10 @@ class CobranzaController extends Controller
      */
     public function index(Request $request)
     {
-        $agentes_ventas = User::whereHas('roles', function($q){
-            $q->where('name', 'Agente de Cobranza');
-        })->get();
+        $agentes_ventas = User::whereHas('roles', function ($q) {
+            $q->where('name', 'Agente de Cobranza')
+              ->orWhere('name', 'Supervisor');
+        })->get();        
 
         $tipoRecibos = $request->get('tipo_recibos', 'TODOS');
         $recibos = $this->filtrarRecibos($tipoRecibos);
@@ -33,6 +34,7 @@ class CobranzaController extends Controller
             return DataTables()
                 ->of($recibos)
                 ->addColumn('agente_cob_id', function($data){
+                    $button = '';
                     if ($data->agente_cob_id === null) {
                         return '<span class="badge rounded-pill badge-soft-danger badge-border">Sin asignar</span>';
                     }else{
@@ -41,6 +43,8 @@ class CobranzaController extends Controller
                     }
                 })
                 ->addColumn('action', function($data){
+                    $button = ''; // Inicializa la variable $button aquí
+                
                     // Si el recibo no tiene agente de cobranza, se le puede asignar, asi mismo ponemos un boton para cancelar el recibo
                     if ($data->agente_cob_id === null) {
                         if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza')) {

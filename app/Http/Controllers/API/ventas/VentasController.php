@@ -29,24 +29,6 @@ class VentasController extends Controller
         $this->middleware('auth')->except('store');
     }
 
-    public function applyRoleFilters($query, $rol)
-    {
-        if ($rol == 'Agente Ventas Nuevas') {
-            $query->where('tVenta', 'VENTA NUEVA')
-                ->where('UGestion', 'PREVENTA');
-        } elseif ($rol == 'Agente Renovaciones') {
-            $query->where('tVenta', 'RENOVACIONES')
-                ->where(function ($q) {
-                    $q->where('UGestion', '')->orWhereNull('UGestion');
-                });
-        } elseif ($rol == 'Agente Preventa') {
-            $query->where('UGestion', 'PREVENTA');
-        } elseif ($rol == 'Agente Cobranza') {
-            $query->where('UGestion', 'COBRANZA');
-        }
-
-        return $query;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -79,21 +61,6 @@ class VentasController extends Controller
         // Filtramos por agente
         $usuario = User::find($request->agente);
 
-        if ($usuario) {
-            $query->where('LoginIntranet', $usuario->usuario);
-        } else {
-            $rol = $request->rol;
-
-            if (in_array($rol, ['Agente Ventas Nuevas', 'Agente Renovaciones', 'Agente Preventa', 'Agente Cobranza'])) {
-                $query = $this->applyRoleFilters($query, $rol);
-                $query->where('LoginIntranet', Auth::user()->usuario);
-            } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
-                // No aplicar filtros adicionales para supervisores y coordinadores
-            } else {
-                // No aplicar filtros adicionales para administradores
-            }
-        }
-
         // Búsqueda por tipo de venta
         if ($request->filled('tipo_venta')) {
             $query->where('tVenta', $request->tipo_venta);
@@ -109,22 +76,16 @@ class VentasController extends Controller
                 ->where('MesBdd', $mes);
         }
 
-        Log::info('Query: ' . $query->toSql());
-        Log::info('Bindings: ' . json_encode($query->getBindings()));
-
         $resultados = $query->get();
 
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
-        if ($rol == 'Agente Ventas Nuevas') {
-            $resultados = $resultados->where('tVenta', 'VENTA NUEVA')
+        if ($rol == 'Agente de Ventas') {
+            $resultados = $resultados->where('tVenta', 'VENTA')
                 ->where('UGestion', 'PREVENTA');
         } elseif ($rol == 'Agente Renovaciones') {
-            $resultados = $resultados->where('tVenta', 'RENOVACION')
-                ->where(function ($q) {
-                    $q->where('UGestion', '')->orWhereNull('UGestion');
-                });
+            $resultados = $resultados->where('tVenta', 'RENOVACION');
         } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
         } else {

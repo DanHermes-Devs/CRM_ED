@@ -59,7 +59,7 @@
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
-                            @if (!auth()->user()->hasRole('Agente de Ventas'))
+                            @if (!auth()->user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones']))
                                 <div class="form-group">
                                     <label for="fecha_inicio">Fecha inicio:</label>
                                     <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control">
@@ -136,8 +136,12 @@
                                         <label for="tipo_venta">Tipo de venta:</label>
                                         <select name="tipo_venta" id="tipo_venta" class="form-select">
                                             <option value="">-- Selecciona --</option>
-                                            <option value="VENTA NUEVA">Venta nueva</option>
-                                            <option value="RENOVACION">Renovaciones</option>
+                                            @if (!auth()->user()->hasAnyRole(['Agente de Ventas']))
+                                                <option value="VENTA">Venta nueva</option>
+                                            @endif
+                                            @if (!auth()->user()->hasAnyRole(['Agente Renovaciones']))
+                                                <option value="RENOVACION">Renovaciones</option>
+                                            @endif
                                             <option value="POSIBLE DUPLICIDAD">Posible Duplicidad</option>
                                         </select>
                                     </div>
@@ -149,19 +153,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <div class="mb-3">
-                                        <label for="supervisor">Supervisor:</label>
-                                        {{-- Mostramos un select con los usuarios que tienen rol superviso --}}
-                                        <select name="supervisor" id="supervisor" class="form-select">
-                                            <option value="">-- Selecciona --</option>
-                                            @foreach ($supervisores as $supervisor)
-                                                <option value="{{ $supervisor->name }}">{{ $supervisor->name }}</option>
-                                            @endforeach
-                                        </select>
+                            @if (!auth()->user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones']))
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <div class="mb-3">
+                                            <label for="supervisor">Supervisor:</label>
+                                            {{-- Mostramos un select con los usuarios que tienen rol superviso --}}
+                                            <select name="supervisor" id="supervisor" class="form-select">
+                                                <option value="">-- Selecciona --</option>
+                                                @foreach ($supervisores as $supervisor)
+                                                    <option value="{{ $supervisor->name }}">{{ $supervisor->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="mb-3">
+                                            <label for="agente">Agente:</label>
+                                            {{-- Mostramos un select con los usuarios que tienen rol agente --}}
+                                            <select name="agente" id="agente" class="form-select">
+                                                <option value="">-- Selecciona --</option>
+                                                @foreach ($agentes as $agente)
+                                                    <option value="{{ $agente->id }}">{{ $agente->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
+<<<<<<< Updated upstream
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
                                         <label for="agente">Agente:</label>
@@ -176,6 +195,9 @@
                                 </div>
                             </div>
                             @if (!auth()->user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones']))
+=======
+                            
+>>>>>>> Stashed changes
                                 <div class="row">
                                     <div class="col-12 col-md-4">
                                         <div class="mb-3">

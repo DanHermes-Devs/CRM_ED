@@ -123,7 +123,7 @@ class CreateReceiptsForSpecificSales extends Command
         ];
 
         foreach ($specificSalesIds as $saleId) {
-            $venta = Venta::where('contactId', $saleId)->first();
+            $venta = Venta::where('contactId', $saleId)->first(); 
 
             if (!$venta) {
                 $this->error("Venta con ContactID {$saleId} no encontrada.");
@@ -159,6 +159,8 @@ class CreateReceiptsForSpecificSales extends Command
                     $finVigencia = Carbon::parse($venta->FinVigencia);
                     $fechaProximoPago = $finVigencia->addMonths($i);
 
+                    // dd($venta->contactId);
+
                     $receipt = new Receipt([
                         'venta_id' => $venta->id,
                         'num_pago' => $i,
@@ -168,7 +170,8 @@ class CreateReceiptsForSpecificSales extends Command
                         'prima_neta_cobrada' => $venta->PncTotal,
                         'agente_cob_id' => null,
                         'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                        'estado_pago' => 'PENDIENTE'
+                        'estado_pago' => 'PENDIENTE',
+                        'contactId' => $venta->contactId,
                     ]);
 
                     $receipt->save();

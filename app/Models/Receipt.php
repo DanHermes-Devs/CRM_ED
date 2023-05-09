@@ -21,7 +21,8 @@ class Receipt extends Model
         'prima_neta_cobrada',
         'agente_cob_id',
         'tipo_pago',
-        'estado_pago'
+        'estado_pago',
+        'contactId'
     ];
 
     public function venta()

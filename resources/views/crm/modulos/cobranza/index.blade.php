@@ -174,7 +174,7 @@
                         }
                     },
                     columns: [{
-                            data: 'venta.contactId',
+                            data: 'contactId',
                             name: 'contactId'
                         },
                         {
