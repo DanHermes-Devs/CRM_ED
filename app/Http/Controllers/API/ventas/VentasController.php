@@ -148,7 +148,7 @@ class VentasController extends Controller
             } else {
                 if ($request->Codificacion === 'RENOVACION') {
                     // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
-                    $ventaRenovacion = Venta::where('nPoliza', $request->nPoliza)
+                    $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                         ->where('tVenta', 'RENOVACION')
                         ->first();
     

@@ -62,7 +62,7 @@
                             </div>
                         @endif
                         <form class="d-flex align-items-center flex-column flex-md-row gap-2">
-                            <div class="mb-3">
+                            <div class="mb-3 w-100">
                                 <label for="tipo_recibos">Tipo de recibos:</label>
                                 <select name="tipo_recibos" id="tipo_recibos" class="form-select">
                                     <option value="TODOS" {{ $tipoRecibos === 'TODOS' ? 'selected' : '' }}>Todos los
@@ -71,20 +71,20 @@
                                         recibos</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="fecha_pago">Fecha de Pago:</label>
-                                <input type="date" name="fecha_pago" class="form-control" id="fecha_pago">
+                            <div class="mb-3 w-100">
+                                <label for="fecha_pago_1">Rango de fecha:</label>
+                                <input type="text" name="fecha_pago_1" class="form-control" id="fecha_pago_1">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 w-100">
                                 <label for="estado_pago">Estado de Pago:</label>
                                 <select name="estado_pago" id="estado_pago" class="form-select">
-                                    <option>-- Selecciona una opción --</option>
-                                    <option value="PAGADO" {{ $tipoRecibos === 'TODOS' ? 'selected' : '' }}>PAGADO</option>
-                                    <option value="PENDIENTE" {{ $tipoRecibos === 'MIS_RECIBOS' ? 'selected' : '' }}>PENDIENTE</option>
-                                    <option value="LIQUIDADO" {{ $tipoRecibos === 'MIS_RECIBOS' ? 'selected' : '' }}>LIQUIDADO</option>
+                                    <option value="TODOS">-- Selecciona una opción --</option>
+                                    <option value="PAGADO">PAGADO</option>
+                                    <option value="PENDIENTE">PENDIENTE</option>
+                                    <option value="LIQUIDADO">LIQUIDADO</option>
                                 </select>
                             </div>
-                            <button type="submit" id="buscarDatos" class="btn btn-primary mt-2">Filtrar</button>
+                            <button type="submit" id="buscarDatos" class="btn btn-primary mt-2 w-100">Filtrar</button>
                         </form>
 
                         <table class="table table-middle table-nowrap mb-0" id="tabla_cobranza">
@@ -166,6 +166,24 @@
 
     <script>
         $(document).ready(function() {
+            var start_date = null;
+            var end_date = null;
+
+            $('#fecha_pago_1').daterangepicker({
+                maxSpan: { days: 7 },
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                },
+            });
+
+            $('input[name="fecha_pago_1"]').on('apply.daterangepicker', function(ev, picker) {
+                // Almacena las fechas seleccionadas en las variables
+                start_date = picker.startDate.format('YYYY-MM-DD');
+                end_date = picker.endDate.format('YYYY-MM-DD');
+            });
+
             var usuarioAutenticadoId = "{{ auth()->user()->id }}";
             $('body').on('click', '#buscarDatos', function(e) {
                 e.preventDefault();
@@ -173,7 +191,8 @@
                 $('#tabla_cobranza').show();
 
                 let tipoRecibos = $('#tipo_recibos').val();
-                let fecha_pago = $('#fecha_pago').val();
+                let fecha_pago_1 = $('#fecha_pago_1').val();
+                let fecha_pago_2 = $('#fecha_pago_2').val();
                 let estado_pago = $('#estado_pago').val();
 
                 $('#tabla_cobranza').DataTable({
@@ -186,16 +205,17 @@
                         type: 'GET',
                         data: {
                             tipo_recibos: tipoRecibos,
-                            fecha_pago: fecha_pago,
+                            fecha_pago_1: start_date,
+                            fecha_pago_2: end_date,
                             estado_pago: estado_pago
                         }
                     },
                     columns: [{
-                            data: 'contactId',
+                            data: 'venta.contactId',
                             name: 'contactId'
                         },
                         {
-                            data: 'venta.NombreDeCliente',
+                            data: 'venta.Nombre',
                             name: 'NombreDeCliente'
                         },
                         {

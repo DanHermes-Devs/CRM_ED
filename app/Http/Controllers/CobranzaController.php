@@ -25,8 +25,9 @@ class CobranzaController extends Controller
 
         $tipoRecibos = $request->get('tipo_recibos', 'TODOS');
         $estado_pago = $request->get('estado_pago');
-        $fecha_pago = $request->get('fecha_pago');
-        $recibos = $this->filtrarRecibos($tipoRecibos, $estado_pago, $fecha_pago);
+        $start_date = $request->get('fecha_pago_1');
+        $end_date = $request->get('fecha_pago_2');
+        $recibos = $this->filtrarRecibos($tipoRecibos, $estado_pago, $start_date, $end_date);
 
         // Relacionamos los recibos con los usuarios para sacar el nombre del agente
         $recibos->load('venta');
@@ -71,12 +72,26 @@ class CobranzaController extends Controller
         return view('crm.modulos.cobranza.index', compact('recibos', 'tipoRecibos', 'agentes_ventas'));
     }
 
-    private function filtrarRecibos($tipoRecibos, $estado_pago, $fecha_pago)
+    private function filtrarRecibos($tipoRecibos, $estado_pago, $start_date, $end_date)
     {
-        $query = Receipt::with('agente_cob')
-                        ->where('estado_pago', $estado_pago)
-                        ->where('fecha_proximo_pago', $fecha_pago)
-                        ->orderBy('fecha_proximo_pago', 'asc');
+        $query = Receipt::with('agente_cob');
+
+        // Aplica el filtro de estado_pago solo si se proporciona
+        if (!empty($estado_pago)) {
+            if (strtoupper($estado_pago) !== 'TODOS') {
+                $query->where('estado_pago', $estado_pago);
+            }
+        } else {
+            // Si estado_pago es vacío, considera todos los posibles estados
+            $query->whereIn('estado_pago', ['LIQUIDADO', 'PENDIENTE', 'PAGADO']);
+        }
+
+        // Aplica el filtro de fecha_pago solo si se proporciona
+        if (!empty($start_date) && !empty($end_date)) {
+            $query->whereBetween('fecha_pago_real', [$start_date, $end_date]);
+        }
+
+        $query->orderBy('fecha_pago_real', 'asc');
 
         if ($tipoRecibos === 'MIS_RECIBOS') {
             $agente_cob_id = Auth::user()->id;
