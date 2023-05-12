@@ -354,7 +354,7 @@
                         target: 2,
                         render: function(data, type, row) {
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null'){
+                            if(data == 'null' || data == 'NULL'){
                                 return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">No tiene ningún dato</span>`;
                             }else {
                                 return `<span class="badge rounded-pill badge-soft-success badge-border text-primary">${data}</span>`;
