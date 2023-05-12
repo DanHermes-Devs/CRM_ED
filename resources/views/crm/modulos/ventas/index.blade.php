@@ -143,6 +143,7 @@
                                                 <option value="RENOVACION">Renovaciones</option>
                                             @endif
                                             <option value="POSIBLE DUPLICIDAD">Posible Duplicidad</option>
+                                            <option value="ULTIMA GESTION">ÚLTIMA GESTIÓN</option>
                                         </select>
                                     </div>
                                 </div>
@@ -246,10 +247,18 @@
                     <table class="table table-middle table-nowrap mb-0" id="tabla_ventas">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Tipo Venta</th>
+                                <th>ContactID</th>
+                                <th>Tipo de Venta</th>
+                                <th>Última Gestión</th>
+                                <th>Póliza</th>
+                                <th>Aseguradora</th>
+                                <th>Prima Total</th>
+                                <th>Frecuencia de Pago</th>
+                                <th>No. Serie</th>
                                 <th>Fecha Preventa</th>
+                                <th>Agente</th>
+                                <th>Supervisor</th>
+                                <th>Fecha de Inicio de Vigencia</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -326,11 +335,32 @@
                     },
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'Nombre', name: 'Nombre'},
+                    {data: 'contactId', name: 'contactId'},
                     {data: 'tVenta', name: 'tVenta'},
+                    {data: 'UGestion', name: 'UGestion'},
+                    {data: 'nPoliza', name: 'nPoliza'},
+                    {data: 'Aseguradora', name: 'Aseguradora'},
+                    {data: 'PncTotal', name: 'PncTotal'},
+                    {data: 'FrePago', name: 'FrePago'},
+                    {data: 'nSerie', name: 'nSerie'},
                     {data: 'Fpreventa', name: 'Fpreventa'},
+                    {data: 'LoginIntranet', name: 'LoginIntranet'},
+                    {data: 'Supervisor', name: 'Supervisor'},
+                    {data: 'fvencimiento', name: 'fvencimiento'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                ],
+                columnDefs: [
+                    {
+                        target: 2,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null'){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">No tiene ningún dato</span>`;
+                            }else {
+                                return `<span class="badge rounded-pill badge-soft-success badge-border text-primary">${data}</span>`;
+                            }
+                        }
+                    },
                 ],
                 language: idiomaDataTable
             });

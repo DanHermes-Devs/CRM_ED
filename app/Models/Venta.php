@@ -76,7 +76,10 @@ class Venta extends Model
         'EstadoDePago'
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'FinVigencia'
+    ];
 
     // Relacion con Receipt
     public function receipts()
