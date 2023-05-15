@@ -50,6 +50,50 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="idload" class="form-label">ID Load</label>
+                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control @error('idload') is-invalid @enderror" value="{{ $cronJob->idload }}">
+
+                            @error('idload')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motor_a" class="form-label">Motor A</label>
+                            <input type="text" name="motor_a" id="motor_a" class="form-control @error('motor_a') is-invalid @enderror" value="{{ $cronJob->motor_a }}">
+
+                            @error('motor_a')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motor_b" class="form-label">Motor B</label>
+                            <input type="text" name="motor_b" id="motor_b" class="form-control @error('motor_b') is-invalid @enderror" value="{{ $cronJob->motor_b }}">
+
+                            @error('motor_b')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motor_c" class="form-label">Motor C</label>
+                            <input type="text" name="motor_c" id="motor_c" class="form-control @error('motor_c') is-invalid @enderror" value="{{ $cronJob->motor_c }}">
+
+                            @error('motor_c')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="frecuency" class="form-label">Frecuencia de ejecución</label>
                             <select name="frequency" id="frecuency" class="form-select @error ('frequency') is-invalid @enderror">
                                 <option>-- Selecciona una opción --</option>

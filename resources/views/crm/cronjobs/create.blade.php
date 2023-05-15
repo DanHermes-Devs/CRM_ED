@@ -29,22 +29,73 @@
                         @csrf
                         <div class="mb-3">
                             <label for="name_cronJob" class="form-label">Nombre de Cron Job</label>
-                            <input type="text" name="name_cronJob" id="name_cronJob" class="form-control" placeholder="Nombre de Cron Job">
+                            <input type="text" name="name_cronJob" id="name_cronJob" class="form-control @error ('name_cronJob') is-invalid @enderror" placeholder="Nombre de Cron Job">
+
+                            @error('name_cronJob')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="skilldata" class="form-label">Nombre Skilldata (Campaña)</label>
-                            <input type="text" name="skilldata" id="skilldata" class="form-control" placeholder="Nombre Skilldata">
+                            <input type="text" name="skilldata" id="skilldata" class="form-control @error ('skilldata') is-invalid @enderror" placeholder="Nombre Skilldata (Campaña)">
+
+                            @error('skilldata')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         
                         <div class="mb-3">
                             <label for="idload" class="form-label">ID Load</label>
-                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control" placeholder="ID Load">
+                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control @error ('idload') is-invalid @enderror" placeholder="ID Load">
+
+                            @error('idload')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motor_a" class="form-label">Motor A</label>
+                            <input type="text" name="motor_a" id="motor_a" class="form-control @error ('motor_a') is-invalid @enderror" placeholder="Motor A">
+
+                            @error('motor_a')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motor_b" class="form-label">Motor B</label>
+                            <input type="text" name="motor_b" id="motor_b" class="form-control @error ('motor_b') is-invalid @enderror" placeholder="Motor B">
+
+                            @error('motor_b')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motor_c" class="form-label">Motor C</label>
+                            <input type="text" name="motor_c" id="motor_c" class="form-control @error ('motor_c') is-invalid @enderror" placeholder="Motor C">
+
+                            @error('motor_c')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="frecuency" class="form-label">Frecuencia de ejecución</label>
-                            <select name="frequency" id="frecuency" class="form-select">
+                            <select name="frequency" id="frecuency" class="form-select @error ('frequency') is-invalid @enderror">
                                 <option>-- Selecciona una opción --</option>
                                 <option value="everyMinute">everyMinute - Cada minuto</option>
                                 <option value="everyFiveMinutes">everyFiveMinutes - Cada 5 minutos</option>
@@ -59,7 +110,13 @@
                                 <option value="monthly">monthly - Cada mes</option>
                                 <option value="quarterly">quarterly - Cada trimestre</option>
                                 <option value="yearly">yearly - Cada año</option>
-                            </select>                            
+                            </select>
+
+                            @error('frequency')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar CronJob</button>

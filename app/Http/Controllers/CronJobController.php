@@ -51,22 +51,31 @@ class CronJobController extends Controller
             'name_cronJob' => 'required',
             'skilldata' => 'required',
             'idload' => 'required',
+            'motor_a' => 'required',
+            'motor_b' => 'required',
+            'motor_c' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
             'idload.required' => 'El idload data es requerido',
+            'motor_a.required' => 'El motor A es requerido',
+            'motor_b.required' => 'El motor B es requerido',
+            'motor_c.required' => 'El motor C es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
         if($validate->fails()){
-            return back()->with('errors', $validate->errors())->withInput();
+            return back()->withInput()->withErrors($validate);
         } else {
             $cronJob = new CronJobConfig;
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
             $cronJob->idload = $request->idload;
+            $cronJob->motor_a = $request->motor_a;
+            $cronJob->motor_b = $request->motor_b;
+            $cronJob->motor_c = $request->motor_c;
             $cronJob->frequency = $request->frequency;
             $cronJob->save();
             return redirect()->route('cronjobs.index')->with('success', 'Cron job creado correctamente');
@@ -113,11 +122,19 @@ class CronJobController extends Controller
         $validate = Validator::make($request->all(), [
             'name_cronJob' => 'required',
             'skilldata' => 'required',
+            'idload' => 'required',
+            'motor_a' => 'required',
+            'motor_b' => 'required',
+            'motor_c' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
+            'idload.required' => 'El idload data es requerido',
+            'motor_a.required' => 'El motor A es requerido',
+            'motor_b.required' => 'El motor B es requerido',
+            'motor_c.required' => 'El motor C es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
@@ -128,6 +145,10 @@ class CronJobController extends Controller
             // Si la validación no falla, actualizamos el cron job
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
+            $cronJob->idload = $request->idload;
+            $cronJob->motor_a = $request->motor_a;
+            $cronJob->motor_b = $request->motor_b;
+            $cronJob->motor_c = $request->motor_c;
             $cronJob->frequency = $request->frequency;
             $cronJob->save();
             return redirect()->route('cronjobs.index')->with('success', 'Cron job actualizado correctamente');

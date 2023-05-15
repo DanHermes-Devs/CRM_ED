@@ -19,6 +19,9 @@ class CreateCronJobConfigsTable extends Migration
             $table->string('skilldata');
             $table->string('idload');
             $table->string('frequency');
+            $table->string('motor_a');
+            $table->string('motor_b');
+            $table->string('motor_c');
             $table->timestamps();
         });
     }
