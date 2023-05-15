@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Venta;
 use Carbon\Carbon;
+use App\Models\Venta;
+use GuzzleHttp\Client;
+use App\Models\Receipt;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use SoapClient;
 
 class InsertDataToEndpoint extends Command
 {
@@ -16,8 +19,12 @@ class InsertDataToEndpoint extends Command
      * @var string
      */
     // protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value}';
-    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload? : Idload value}';
+    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload? : Idload value} {motor_a? : Motor A value} {motor_b? : Motor B value} {motor_c? : Motor C value}';
     protected $description = 'Insert data to the endpoint using a POST request';
+
+    protected $url = "http://b2c.marcatel.com.mx/MarcatelSMSWCF/ServicioInsertarSMS.svc/mex/";
+    protected $user = "RENOVACIONES_QUALITAS";
+    protected $password = "#T42AC30LzVu";
 
     /**
      * Create a new command instance.
@@ -42,6 +49,9 @@ class InsertDataToEndpoint extends Command
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
         $idload = $this->argument('idload');
+        $motor_a = $this->argument('motor_a');
+        $motor_b = $this->argument('motor_b');
+        $motor_c = $this->argument('motor_c');
 
         // Obtenemos todas las ventas
         $records = Venta::all();
@@ -88,7 +98,7 @@ class InsertDataToEndpoint extends Command
             }
         }
 
-        // Revisa las ventas para reciclaje
+        // // Revisa las ventas para reciclaje
         $this->checkForRecycling();
 
     }
@@ -141,7 +151,7 @@ class InsertDataToEndpoint extends Command
     }
 
     // Esta función privada llamada checkForRecycling no toma argumentos. (Validar si es necesario consumir algun endpoint)
-    private function checkForRecycling()
+    private function checkForRecycling($motor_a, $motor_b, $motor_c)
     {
         // Primero, se obtienen todos los registros de la tabla 'Venta' donde 'OCMSent' es verdadero
         // y 'FinVigencia' es menor que la fecha actual menos 60 días.
@@ -154,10 +164,10 @@ class InsertDataToEndpoint extends Command
             // Si 'UltimaGestion' no es igual a 'PROMESA DE PAGO' y 'UltimaGestion' no es igual a 'RENOVACIÓN'...
             if ($record->UltimaGestion !== 'PROMESA DE PAGO' && $record->UltimaGestion !== 'RENOVACIÓN') {
                 // Si 'Motor' es igual a 'B', se cambia a 'C'. De lo contrario, se cambia a 'B'.
-                if ($record->campana === 'B') {
-                    $record->campana = 'C';
+                if ($record->campana === $motor_b) {
+                    $record->campana = $motor_c;
                 } else {
-                    $record->campana = 'B';
+                    $record->campana = $motor_b;
                 }
                 // Finalmente, se guarda el registro con los cambios realizados.
                 $record->save();
@@ -165,4 +175,97 @@ class InsertDataToEndpoint extends Command
         }
     }
 
+    public function sendPaymentReminderSMS()
+    {
+        // Buscar en la base de datos los recibos cuyo estado de pago sea "PENDIENTE",
+        // que fueron creados hace 3 días o menos, y cuyo campo 'fecha_proximo_pago' no sea nulo.
+        $receipts = Receipt::where('estado_pago', 'PENDIENTE')
+            ->with('venta')
+            ->where('created_at', '<=', Carbon::now()->addDays(3))
+            ->get()
+            ->reject(function ($receipt) {
+                return is_null($receipt->fecha_proximo_pago);
+            });
+
+
+        foreach ($receipts as $receipt) {
+            $fecha_formateada = Carbon::parse($receipt->fecha_proximo_pago)->format('d-m-Y');
+
+            $smsText = "{$receipt->venta->Aseguradora}: Te recordamos que el pago de tu poliza #{$receipt->venta->nPoliza} se debe realizar el día {$fecha_formateada} si quieres pagarlo hoy llama al 5593445265. Conduce con precaución";
+
+            $xml_post_string = '
+                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <tem:EnviaSMS>
+                        <tem:Usuario>'.$this->user.'</tem:Usuario>
+                        <tem:Password>'.$this->password.'</tem:Password>
+                        <tem:Telefonos>5518840878</tem:Telefonos>
+                        <tem:Mensaje>'.$smsText.'</tem:Mensaje>
+                        <tem:codigoPais>52</tem:codigoPais>
+                        <tem:SMSDosVias>0</tem:SMSDosVias>
+                        <tem:Unicode>0</tem:Unicode>
+                        <tem:MensajeLargo>1</tem:MensajeLargo>
+                        <tem:ModoNotificacion>0</tem:ModoNotificacion>
+                        <tem:NotificarRespuestas>0</tem:NotificarRespuestas>
+                        <tem:FrecuenciaMinutos>0</tem:FrecuenciaMinutos>
+                        <tem:AntiSpam>0</tem:AntiSpam>
+                        <tem:NoTransaccion>0</tem:NoTransaccion>
+                        <tem:ValidaListaNegra>0</tem:ValidaListaNegra>
+                        <tem:ValidaZonaHoraria>0</tem:ValidaZonaHoraria>
+                    </tem:EnviaSMS>
+                </soapenv:Body>
+                </soapenv:Envelope>';
+
+            $headers = [
+                "Content-type: text/xml;charset=\"utf-8\"",
+                "Accept: text/xml",
+                "Cache-Control: no-cache",
+                "Pragma: no-cache",
+                "SOAPAction: http://tempuri.org/IInsertaSMS/EnviaSMS",
+                "Content-length: ".strlen($xml_post_string),
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+            curl_setopt($ch, CURLOPT_URL, $this->url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->user.":".$this->password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $response1 = str_replace("<soap:Body>", "", $response);
+            $response2 = str_replace("</soap:Body>", "", $response1);
+
+            // Parseamos la respuesta
+            $parser = simplexml_load_string($response2);
+            return $parser;
+        }
+    }
+
+    public function sendPaymentPendingRecordsToOCM($url, $skilldata, $idload)
+    {
+        $receipts = Receipt::where('estado_pago', 'PENDIENTE')
+            ->where('fecha_proximo_pago', '<=', Carbon::now()->addDays(3))
+            ->get();
+
+        foreach ($receipts as $receipt) {
+            if (!$receipt->OCMSent) {
+                $data = $this->prepareData($receipt, $skilldata, $idload);
+
+                $response = $this->sendData($url, $data);
+
+                if ($response->successful()) {
+                    $receipt->OCMSent = true;
+                    $receipt->save();
+                }
+            }
+        }
+    }
 }
