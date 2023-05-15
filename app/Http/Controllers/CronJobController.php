@@ -50,11 +50,13 @@ class CronJobController extends Controller
         $validate = Validator::make($request->all(), [
             'name_cronJob' => 'required',
             'skilldata' => 'required',
+            'idload' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
+            'idload.required' => 'El idload data es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
@@ -64,6 +66,7 @@ class CronJobController extends Controller
             $cronJob = new CronJobConfig;
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
+            $cronJob->idload = $request->idload;
             $cronJob->frequency = $request->frequency;
             $cronJob->save();
             return redirect()->route('cronjobs.index')->with('success', 'Cron job creado correctamente');

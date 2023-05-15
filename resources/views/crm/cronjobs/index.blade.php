@@ -51,7 +51,7 @@
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Nombre CronJOb</th>
-                                    <th scope="col">Skilldata</th>
+                                    <th scope="col">Skilldata (Campaña)</th>
                                     <th scope="col">Frecuencia de ejecución</th>
                                     <th scope="col">Acciones</th>
                                 </tr>

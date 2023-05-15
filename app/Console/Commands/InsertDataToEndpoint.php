@@ -15,7 +15,8 @@ class InsertDataToEndpoint extends Command
      *
      * @var string
      */
-    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value}';
+    // protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value}';
+    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload? : Idload value}';
     protected $description = 'Insert data to the endpoint using a POST request';
 
     /**
@@ -35,14 +36,12 @@ class InsertDataToEndpoint extends Command
      */
     public function handle()
     {
-        $url = 'http://apiproject.test/api/AddReg';
-        // $url = 'http://172.93.111.251:8070/OCMAPI/AddReg';
+        // $url = 'http://apiproject.test/api/AddReg';
+        $url = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
-
-        // Registra el valor de skilldata
-        Log::info('Valor de skilldata:', ['skilldata' => $skilldata]);
+        $idload = $this->argument('idload');
 
         // Obtenemos todas las ventas
         $records = Venta::all();
@@ -73,7 +72,7 @@ class InsertDataToEndpoint extends Command
             // Si la fecha calculada es hoy y el registro aún no ha sido enviado a OCM
             if ($dateForOCM->isToday() && !$record->OCMSent) {
                 // Prepara los datos para enviar a la API
-                $data = $this->prepareData($record, $skilldata);
+                $data = $this->prepareData($record, $skilldata, $idload);
 
                 // Envía los datos a la API
                 $response = $this->sendData($url, $data);
@@ -95,7 +94,7 @@ class InsertDataToEndpoint extends Command
     }
 
     // Esta función privada llamada prepareData toma dos argumentos: un registro y un valor de skilldata
-    private function prepareData($record, $skilldata)
+    private function prepareData($record, $skilldata, $idload)
     {
         // Retorna un array asociativo con la siguiente estructura:
         return [
@@ -113,8 +112,8 @@ class InsertDataToEndpoint extends Command
             // 'skilldata' toma el valor del argumento skilldata que se pasó a la función
             'skilldata' => $skilldata,
 
-            // 'idload' se establece como 95, esto parece un valor constante y puede necesitar ser ajustado dependiendo de tu lógica de negocio
-            'idload' => 95,
+            // 'idload' se establece como idload, esto parece un valor constante y puede necesitar ser ajustado dependiendo de tu lógica de negocio
+            'idload' => $idload,
 
             // 'datenextcall' toma la fecha y hora actual, formateada en el formato ISO 8601
             'datenextcall' => Carbon::now()->toIso8601String(),

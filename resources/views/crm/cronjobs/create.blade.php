@@ -33,8 +33,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="skilldata" class="form-label">Nombre Skilldata</label>
+                            <label for="skilldata" class="form-label">Nombre Skilldata (Campaña)</label>
                             <input type="text" name="skilldata" id="skilldata" class="form-control" placeholder="Nombre Skilldata">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="idload" class="form-label">ID Load</label>
+                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control" placeholder="ID Load">
                         </div>
 
                         <div class="mb-3">

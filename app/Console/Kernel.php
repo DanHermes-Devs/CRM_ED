@@ -20,19 +20,17 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-{
-    $configs = CronJobConfig::all();
+    {
+        $configs = CronJobConfig::all();
 
-    // ...
+        foreach ($configs as $config) {
+            // $schedule->command("insert:data-to-endpoint {$config->skilldata}")
+            //         ->{$config->frequency}(); // Ajusta la frecuencia según la columna frequency
 
-    foreach ($configs as $config) {
-        // Registra la información de la configuración actual
-        Log::info('Programando comando con configuración:', ['config' => $config]);
-
-        $schedule->command("insert:data-to-endpoint {$config->skilldata}")
-                 ->{$config->frequency}(); // Ajusta la frecuencia según la columna frequency
+            $schedule->command("insert:data-to-endpoint {$config->skilldata} {$config->idload}")
+                     ->{$config->frequency}();
+        }
     }
-}
 
 
     /**
