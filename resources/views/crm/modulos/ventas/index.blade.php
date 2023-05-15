@@ -48,7 +48,7 @@
         <div class="col-xl-12">
             <div class="card crm-widget py-4 px-3">
                 <div class="card-body">
-                    @if (Auth::user()->hasRole('Administrador'))
+                    @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
                         <div class="d-flex justify-content-end">
                             <a href="{{ route('ventas.formImportVentas') }}" class="btn btn-warning d-flex align-items-center justify-content-center gap-1 fs-5">
                                 <i class="ri-file-excel-2-line"></i>

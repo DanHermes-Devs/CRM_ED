@@ -31,7 +31,6 @@ class CreateReceiptsForSpecificSales extends Command
             '4311900013638',
             '4012100151549',
             '4012200122548',
-            '4012200122498',
         ];
 
         foreach ($specificSalesIds as $saleId) {
