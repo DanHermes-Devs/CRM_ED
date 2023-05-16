@@ -4,12 +4,10 @@ namespace App\Console\Commands;
 
 use Carbon\Carbon;
 use App\Models\Venta;
-use GuzzleHttp\Client;
 use App\Models\Receipt;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-use SoapClient;
 
 class InsertDataToEndpoint extends Command
 {
@@ -44,7 +42,7 @@ class InsertDataToEndpoint extends Command
     public function handle()
     {
         // $url = 'http://apiproject.test/api/AddReg';
-        $url = 'http://172.93.111.251:8070/OCMAPI/AddReg';
+        $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
@@ -67,25 +65,25 @@ class InsertDataToEndpoint extends Command
             // Inicializa una variable para almacenar el número de días a contar hacia atrás
             $daysBack = 0;
 
-            // Si el proveedor del registro es 'MAPFRE', ajusta daysBack a 22
-            if ($record->Proveedor === 'MAPFRE') {
+            // Si el Aseguradora del registro es 'MAPFRE', ajusta daysBack a 22
+            if ($record->Aseguradora === 'MAPFRE') {
                 $daysBack = 22;
             }
-            // Si el proveedor del registro es 'QUALITAS' o 'AXA', ajusta daysBack a 15
-            elseif ($record->Proveedor === 'QUALITAS' || $record->Proveedor === 'AXA') {
+            // Si el Aseguradora del registro es 'QUALITAS' o 'AXA', ajusta daysBack a 15
+            elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
                 $daysBack = 15;
             }
 
-            // Calcula la fecha para enviar a OCM, restando daysBack del FinVigencia del registro
-            $dateForOCM = $record->FinVigencia->subDays($daysBack);
+            // Calcula la fecha a enviar a OCM, sumando los días al día actual
+            $dateForOCM = Carbon::today()->addDays($daysBack);
 
             // Si la fecha calculada es hoy y el registro aún no ha sido enviado a OCM
-            if ($dateForOCM->isToday() && !$record->OCMSent) {
+            if ($dateForOCM->eq($record->FinVigencia) && !$record->OCMSent) {
 
                 // Prepara los datos para enviar a la API
                 $data = $this->prepareData($record, $skilldata, $idload);
 
-                $response = $this->sendData($url, $data);
+                $response = $this->sendData($url_ocm, $data);
 
                 // Si la respuesta de la API es exitosa
                 if ($response->successful()) {
@@ -103,7 +101,6 @@ class InsertDataToEndpoint extends Command
 
         // // Revisa las ventas para reciclaje
         $this->checkForRecycling($motor_a, $motor_b, $motor_c);
-
     }
 
     // Esta función privada llamada prepareData toma dos argumentos: un registro y un valor de skilldata
@@ -138,22 +135,21 @@ class InsertDataToEndpoint extends Command
         ];
     }
 
-
     // Esta función privada llamada sendData toma dos argumentos: una URL y un conjunto de datos.
-    private function sendData($url, $data)
+    private function sendData($url_ocm, $data)
     {
         // Aquí usamos el facade Http de Laravel para enviar una solicitud POST a la URL proporcionada.
         // En el encabezado de la solicitud, se incluyen los campos 'Accept' y 'ApiToken'.
         // 'Accept' le dice al servidor que la respuesta debe ser en formato JSON.
         // 'ApiToken' es un campo personalizado que probablemente se use para la autenticación en el servidor.
         // Los datos que se envían con la solicitud POST son el segundo argumento que se pasó a esta función.
-        if($url == null){
+        if($url_ocm == null){
             return null;
         }else{
             return Http::withHeaders([
                 'Accept' => 'application/json',
                 'ApiToken' => 'Expon1753',
-            ])->post($url, $data);
+            ])->post($url_ocm, $data);
         }   
     }
 
@@ -169,7 +165,7 @@ class InsertDataToEndpoint extends Command
         // Luego, para cada uno de estos registros...
         foreach ($records as $record) {
             // Si 'UltimaGestion' no es igual a 'PROMESA DE PAGO' y 'UltimaGestion' no es igual a 'RENOVACIÓN'...
-            if ($record->UltimaGestion !== 'PROMESA DE PAGO' && $record->UltimaGestion !== 'RENOVACIÓN') {
+            if ($record->UltimaGestion !== 'PROMESA DE PAGO' && $record->UltimaGestion !== 'RENOVACION') {
                 // Se obtiene la fecha de la segunda vez que se envió el registro a OCM.
                 $secondOcmDate = Carbon::createFromFormat('Y-m-d', $record->ocmdaytosend);
                 
@@ -178,7 +174,7 @@ class InsertDataToEndpoint extends Command
 
                 // Si la fecha actual es mayor que los 8 días desde la segunda vez que se envió el registro a OCM
                 // y 'UltimaGestion' sigue siendo diferente a 'RENOVACIÓN' y 'PROMESA DE PAGO'...
-                if (Carbon::now()->greaterThanOrEqualTo($daysToCheck) && $record->UltimaGestion !== 'RENOVACIÓN' && $record->UltimaGestion !== 'PROMESA DE PAGO') {
+                if (Carbon::now()->greaterThanOrEqualTo($daysToCheck) && $record->UltimaGestion !== 'RENOVACION' && $record->UltimaGestion !== 'PROMESA DE PAGO') {
                     // Si 'Motor' es igual a 'B', se cambia a 'C'. De lo contrario, se cambia a 'B'.
                     if ($record->campana === $motor_b) {
                         $record->campana = $motor_c;
@@ -198,7 +194,7 @@ class InsertDataToEndpoint extends Command
         // que fueron creados hace 3 días o menos, y cuyo campo 'fecha_proximo_pago' no sea nulo.
         $receipts = Receipt::where('estado_pago', 'PENDIENTE')
             ->with('venta')
-            ->where('created_at', '<=', Carbon::now()->addDays(3))
+            ->where('fecha_proximo_pago', '<=', Carbon::now()->addDays(3))
             ->get()
             ->reject(function ($receipt) {
                 return is_null($receipt->fecha_proximo_pago);
@@ -217,13 +213,14 @@ class InsertDataToEndpoint extends Command
                     <tem:EnviaSMS>
                         <tem:Usuario>'.$this->user.'</tem:Usuario>
                         <tem:Password>'.$this->password.'</tem:Password>
-                        <tem:Telefonos>5518840879</tem:Telefonos>
+                        <tem:Telefonos>5614753060</tem:Telefonos>
                         <tem:Mensaje>'.$smsText.'</tem:Mensaje>
                         <tem:codigoPais>52</tem:codigoPais>
                         <tem:SMSDosVias>0</tem:SMSDosVias>
                         <tem:Unicode>0</tem:Unicode>
                         <tem:MensajeLargo>1</tem:MensajeLargo>
                         <tem:ModoNotificacion>0</tem:ModoNotificacion>
+                        <tem:Prioridad>1</tem:Prioridad>
                         <tem:NotificarRespuestas>0</tem:NotificarRespuestas>
                         <tem:FrecuenciaMinutos>0</tem:FrecuenciaMinutos>
                         <tem:AntiSpam>0</tem:AntiSpam>
@@ -266,7 +263,7 @@ class InsertDataToEndpoint extends Command
         }
     }
 
-    public function sendPaymentPendingRecordsToOCM($url, $skilldata, $idload)
+    public function sendPaymentPendingRecordsToOCM($url_ocm, $skilldata, $idload)
     {
         // Obtenemos todos los recibos pendientes de pago que cumplen las condiciones
         $receipts = Receipt::where('estado_pago', 'PENDIENTE')
@@ -282,12 +279,16 @@ class InsertDataToEndpoint extends Command
                 $data = $this->prepareData($receipt, $skilldata, $idload);
 
                 // Enviamos los datos a la API
-                $response = $this->sendData($url, $data);
+                $response = $this->sendData($url_ocm, $data);
 
                 // Verificamos si la respuesta de la API es exitosa
                 if ($response->successful()) {
                     // Marcamos el registro de venta como enviado a OCM
                     $receipt->venta->OCMSent = true;
+                    
+                    // Guardamos la fecha del ultimo envio
+                    $receipt->ocmdaytosend = Carbon::now();
+
                     $receipt->save();
                 }
             }
