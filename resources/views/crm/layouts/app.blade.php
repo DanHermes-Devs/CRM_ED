@@ -216,6 +216,11 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link menu-link" href="{{ route('aseguradoras.index') }}">
+                                        <i class="ri-building-line"></i> <span data-key="t-dashboards">Aseguradoras</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link menu-link" href="{{ route('proyectos.index') }}">
                                         <i class="ri-stack-line"></i> <span data-key="t-dashboards">Proyectos</span>
                                     </a>
