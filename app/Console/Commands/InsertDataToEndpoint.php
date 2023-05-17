@@ -17,7 +17,7 @@ class InsertDataToEndpoint extends Command
      * @var string
      */
     // protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value}';
-    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload? : Idload value} {aseguradora? : Aseguradora value} {motor_b? : Motor B value} {motor_c? : Motor C value}';
+    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload_skilldata? : Idload_skilldata value} {aseguradora? : Aseguradora value} {motor_b? : Motor B value} {motor_c? : Motor C value}';
     protected $description = 'Insert data to the endpoint using a POST request';
 
     protected $url = "http://b2c.marcatel.com.mx/MarcatelSMSWCF/ServicioInsertarSMS.svc/mex/";

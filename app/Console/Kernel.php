@@ -25,12 +25,12 @@ class Kernel extends ConsoleKernel
         $insertData = new InsertDataToEndpoint();
 
         foreach ($configs as $config) {
-            $schedule->command("insert:data-to-endpoint {$config->skilldata} {$config->idload} {$config->aseguradora} {$config->motor_b} {$config->motor_c}")
+            $schedule->command("insert:data-to-endpoint {$config->skilldata} {$config->idload_skilldata} {$config->aseguradora} {$config->motor_b} {$config->motor_c}")
                     ->{$config->frequency}()
                     ->after(function () use ($config, $insertData) { // Añadimos $insertData aquí
                         if ($config->skilldata == 'OUT_COBRANZAMotor') {
                             $insertData->sendPaymentReminderSMS();
-                            $insertData->sendPaymentPendingRecordsToOCM($config->url, $config->skilldata, $config->idload, $config->aseguradora, $config->motor_b, $config->motor_c);
+                            $insertData->sendPaymentPendingRecordsToOCM($config->url, $config->skilldata, $config->idload_skilldata, $config->aseguradora, $config->motor_b, $config->motor_c);
                         }
                     });
         }
