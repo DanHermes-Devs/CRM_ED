@@ -2,17 +2,18 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CobranzaController;
+use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\API\ventas\VentasController;
-use App\Http\Controllers\CronJobController;
-use App\Http\Controllers\LogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,13 +62,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/editar-cronjob/{id}', [CronJobController::class, 'edit'])->name('editar-cronjob');
     Route::put('/editar-cronjob/{id}', [CronJobController::class, 'update'])->name('actualizar-cronjob');
     Route::delete('/eliminar-cronjob/{id}', [CronJobController::class, 'destroy'])->name('eliminar-cronjob');
-});
 
-Route::get('/ventas', [VentasController::class, 'index'])->name('ventas.index');
-Route::get('/usuario-venta/{id}', [VentasController::class, 'show'])->name('ver-usuario');
-Route::get('/ventas-export', [VentasController::class, 'exportVentas'])->name('ventas.exportVentas');
-Route::get('/ventas-import-form', [VentasController::class, 'formImportVentas'])->name('ventas.formImportVentas');
-Route::post('/ventas-import', [VentasController::class, 'importVentas'])->name('ventas.importVentas');
+    Route::get('/ventas', [VentasController::class, 'index'])->name('ventas.index');
+    Route::get('/usuario-venta/{id}', [VentasController::class, 'show'])->name('ver-usuario');
+    Route::get('/ventas-export', [VentasController::class, 'exportVentas'])->name('ventas.exportVentas');
+    Route::get('/ventas-import-form', [VentasController::class, 'formImportVentas'])->name('ventas.formImportVentas');
+    Route::post('/ventas-import', [VentasController::class, 'importVentas'])->name('ventas.importVentas');
+
+    // Aseguradoras
+    Route::get('/aseguradoras', [InsuranceController::class, 'index'])->name('aseguradoras.index');
+    Route::get('/crear-aseguradora', [InsuranceController::class, 'create'])->name('crear-aseguradora');
+    Route::post('/crear-aseguradora', [InsuranceController::class, 'store'])->name('store-aseguradora');
+    Route::get('/editar-aseguradora/{id}', [InsuranceController::class, 'edit'])->name('editar-aseguradora');
+    Route::put('/editar-aseguradora/{id}', [InsuranceController::class, 'update'])->name('actualizar-aseguradora');
+    Route::delete('/eliminar-aseguradora/{id}', [InsuranceController::class, 'destroy'])->name('eliminar-aseguradora');
+});
 
 // Formulario de prueba para insercion de datos
 Route::get('/form', [VentasController::class, 'form'])->name('ventas.form');

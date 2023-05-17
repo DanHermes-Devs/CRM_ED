@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CronJobConfig;
+use App\Models\Insurance;
 use App\Models\Venta;
 use Illuminate\Support\Facades\Validator;
 
@@ -38,8 +39,8 @@ class CronJobController extends Controller
     public function create()
     {
         // De las ventas solamente traemos el campo Aseguradora, y si hay repetidos solo traemos uno de cada uno
-        $ventas = Venta::select('Aseguradora')->distinct()->get();
-        return view('crm.cronjobs.create', compact('ventas'));
+        $aseguradoras = Insurance::all();
+        return view('crm.cronjobs.create', compact('aseguradoras'));
     }
 
     /**
@@ -102,9 +103,9 @@ class CronJobController extends Controller
     {
         $cronJob = CronJobConfig::find($id);
         // De las ventas solamente traemos el campo Aseguradora, y si hay repetidos solo traemos uno de cada uno
-        $ventas = Venta::select('Aseguradora')->distinct()->get();
+        $aseguradoras = Insurance::all();
 
-        return view('crm.cronjobs.edit', compact('cronJob', 'ventas'));
+        return view('crm.cronjobs.edit', compact('cronJob', 'aseguradoras'));
     }
 
     /**

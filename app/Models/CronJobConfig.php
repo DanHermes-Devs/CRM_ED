@@ -20,4 +20,10 @@ class CronJobConfig extends Model
         'motor_b',
         'motor_c'
     ];
+
+    // Relación inversa de uno a muchos con Insurance
+    public function insurance()
+    {
+        return $this->belongsTo(Insurance::class, 'aseguradora', 'nombre_aseguradora');
+    }
 }

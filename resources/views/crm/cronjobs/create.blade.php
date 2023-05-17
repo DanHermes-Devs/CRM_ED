@@ -54,8 +54,8 @@
                             <label for="aseguradora" class="form-label">Aseguradora</label>
                             <select id="aseguradora" name="aseguradora" class="form-select">
                                 <option>-- Selecciona una Aseguradora --</option>
-                                @foreach ($ventas as $venta)
-                                    <option value="{{ $venta->Aseguradora }}">{{ $venta->Aseguradora }}</option>
+                                @foreach ($aseguradoras as $aseguradora)
+                                    <option value="{{ $aseguradora->nombre_aseguradora }}">{{ $aseguradora->nombre_aseguradora }}</option>
                                 @endforeach
                             </select>
 

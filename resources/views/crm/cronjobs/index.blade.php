@@ -53,6 +53,7 @@
                                     <th scope="col">Nombre CronJob</th>
                                     <th scope="col">ID Load</th>
                                     <th scope="col">Skilldata (Campaña)</th>
+                                    <th scope="col">Aseguradora</th>
                                     <th scope="col">Frecuencia de ejecución</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
@@ -84,6 +85,7 @@
                 {data: 'name_cronJob', name: 'name_cronJob'},
                 {data: 'idload', name: 'idload'},
                 {data: 'skilldata', name: 'skilldata'},
+                {data: 'aseguradora', name: 'aseguradora'},
                 {data: 'frequency', name: 'frequency'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
