@@ -46,7 +46,7 @@ class InsertDataToEndpoint extends Command
 
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
-        $idload = $this->argument('idload');
+        $idload = $this->argument('idload_skilldata');
         $aseguradora = $this->argument('aseguradora');
         $motor_b = $this->argument('motor_b');
         $motor_c = $this->argument('motor_c');
@@ -147,6 +147,24 @@ class InsertDataToEndpoint extends Command
                 'colonia' => $record->Colonia,
                 'paquete' => $record->Paquete,
                 'formaPago' => $record->fPago,
+                'polizaAnterior' => $record->nPoliza,
+                'marca' => $record->Marca,
+                'submarca' => $record->Submarca,
+                'modelo' => $record->Modelo,
+                'numeroSerie' => $record->nSerie,
+                'numeroMotor' => $record->nMotor,
+                'numeroPlaca' => $record->nPlaca,
+                'tipoSegmento' => $record->Segmento,
+                'legalizado' => $record->Legalizado,
+                'paquete' => $record->Paquete,
+                'numeroPoliza' => $record->nPoliza,
+                'frecuenciaPago' => $record->FrePago,
+                'tipoTarjeta' => $record->tTarjeta,
+                'numeroTarjeta' => $record->nTarjeta,
+                'fechaVencimiento' => $record->fVencimiento,
+                'primaCobrada' => $record->PrimaNetaCobrada,
+                'primaTotal' => $record->PncTotal,
+                'id_lead' => $record->contactId
             ],
         ];
     }

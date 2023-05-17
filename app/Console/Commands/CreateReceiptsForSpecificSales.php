@@ -21,16 +21,7 @@ class CreateReceiptsForSpecificSales extends Command
     {
         // Coloca aquí los IDs de los 98 registros específicos
         $specificSalesIds = [
-            '4012100133931',
-            '4011900163381',
-            '4011800158522',
-            '4011900192035',
-            '4012000101163',
-            '4012000105125',
-            '4311900013769',
-            '4311900013638',
-            '4012100151549',
-            '4012200122548',
+            '4312100000000',
         ];
 
         foreach ($specificSalesIds as $saleId) {
