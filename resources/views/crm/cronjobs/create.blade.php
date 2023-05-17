@@ -49,11 +49,17 @@
                             @enderror
                         </div>
                         
+                        
                         <div class="mb-3">
-                            <label for="idload" class="form-label">ID Load</label>
-                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control @error ('idload') is-invalid @enderror" placeholder="ID Load">
+                            <label for="aseguradora" class="form-label">Aseguradora</label>
+                            <select id="aseguradora" name="aseguradora" class="form-select">
+                                <option>-- Selecciona una Aseguradora --</option>
+                                @foreach ($ventas as $venta)
+                                    <option value="{{ $venta->Aseguradora }}">{{ $venta->Aseguradora }}</option>
+                                @endforeach
+                            </select>
 
-                            @error('idload')
+                            @error('aseguradora')
                                 <span class="invalid-feedback d-block" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -61,10 +67,10 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="motor_a" class="form-label">Motor A</label>
-                            <input type="text" name="motor_a" id="motor_a" class="form-control @error ('motor_a') is-invalid @enderror" placeholder="Motor A">
+                            <label for="idload" class="form-label">ID Load</label>
+                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control @error ('idload') is-invalid @enderror" placeholder="ID Load">
 
-                            @error('motor_a')
+                            @error('idload')
                                 <span class="invalid-feedback d-block" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

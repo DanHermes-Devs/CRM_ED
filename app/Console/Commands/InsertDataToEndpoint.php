@@ -17,7 +17,7 @@ class InsertDataToEndpoint extends Command
      * @var string
      */
     // protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value}';
-    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload? : Idload value} {motor_a? : Motor A value} {motor_b? : Motor B value} {motor_c? : Motor C value}';
+    protected $signature = 'insert:data-to-endpoint {skilldata? : Skilldata value} {idload? : Idload value} {aseguradora? : Aseguradora value} {motor_b? : Motor B value} {motor_c? : Motor C value}';
     protected $description = 'Insert data to the endpoint using a POST request';
 
     protected $url = "http://b2c.marcatel.com.mx/MarcatelSMSWCF/ServicioInsertarSMS.svc/mex/";
@@ -47,12 +47,12 @@ class InsertDataToEndpoint extends Command
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
         $idload = $this->argument('idload');
-        $motor_a = $this->argument('motor_a');
+        $aseguradora = $this->argument('aseguradora');
         $motor_b = $this->argument('motor_b');
         $motor_c = $this->argument('motor_c');
 
-        // Obtenemos todas las ventas
-        $records = Venta::all();
+        // Obtenemos todas las ventas que correspondan a la aseguradora
+        $records = Venta::where('Aseguradora', $aseguradora)->get();
 
         // Si no hay registros, finaliza la ejecución
         if ($records->isEmpty()) {
@@ -87,6 +87,9 @@ class InsertDataToEndpoint extends Command
 
                 // Si la respuesta de la API es exitosa
                 if ($response->successful()) {
+                    // Asignamos el skilldata a la campana de la venta
+                    $record->campana = $skilldata;
+
                     // Marca el registro como enviado a OCM
                     $record->OCMSent = true;
 
@@ -100,7 +103,7 @@ class InsertDataToEndpoint extends Command
         }
 
         // // Revisa las ventas para reciclaje
-        $this->checkForRecycling($motor_a, $motor_b, $motor_c);
+        $this->checkForRecycling($aseguradora, $motor_b, $motor_c);
     }
 
     // Esta función privada llamada prepareData toma dos argumentos: un registro y un valor de skilldata
@@ -131,6 +134,19 @@ class InsertDataToEndpoint extends Command
             // 'extendata' es un array que contiene la propiedad 'nombre', que toma el valor de la propiedad Nombre del registro
             'extendata' => [
                 'nombre' => $record->Nombre,
+                'apellidoPaterno' => $record->ApePaterno,
+                'apellidoMaterno' => $record->ApeMaterno,
+                'fechaNacimiento' => $record->fNacimiento,
+                'genero' => $record->Genero,
+                'correo' => $record->Correo,
+                'calle' => $record->Calle,
+                'noInterior' => $record->NumInt,
+                'noExterior' => $record->NumExt,
+                'cp' => $record->CP,
+                'municipio' => $record->AlMun,
+                'colonia' => $record->Colonia,
+                'paquete' => $record->Paquete,
+                'formaPago' => $record->fPago,
             ],
         ];
     }
@@ -154,7 +170,7 @@ class InsertDataToEndpoint extends Command
     }
 
     // Esta función privada llamada checkForRecycling no toma argumentos. (Validar si es necesario consumir algun endpoint)
-    private function checkForRecycling($motor_a, $motor_b, $motor_c)
+    private function checkForRecycling($aseguradora, $motor_b, $motor_c)
     {
         // Primero, se obtienen todos los registros de la tabla 'Venta' donde 'OCMSent' es verdadero
         // y 'FinVigencia' es menor que la fecha actual menos 60 días.
@@ -213,7 +229,7 @@ class InsertDataToEndpoint extends Command
                     <tem:EnviaSMS>
                         <tem:Usuario>'.$this->user.'</tem:Usuario>
                         <tem:Password>'.$this->password.'</tem:Password>
-                        <tem:Telefonos>5614753060</tem:Telefonos>
+                        <tem:Telefonos>5518840878</tem:Telefonos>
                         <tem:Mensaje>'.$smsText.'</tem:Mensaje>
                         <tem:codigoPais>52</tem:codigoPais>
                         <tem:SMSDosVias>0</tem:SMSDosVias>

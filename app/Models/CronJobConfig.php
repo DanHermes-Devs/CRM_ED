@@ -14,7 +14,10 @@ class CronJobConfig extends Model
     protected $fillable = [
         'name_cronJob',
         'skilldata',
+        'aseguradora',
         'idload',
         'frequency',
+        'motor_b',
+        'motor_c'
     ];
 }

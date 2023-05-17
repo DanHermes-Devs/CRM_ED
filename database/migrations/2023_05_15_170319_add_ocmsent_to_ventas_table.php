@@ -14,7 +14,7 @@ class AddOcmsentToVentasTable extends Migration
     public function up()
     {
         Schema::table('ventas', function (Blueprint $table) {
-            $table->string('OCMSent');
+            $table->string('OCMSent')->nullable();
         });
     }
 

@@ -59,12 +59,17 @@
                                 </span>
                             @enderror
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="motor_a" class="form-label">Motor A</label>
-                            <input type="text" name="motor_a" id="motor_a" class="form-control @error('motor_a') is-invalid @enderror" value="{{ $cronJob->motor_a }}">
 
-                            @error('motor_a')
+                        <div class="mb-3">
+                            <label for="aseguradora" class="form-label">Aseguradora</label>
+                            <select id="aseguradora" name="aseguradora" class="form-select">
+                                <option>-- Selecciona una Aseguradora --</option>
+                                @foreach ($ventas as $venta)
+                                    <option value="{{ $venta->Aseguradora }}" {{ $cronJob->aseguradora == $venta->Aseguradora ? 'selected' : '' }}>{{ $venta->Aseguradora }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('aseguradora')
                                 <span class="invalid-feedback d-block" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

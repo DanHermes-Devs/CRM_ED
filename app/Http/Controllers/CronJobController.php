@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CronJobConfig;
+use App\Models\Venta;
 use Illuminate\Support\Facades\Validator;
 
 class CronJobController extends Controller
@@ -36,7 +37,9 @@ class CronJobController extends Controller
      */
     public function create()
     {
-        return view('crm.cronjobs.create');
+        // De las ventas solamente traemos el campo Aseguradora, y si hay repetidos solo traemos uno de cada uno
+        $ventas = Venta::select('Aseguradora')->distinct()->get();
+        return view('crm.cronjobs.create', compact('ventas'));
     }
 
     /**
@@ -50,19 +53,15 @@ class CronJobController extends Controller
         $validate = Validator::make($request->all(), [
             'name_cronJob' => 'required',
             'skilldata' => 'required',
+            'aseguradora' => 'required',
             'idload' => 'required',
-            'motor_a' => 'required',
-            'motor_b' => 'required',
-            'motor_c' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
+            'aseguradora.required' => 'La aseguradora es requerida',
             'idload.required' => 'El idload data es requerido',
-            'motor_a.required' => 'El motor A es requerido',
-            'motor_b.required' => 'El motor B es requerido',
-            'motor_c.required' => 'El motor C es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
@@ -72,8 +71,8 @@ class CronJobController extends Controller
             $cronJob = new CronJobConfig;
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
+            $cronJob->aseguradora = $request->aseguradora;
             $cronJob->idload = $request->idload;
-            $cronJob->motor_a = $request->motor_a;
             $cronJob->motor_b = $request->motor_b;
             $cronJob->motor_c = $request->motor_c;
             $cronJob->frequency = $request->frequency;
@@ -102,8 +101,10 @@ class CronJobController extends Controller
     public function edit($id)
     {
         $cronJob = CronJobConfig::find($id);
+        // De las ventas solamente traemos el campo Aseguradora, y si hay repetidos solo traemos uno de cada uno
+        $ventas = Venta::select('Aseguradora')->distinct()->get();
 
-        return view('crm.cronjobs.edit', compact('cronJob'));
+        return view('crm.cronjobs.edit', compact('cronJob', 'ventas'));
     }
 
     /**
@@ -122,19 +123,15 @@ class CronJobController extends Controller
         $validate = Validator::make($request->all(), [
             'name_cronJob' => 'required',
             'skilldata' => 'required',
+            'aseguradora' => 'required',
             'idload' => 'required',
-            'motor_a' => 'required',
-            'motor_b' => 'required',
-            'motor_c' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
+            'aseguradora.required' => 'La aseguradora es requerida',
             'idload.required' => 'El idload data es requerido',
-            'motor_a.required' => 'El motor A es requerido',
-            'motor_b.required' => 'El motor B es requerido',
-            'motor_c.required' => 'El motor C es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
@@ -145,8 +142,8 @@ class CronJobController extends Controller
             // Si la validación no falla, actualizamos el cron job
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
+            $cronJob->aseguradora = $request->aseguradora;
             $cronJob->idload = $request->idload;
-            $cronJob->motor_a = $request->motor_a;
             $cronJob->motor_b = $request->motor_b;
             $cronJob->motor_c = $request->motor_c;
             $cronJob->frequency = $request->frequency;
