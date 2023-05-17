@@ -55,14 +55,14 @@ class CronJobController extends Controller
             'name_cronJob' => 'required',
             'skilldata' => 'required',
             'aseguradora' => 'required',
-            'idload' => 'required',
+            'idload_skilldata' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
             'aseguradora.required' => 'La aseguradora es requerida',
-            'idload.required' => 'El idload data es requerido',
+            'idload_skilldata.required' => 'El idload de skilldata es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
@@ -73,9 +73,11 @@ class CronJobController extends Controller
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
             $cronJob->aseguradora = $request->aseguradora;
-            $cronJob->idload = $request->idload;
+            $cronJob->idload_skilldata = $request->idload_skilldata;
             $cronJob->motor_b = $request->motor_b;
+            $cronJob->idload_motor_b = $request->idload_motor_b;
             $cronJob->motor_c = $request->motor_c;
+            $cronJob->idload_motor_c = $request->idload_motor_c;
             $cronJob->frequency = $request->frequency;
             $cronJob->save();
             return redirect()->route('cronjobs.index')->with('success', 'Cron job creado correctamente');
@@ -125,14 +127,14 @@ class CronJobController extends Controller
             'name_cronJob' => 'required',
             'skilldata' => 'required',
             'aseguradora' => 'required',
-            'idload' => 'required',
+            'idload_skilldata' => 'required',
             'frequency' => 'required',
         ],
         [
             'name_cronJob.required' => 'El nombre del cron job es requerido',
             'skilldata.required' => 'El skill data es requerido',
             'aseguradora.required' => 'La aseguradora es requerida',
-            'idload.required' => 'El idload data es requerido',
+            'idload_skilldata.required' => 'El idload_skilldata data es requerido',
             'frequency.required' => 'La frecuencia es requerida',
         ]);
 
@@ -144,9 +146,11 @@ class CronJobController extends Controller
             $cronJob->name_cronJob = $request->name_cronJob;
             $cronJob->skilldata = $request->skilldata;
             $cronJob->aseguradora = $request->aseguradora;
-            $cronJob->idload = $request->idload;
+            $cronJob->idload_skilldata = $request->idload_skilldata;
             $cronJob->motor_b = $request->motor_b;
+            $cronJob->idload_motor_b = $request->idload_motor_b;
             $cronJob->motor_c = $request->motor_c;
+            $cronJob->idload_motor_c = $request->idload_motor_c;
             $cronJob->frequency = $request->frequency;
             $cronJob->save();
             return redirect()->route('cronjobs.index')->with('success', 'Cron job actualizado correctamente');

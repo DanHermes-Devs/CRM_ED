@@ -27,100 +27,136 @@
                     <form action="{{ route('actualizar-cronjob', $cronJob->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <div class="mb-3">
-                            <label for="name_cronJob" class="form-label">Nombre de Cron Job</label>
-                            <input type="text" name="name_cronJob" id="name_cronJob" class="form-control @error ('name_cronJob') is-invalid @enderror" value="{{ $cronJob->name_cronJob }}">
+                        <div class="row">
+                            <div class="mb-3">
+                                <label for="name_cronJob" class="form-label">Nombre de Cron Job</label>
+                                <input type="text" name="name_cronJob" id="name_cronJob" class="form-control @error ('name_cronJob') is-invalid @enderror" value="{{ $cronJob->name_cronJob }}">
+    
+                                @error('name_cronJob')
+                                    <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+    
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="skilldata" class="form-label">Nombre Skilldata</label>
+                                    <input type="text" name="skilldata" id="skilldata" class="form-control @error ('skilldata') is-invalid @enderror" value="{{ $cronJob->skilldata }}">
+        
+                                    @error('skilldata')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="idload_skilldata" class="form-label">ID Load</label>
+                                    <input type="text" pattern="\d+" name="idload_skilldata" id="idload_skilldata" class="form-control @error('idload_skilldata') is-invalid @enderror" value="{{ $cronJob->idload_skilldata }}">
+        
+                                    @error('idload_skilldata')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+    
+                            <div class="mb-3">
+                                <label for="aseguradora" class="form-label">Aseguradora</label>
+                                <select id="aseguradora" name="aseguradora" class="form-select">
+                                    <option>-- Selecciona una Aseguradora --</option>
+                                    @foreach ($aseguradoras as $aseguradora)
+                                        <option value="{{ $aseguradora->nombre_aseguradora }}" {{ $aseguradora->nombre_aseguradora == $cronJob->aseguradora ? 'selected' : '' }}>
+                                            {{ $aseguradora->nombre_aseguradora }}
+                                        </option>
+                                    @endforeach
+                                </select>
+    
+                                @error('aseguradora')
+                                    <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="motor_b" class="form-label">Motor B</label>
+                                    <input type="text" name="motor_b" id="motor_b" class="form-control @error('motor_b') is-invalid @enderror" value="{{ $cronJob->motor_b }}">
+        
+                                    @error('motor_b')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
 
-                            @error('name_cronJob')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="idload_motor_b" class="form-label">ID Load Motor B</label>
+                                    <input type="text" pattern="\d+" name="idload_motor_b" id="idload_motor_b" class="form-control @error ('idload_motor_b') is-invalid @enderror" value="{{ $cronJob->idload_motor_b }}">
+        
+                                    @error('idload_motor_b')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="motor_c" class="form-label">Motor C</label>
+                                    <input type="text" name="motor_c" id="motor_c" class="form-control @error('motor_c') is-invalid @enderror" value="{{ $cronJob->motor_c }}">
+        
+                                    @error('motor_c')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="skilldata" class="form-label">Nombre Skilldata</label>
-                            <input type="text" name="skilldata" id="skilldata" class="form-control @error ('skilldata') is-invalid @enderror" value="{{ $cronJob->skilldata }}">
-
-                            @error('skilldata')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="idload" class="form-label">ID Load</label>
-                            <input type="text" pattern="\d+" name="idload" id="idload" class="form-control @error('idload') is-invalid @enderror" value="{{ $cronJob->idload }}">
-
-                            @error('idload')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="aseguradora" class="form-label">Aseguradora</label>
-                            <select id="aseguradora" name="aseguradora" class="form-select">
-                                <option>-- Selecciona una Aseguradora --</option>
-                                @foreach ($aseguradoras as $aseguradora)
-                                    <option value="{{ $aseguradora->nombre_aseguradora }}" {{ $aseguradora->nombre_aseguradora == $cronJob->aseguradora ? 'selected' : '' }}>
-                                        {{ $aseguradora->nombre_aseguradora }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            @error('aseguradora')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="motor_b" class="form-label">Motor B</label>
-                            <input type="text" name="motor_b" id="motor_b" class="form-control @error('motor_b') is-invalid @enderror" value="{{ $cronJob->motor_b }}">
-
-                            @error('motor_b')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="motor_c" class="form-label">Motor C</label>
-                            <input type="text" name="motor_c" id="motor_c" class="form-control @error('motor_c') is-invalid @enderror" value="{{ $cronJob->motor_c }}">
-
-                            @error('motor_c')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="frecuency" class="form-label">Frecuencia de ejecución</label>
-                            <select name="frequency" id="frecuency" class="form-select @error ('frequency') is-invalid @enderror">
-                                <option>-- Selecciona una opción --</option>
-                                <option value="everyMinute" {{ $cronJob->frequency == 'everyMinute' ? 'selected' : '' }}>everyMinute - Cada minuto</option>
-                                <option value="everyFiveMinutes" {{ $cronJob->frequency == 'everyFiveMinutes' ? 'selected' : '' }}>everyFiveMinutes - Cada 5 minutos</option>
-                                <option value="everyTenMinutes" {{ $cronJob->frequency == 'everyTenMinutes' ? 'selected' : '' }}>everyTenMinutes - Cada 10 minutos</option>
-                                <option value="everyThirtyMinutes" {{ $cronJob->frequency == 'everyThirtyMinutes' ? 'selected' : '' }}>everyThirtyMinutes - Cada 30 minutos</option>
-                                <option value="hourly" {{ $cronJob->frequency == 'hourly' ? 'selected' : '' }}>hourly - Cada hora</option>
-                                <option value="daily" {{ $cronJob->frequency == 'daily' ? 'selected' : '' }}>daily - Cada día</option>
-                                <option value="weekly" {{ $cronJob->frequency == 'weekly' ? 'selected' : '' }}>weekly - Cada semana</option>
-                                <option value="monthly" {{ $cronJob->frequency == 'monthly' ? 'selected' : '' }}>monthly - Cada mes</option>
-                                <option value="quarterly" {{ $cronJob->frequency == 'quarterly' ? 'selected' : '' }}>quarterly - Cada trimestre</option>
-                                <option value="yearly" {{ $cronJob->frequency == 'yearly' ? 'selected' : '' }}>yearly - Cada año</option>
-                            </select>
-
-                            @error('frequency')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <div class="col-12 col-md-6">
+                                <div class="mb-3">
+                                    <label for="idload_motor_c" class="form-label">ID Load Motor C</label>
+                                    <input type="text" pattern="\d+" name="idload_motor_c" id="idload_motor_c" class="form-control @error ('idload_motor_c') is-invalid @enderror" value="{{ $cronJob->idload_motor_c }}">
+        
+                                    @error('idload_motor_c')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+    
+                            <div class="mb-3">
+                                <label for="frecuency" class="form-label">Frecuencia de ejecución</label>
+                                <select name="frequency" id="frecuency" class="form-select @error ('frequency') is-invalid @enderror">
+                                    <option>-- Selecciona una opción --</option>
+                                    <option value="everyMinute" {{ $cronJob->frequency == 'everyMinute' ? 'selected' : '' }}>everyMinute - Cada minuto</option>
+                                    <option value="everyFiveMinutes" {{ $cronJob->frequency == 'everyFiveMinutes' ? 'selected' : '' }}>everyFiveMinutes - Cada 5 minutos</option>
+                                    <option value="everyTenMinutes" {{ $cronJob->frequency == 'everyTenMinutes' ? 'selected' : '' }}>everyTenMinutes - Cada 10 minutos</option>
+                                    <option value="everyThirtyMinutes" {{ $cronJob->frequency == 'everyThirtyMinutes' ? 'selected' : '' }}>everyThirtyMinutes - Cada 30 minutos</option>
+                                    <option value="hourly" {{ $cronJob->frequency == 'hourly' ? 'selected' : '' }}>hourly - Cada hora</option>
+                                    <option value="daily" {{ $cronJob->frequency == 'daily' ? 'selected' : '' }}>daily - Cada día</option>
+                                    <option value="weekly" {{ $cronJob->frequency == 'weekly' ? 'selected' : '' }}>weekly - Cada semana</option>
+                                    <option value="monthly" {{ $cronJob->frequency == 'monthly' ? 'selected' : '' }}>monthly - Cada mes</option>
+                                    <option value="quarterly" {{ $cronJob->frequency == 'quarterly' ? 'selected' : '' }}>quarterly - Cada trimestre</option>
+                                    <option value="yearly" {{ $cronJob->frequency == 'yearly' ? 'selected' : '' }}>yearly - Cada año</option>
+                                </select>
+    
+                                @error('frequency')
+                                    <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Actualizar CronJob</button>

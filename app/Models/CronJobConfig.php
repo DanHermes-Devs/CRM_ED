@@ -15,10 +15,12 @@ class CronJobConfig extends Model
         'name_cronJob',
         'skilldata',
         'aseguradora',
-        'idload',
+        'idload_skilldata',
         'frequency',
         'motor_b',
-        'motor_c'
+        'idload_motor_b',
+        'motor_c',
+        'idload_motor_c'
     ];
 
     // Relación inversa de uno a muchos con Insurance

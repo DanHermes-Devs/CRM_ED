@@ -83,7 +83,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'name_cronJob', name: 'name_cronJob'},
-                {data: 'idload', name: 'idload'},
+                {data: 'idload_skilldata', name: 'idload_skilldata'},
                 {data: 'skilldata', name: 'skilldata'},
                 {data: 'aseguradora', name: 'aseguradora'},
                 {data: 'frequency', name: 'frequency'},
