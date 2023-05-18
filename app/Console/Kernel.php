@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         foreach ($configs as $config) {
             $schedule->command("insert:data-to-endpoint {$config->skilldata} {$config->idload_skilldata} {$config->aseguradora} {$config->motor_b} {$config->motor_c}")
                     ->{$config->frequency}()
+                    ->withoutOverlapping()
                     ->after(function () use ($config, $insertData) { // Añadimos $insertData aquí
                         if ($config->skilldata == 'OUT_COBRANZAMotor') {
                             $insertData->sendPaymentReminderSMS();
