@@ -19,8 +19,8 @@ class CobranzaController extends Controller
     public function index(Request $request)
     {
         $agentes_ventas = User::whereHas('roles', function ($q) {
-            $q->where('name', 'Agente de Cobranza')
-              ->orWhere('name', 'Supervisor');
+            $q->where('name', 'Agente de Cobranza');
+            //   ->orWhere('name', 'Supervisor');
         })->get();
 
         $tipoRecibos = $request->get('tipo_recibos', 'TODOS');
