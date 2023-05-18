@@ -163,6 +163,38 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal para reasignar recibo -->
+    <div class="modal fade" id="editarReciboModal" tabindex="-1" role="dialog" aria-labelledby="editarReciboModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarReciboModalLabel">Editar Recibo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editarReciboForm">
+                        <input type="hidden" id="editar_recibo_id" name="recibo_id">
+                        <div class="form-group mb-3">
+                            <label for="estado_pago" class="form-label">Estado de Pago:</label>
+                            <select class="form-select" id="estado_pago_edit" name="estado_pago">
+                                <option selected>-- Selecciona un estado de pago --</option>
+                                <option value="PAGADO">PAGADO</option>
+                                <option value="PENDIENTE">PENDIENTE</option>
+                                <option value="LIQUIDADO">LIQUIDADO</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="prima_cobrada" class="form-label">Prima Cobrada:</label>
+                            <input type="text" pattern="^\d*(\.\d{0,2})?$" class="form-control" id="prima_cobrada" name="prima_cobrada">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Editar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -258,6 +290,95 @@
                 var reciboId = $(this).data('id');
                 $('#recibo_id').val(reciboId);
                 $('#asignarReciboModal').modal('show');
+            });
+            
+            $(document).on('click', '.editar-recibo', function(e) {
+                e.preventDefault();
+                var reciboId = $(this).data('id');
+                $('#editar_recibo_id').val(reciboId);
+                $('#editarReciboModal').modal('show');
+
+                // Consultamos a la base de datos
+                var route = '{{ route('cobranza.edit', ':id') }}';
+                var url = route.replace(':id', reciboId);
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        if(response.code == 200){
+                            // Pintamos los datos en los inputs
+                            $('#prima_cobrada').val(response.recibo.prima_neta_cobrada);
+                            $('#estado_pago_edit').val(response.recibo.estado_pago);
+                        }
+                    }
+                });
+            });
+
+
+            $('#editarReciboForm').on('submit', function(e){
+                e.preventDefault();
+
+                var reciboId = $('#editar_recibo_id').val();
+                var prima_cobrada = $('#prima_cobrada').val();
+                var estado_pago = $('#estado_pago_edit').val();
+
+                var route = '{{ route('cobranza.update', ':id') }}';
+                var url = route.replace(':id', reciboId);
+
+                $.ajax({
+                    url: url,
+                    method: 'PUT',
+                    data: {
+                        recibo_id: reciboId,
+                        prima_cobrada: prima_cobrada,
+                        estado_pago: estado_pago
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response){
+                        // Si el response.code es igual a 200 mandamos un sweet alert de éxito
+                        if(response.code == 200){
+                            Swal.fire(
+                                'Éxito',
+                                response.message,
+                                'success'
+                            )
+                        }
+                        $('#editarReciboModal').modal('hide');
+                        // Limpiamos el formulario
+                        $('#editarReciboForm')[0].reset();
+                        // Recargamos la tabla
+                        $('#tabla_cobranza').DataTable().ajax.reload();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        if(jqXHR.status == 422) { // Cuando la respuesta de Laravel es 422, significa que hay un error de validación
+                            let errors = jqXHR.responseJSON.errors;
+                            let errorMessage = '';
+
+                            // Iteramos a través de los errores y los agregamos a nuestro mensaje de error
+                            Object.values(errors).forEach((errorFields) => {
+                                errorFields.forEach((error) => {
+                                    errorMessage += error + '\n';
+                                });
+                            });
+
+                            Swal.fire(
+                                'Error',
+                                errorMessage,
+                                'error'
+                            )
+                        } else {
+                            // Si no es un error de validación, es posible que sea otro tipo de error
+                            Swal.fire(
+                                'Error',
+                                'Hubo un problema al intentar actualizar. Por favor, intenta de nuevo más tarde.',
+                                'error'
+                            )
+                        }
+                    }
+                });
             });
 
             $('#asignarReciboForm').on('submit', function(e) {

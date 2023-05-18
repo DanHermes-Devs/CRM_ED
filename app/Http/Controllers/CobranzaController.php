@@ -51,15 +51,17 @@ class CobranzaController extends Controller
                     // Si el recibo no tiene agente de cobranza, se le puede asignar, asi mismo ponemos un boton para cancelar el recibo
                     if ($data->agente_cob_id === null) {
                         if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza')) {
-                            $button = '<button class="btn btn-primary asignar-recibo mr_3" data-id="' . $data->id . '">Asignar recibo</button>';
+                            $button = '<div class="d-flex flex-column flex-md-row gap-2 w-100"><button class="btn btn-primary asignar-recibo" data-id="' . $data->id . '">Asignar recibo</button>';
+                            $button .= '<button class="btn btn-dark editar-recibo" data-id="' . $data->id . '">Editar Recibo</button>';
                         }
-                        $button .= '<a href="'.route('cobranza.cancelar.show', $data->id).'" class="btn btn-danger">Cancelar Recibo</a>';
+                        $button .= '<a href="'.route('cobranza.cancelar.show', $data->id).'" class="btn btn-danger">Cancelar Recibo</a></div>';
                         return $button;
                     }else{
                         // solo puede cancelar el recibo el agente de ventas que lo tiene asignado o el administrador del sistema o el agente de cobranza
                         if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza')) {
-                            $button = '<button class="btn btn-info mr_3 reasignar-recibo" data-id="' . $data->id . '">Reasignar recibo</button>';
-                            $button .= '<a href="'.route('cobranza.cancelar.show', $data->id).'" class="btn btn-danger">Cancelar Recibo</a>';
+                            $button = '<div class="row flex-column flex-md-row gap-3 w-100"><button class="btn btn-info reasignar-recibo" data-id="' . $data->id . '">Reasignar recibo</button>';
+                            $button .= '<button class="btn btn-dark editar-recibo" data-id="' . $data->id . '">Editar Recibo</button>';
+                            $button .= '<a href="'.route('cobranza.cancelar.show', $data->id).'" class="btn btn-danger">Cancelar Recibo</a></div>';
                             return $button;
                         }
                     }
@@ -153,5 +155,42 @@ class CobranzaController extends Controller
         $request->session()->flash('success', 'Recibo cancelado correctamente');
 
         return redirect()->route('cobranza.index');
+    }
+
+    public function edit($id)
+    {
+        // Buscamos el recibo por su id
+        $recibo = Receipt::find($id);
+
+        // Mandamos la respuesta en formato json
+        return response()->json([
+            'code' => 200,
+            'recibo' => $recibo
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Buscamos el recibo por su id
+        $recibo = Receipt::findOrFail($id);
+
+        // Validamos los datos del recibo
+        $request->validate([
+            'prima_cobrada' => 'required|numeric',
+            'estado_pago' => 'required'
+        ]);
+
+        // Actualizamos los datos del recibo
+        $recibo->prima_neta_cobrada = $request->prima_cobrada;
+        $recibo->estado_pago = $request->estado_pago;
+
+        // Guardamos los cambios
+        $recibo->save();
+
+        // Mandamos una respuesta en formato json con codigo 200 y un mensaje de confirmacion
+        return response()->json([
+            'code' => 200,
+            'message' => 'Recibo actualizado correctamente'
+        ]);
     }
 }

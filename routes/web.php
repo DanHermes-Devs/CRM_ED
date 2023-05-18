@@ -51,6 +51,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/cobranza', [CobranzaController::class, 'index'])->name('cobranza.index');
     Route::post('/cobranza/asignar/{recibo_id}', [CobranzaController::class, 'asignarRecibo'])->name('cobranza.asignar');
+    Route::get('/cobranza/ver/{id}', [CobranzaController::class, 'edit'])->name('cobranza.edit');
+    Route::put('/cobranza/actualizar/{id}', [CobranzaController::class, 'update'])->name('cobranza.update');
 
     Route::get('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'showCancelarRecibo'])->name('cobranza.cancelar.show');
     Route::post('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'cancelarRecibo'])->name('cobranza.cancelar');

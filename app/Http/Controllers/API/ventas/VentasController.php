@@ -330,7 +330,7 @@ class VentasController extends Controller
                 ->where(function ($q) {
                     $q->where('UGestion', '')->orWhereNull('UGestion');
                 });
-        } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
+        } elseif ($rol == 'Supervisor' || $rol == 'Coordinador' || $rol == 'Administrador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
         } else {
             // No aplicar filtros adicionales para administradores
