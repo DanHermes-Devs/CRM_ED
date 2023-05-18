@@ -59,7 +59,7 @@ class CobranzaController extends Controller
                     }else{
                         // solo puede cancelar el recibo el agente de ventas que lo tiene asignado o el administrador del sistema o el agente de cobranza
                         if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza')) {
-                            $button = '<div class="row flex-column flex-md-row gap-3 w-100"><button class="btn btn-info reasignar-recibo" data-id="' . $data->id . '">Reasignar recibo</button>';
+                            $button = '<div class="d-flex flex-column flex-md-row gap-3 w-100"><button class="btn btn-info reasignar-recibo" data-id="' . $data->id . '">Reasignar recibo</button>';
                             $button .= '<button class="btn btn-dark editar-recibo" data-id="' . $data->id . '">Editar Recibo</button>';
                             $button .= '<a href="'.route('cobranza.cancelar.show', $data->id).'" class="btn btn-danger">Cancelar Recibo</a></div>';
                             return $button;
