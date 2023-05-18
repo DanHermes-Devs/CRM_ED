@@ -14,6 +14,7 @@ use App\Http\Controllers\CobranzaController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\API\ventas\VentasController;
+use App\Http\Controllers\MediaController;
 
 /*
 |--------------------------------------------------------------------------

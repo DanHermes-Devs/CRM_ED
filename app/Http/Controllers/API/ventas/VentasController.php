@@ -173,7 +173,6 @@ class VentasController extends Controller
             }
         } else {
             // Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta
-            Log::info('Si no se encuentra una venta existente, crea una nueva instancia del modelo Venta');
             $venta = new Venta;
             $venta->contactId = $request->contactId;
             $venta->UGestion = $request->UGestion;
@@ -183,7 +182,6 @@ class VentasController extends Controller
 
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
-                Log::info('Busca si existe una venta con el mismo nSerie y tVenta VENTA NUEVA');
                 $ventaExistente = Venta::where('nSerie', $request->nSerie)
                     ->where('tVenta', 'VENTA NUEVA')
                     ->first();
@@ -192,7 +190,6 @@ class VentasController extends Controller
                 $hoy = Carbon::now();
                 if ($ventaExistente) {
                     // Calcula la diferencia en días entre la fecha actual y Fpreventa
-                    Log::info('Calcula la diferencia en días entre la fecha actual y Fpreventa');
                     $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
                     $diasDiferencia = $fpreventa->diffInDays($hoy, false);
 
@@ -206,7 +203,6 @@ class VentasController extends Controller
                     }
 
                 } else {
-                    Log::info('Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente');
                     // Busca si existe una venta coincidente con RFC, TelCelular y NombreDeCliente
                     $ventaCoincidente = Venta::where('RFC', $request->RFC)
                         ->where('TelCelular', $request->TelCelular)
@@ -215,11 +211,9 @@ class VentasController extends Controller
 
                     // Si se encuentra una coincidencia, asigna 'POSIBLE DUPLICIDAD' al campo tVenta
                     if ($ventaCoincidente) {
-                        Log::info('Si se encuentra una coincidencia, asigna POSIBLE DUPLICIDAD al campo tVenta');
                         $venta->tVenta = 'POSIBLE DUPLICIDAD';
                     } else {
                         // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
-                        Log::info('Si no hay una venta existente con el mismo nSerie y tVenta VENTA NUEVA, asigna tVenta enviado en la solicitud');
                         $venta->tVenta = 'VENTA NUEVA';
                     }
                 }
@@ -253,8 +247,6 @@ class VentasController extends Controller
 
         // Guarda la venta en la base de datos
         $venta->save();
-
-        Log::info("La frecuencia de pago es: " . $request->FrePago . " La codificacion es: " . $request->Codificacion);
 
         // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
         if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION' || $venta->FrePago !== null){
@@ -323,7 +315,7 @@ class VentasController extends Controller
         $rol = $request->rol;
 
         if ($rol == 'Agente Ventas Nuevas') {
-            $query->where('tVenta', 'VENTA NUEVA')
+            $query->where('tVenta', 'VENTA')
                 ->where('UGestion', 'PREVENTA');
         } elseif ($rol == 'Agente Renovaciones') {
             $query->where('tVenta', 'RENOVACION')

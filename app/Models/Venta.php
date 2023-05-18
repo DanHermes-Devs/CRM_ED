@@ -73,7 +73,9 @@ class Venta extends Model
         'PrimaNetaCobrada',
         'AgenteCob',
         'TipoPago',
-        'EstadoDePago'
+        'EstadoDePago',
+        'OCMSent',
+        'ocmdaytosend'
     ];
 
     protected $dates = [

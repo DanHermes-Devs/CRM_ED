@@ -26,6 +26,19 @@ class SeederUser extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ])->assignRole('Administrador');
+
+        User::create([
+            'usuario' => 'tec01jl1',
+            'name' => 'Jose Luis',
+            'apellido_paterno' => 'Alvarado',
+            'apellido_materno' => 'Jimenez',
+            'email' => 'jalvarado@exponentedigital.mx',
+            'password' => bcrypt('tec01jl1'),
+            'estatus' => 1,
+            'fecha_ultimo_login' => now(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ])->assignRole('Administrador');
         
         User::create([
             'usuario' => 'adminexponente',
