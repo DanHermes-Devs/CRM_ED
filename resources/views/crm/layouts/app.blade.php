@@ -180,7 +180,7 @@
                                                 Ventas
                                             </a>
                                         </li>
-                                        @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Agente Renovaciones', 'Administrador', 'Supervisor']))
+                                        @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Agente Renovaciones', 'Administrador', 'Supervisor', 'Coordinador']))
                                             <li class="nav-item">
                                                 <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
                                                     Cobranza

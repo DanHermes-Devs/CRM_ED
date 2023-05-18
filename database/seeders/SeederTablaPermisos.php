@@ -52,6 +52,18 @@ class SeederTablaPermisos extends Seeder
             'crear-grupos',
             'editar-grupos',
             'borrar-grupos',
+            'ver-cobranza',
+            'crear-cobranza',
+            'editar-cobranza',
+            'borrar-cobranza',
+            'ver-aseguradoras',
+            'crear-aseguradoras',
+            'editar-aseguradoras',
+            'borrar-aseguradoras',
+            'ver-jobs',
+            'crear-jobs',
+            'editar-jobs',
+            'borrar-jobs',
             'exportar-ventas',
         ];
 

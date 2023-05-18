@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class InsuranceController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-aseguradoras|crear-aseguradoras|editar-aseguradoras|borrar-aseguradoras',['only' => ['index','show']]);
+        $this->middleware('permission:crear-aseguradoras', ['only' => ['create','store']]);
+        $this->middleware('permission:editar-aseguradoras', ['only' => ['edit','update']]);
+        $this->middleware('permission:borrar-aseguradoras', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

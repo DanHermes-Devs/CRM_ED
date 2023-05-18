@@ -11,6 +11,13 @@ use App\Http\Controllers\API\ventas\VentasController;
 
 class CobranzaController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-cobranza|crear-cobranza|editar-cobranza|borrar-cobranza',['only' => ['index','show']]);
+        $this->middleware('permission:crear-cobranza', ['only' => ['create','store']]);
+        $this->middleware('permission:editar-cobranza', ['only' => ['edit','update']]);
+        $this->middleware('permission:borrar-cobranza', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -50,7 +57,7 @@ class CobranzaController extends Controller
                 
                     // Si el recibo no tiene agente de cobranza, se le puede asignar, asi mismo ponemos un boton para cancelar el recibo
                     if ($data->agente_cob_id === null) {
-                        if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza')) {
+                        if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza') || Auth::user()->hasRole('Coordinador')) {
                             $button = '<div class="d-flex flex-column flex-md-row gap-2 w-100"><button class="btn btn-primary asignar-recibo" data-id="' . $data->id . '">Asignar recibo</button>';
                             $button .= '<button class="btn btn-dark editar-recibo" data-id="' . $data->id . '">Editar Recibo</button>';
                         }
@@ -58,7 +65,7 @@ class CobranzaController extends Controller
                         return $button;
                     }else{
                         // solo puede cancelar el recibo el agente de ventas que lo tiene asignado o el administrador del sistema o el agente de cobranza
-                        if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza')) {
+                        if ($data->agente_cob_id === Auth::user()->id || Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Agente de Cobranza') || Auth::user()->hasRole('Coordinador')) {
                             $button = '<div class="d-flex flex-column flex-md-row gap-3 w-100"><button class="btn btn-info reasignar-recibo" data-id="' . $data->id . '">Reasignar recibo</button>';
                             $button .= '<button class="btn btn-dark editar-recibo" data-id="' . $data->id . '">Editar Recibo</button>';
                             $button .= '<a href="'.route('cobranza.cancelar.show', $data->id).'" class="btn btn-danger">Cancelar Recibo</a></div>';

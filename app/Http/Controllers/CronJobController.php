@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class CronJobController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-jobs|crear-jobs|editar-jobs|borrar-jobs',['only' => ['index','show']]);
+        $this->middleware('permission:crear-jobs', ['only' => ['create','store']]);
+        $this->middleware('permission:editar-jobs', ['only' => ['edit','update']]);
+        $this->middleware('permission:borrar-jobs', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
