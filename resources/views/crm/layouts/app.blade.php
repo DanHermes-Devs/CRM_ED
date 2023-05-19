@@ -190,6 +190,7 @@
                                     </ul>
                                 </div>
                             </li>
+
                             {{-- Solo lo puede ver administrador este bloque html --}}
                             @if (Auth::user()->hasRole('Administrador'))
                                 <li class="nav-item">
@@ -218,6 +219,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="{{ route('aseguradoras.index') }}">
                                         <i class="ri-building-line"></i> <span data-key="t-dashboards">Aseguradoras</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" href="{{ route('campaigns.index') }}">
+                                        <i class="ri-medal-line"></i> <span data-key="t-dashboards">Campañas</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">

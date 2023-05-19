@@ -7,14 +7,15 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CobranzaController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\API\ventas\VentasController;
-use App\Http\Controllers\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/editar-aseguradora/{id}', [InsuranceController::class, 'edit'])->name('editar-aseguradora');
     Route::put('/editar-aseguradora/{id}', [InsuranceController::class, 'update'])->name('actualizar-aseguradora');
     Route::delete('/eliminar-aseguradora/{id}', [InsuranceController::class, 'destroy'])->name('eliminar-aseguradora');
+
+    // Rutas Campañas
+    Route::resource('/campaigns', CampaignController::class);
 });
 
 // Formulario de prueba para insercion de datos
