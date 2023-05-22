@@ -87,7 +87,7 @@
                                                 @foreach ($supervisores as $supervisor)
                                                     {{-- Mostramos el supervisor que tiene asignado con un if ternario --}}
                                                     <option value="{{ $supervisor->id }}"
-                                                        {{ $supervisor->id == $expediente->id_supervisor ? 'selected' : '' }}>
+                                                        {{ isset($expediente) && $supervisor->id == $expediente->id_supervisor ? 'selected' : '' }}>
                                                         {{ $supervisor->name }}</option>
                                                 @endforeach
                                             </select>
@@ -104,11 +104,10 @@
                                             <label for="nombre" class="form-label">Proyecto:</label>
                                             <select name="id_proyecto" id="id_proyecto" class="form-select">
                                                 <option>-- Selecciona un proyecto --</option>
-                                                @foreach ($proyectos as $proyecto)
-                                                    {{-- Mostramos el proyecto que tiene asignado con un if ternario --}}
-                                                    <option value="{{ $proyecto->id }}"
-                                                        {{ $proyecto->id == $expediente->id_proyecto ? 'selected' : '' }}>
-                                                        {{ $proyecto->proyecto }}</option>
+                                                @foreach ($supervisores as $supervisor)
+                                                    <option value="{{ $supervisor->id }}"
+                                                        {{ isset($expediente) && $supervisor->id == $expediente->id_supervisor ? 'selected' : '' }}>
+                                                        {{ $supervisor->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -128,12 +127,12 @@
                                     <fieldset>
                                         <legend>Cargar INE</legend>
                                         <div class="mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="ine @if ($expediente->ruta_ine) w-75 @else w-100 @endif">
+                                            <div class="ine @if ($expediente && $expediente->ruta_ine) w-75 @else w-100 @endif">
                                                 <input id="ruta_ine" name="ruta_ine" class="form-control w-100"
                                                     type="file" accept=".jpeg, .jpg, .png, .pdf"
                                                     data-show-preview="true">
                                             </div>
-                                            @if ($expediente->ruta_ine)
+                                            @if ($expediente && $expediente->ruta_ine)
                                                 <a href="{{ asset('storage/uploads/ine/' . $usuario->usuario . '/' . $expediente->ruta_ine) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver INE</a>
                                             @endif
@@ -144,13 +143,13 @@
                                     <fieldset>
                                         <legend>Cargar Acta de Nacimiento</legend>
                                         <div class="mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="acta_nacimiento @if ($expediente->ruta_acta_nacimiento) w-75 @else w-100 @endif">
+                                            <div class="acta_nacimiento @if ($expediente && $expediente->ruta_acta_nacimiento) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_acta_nacimiento" name="ruta_acta_nacimiento"
                                                     data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_acta_nacimiento)
+                                            @if ($expediente && $expediente->ruta_acta_nacimiento)
                                                 <a href="{{ asset('storage/uploads/acta_nacimiento/' . $usuario->usuario . '/' . $expediente->ruta_acta_nacimiento) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Acta</a>
                                             @endif
@@ -161,12 +160,12 @@
                                     <fieldset>
                                         <legend>Cargar CURP</legend>
                                         <div class="mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="curp @if ($expediente->ruta_curp) w-75 @else w-100 @endif">
+                                            <div class="curp @if ($expediente && $expediente->ruta_curp) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_curp" name="ruta_curp" data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_curp)
+                                            @if ($expediente && $expediente->ruta_curp)
                                                 <a href="{{ asset('storage/uploads/curp/' . $usuario->usuario . '/' . $expediente->ruta_curp) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -177,13 +176,13 @@
                                     <fieldset>
                                         <legend>Cargar Constancia Fiscal</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="constancia_fiscal @if ($expediente->ruta_constancia_fiscal) w-75 @else w-100 @endif">
+                                            <div class="constancia_fiscal @if ($expediente && $expediente->ruta_constancia_fiscal) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_constancia_fiscal" name="ruta_constancia_fiscal"
                                                     data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_constancia_fiscal)
+                                            @if ($expediente && $expediente->ruta_constancia_fiscal)
                                                 <a href="{{ asset('storage/uploads/constancia_fiscal/' . $usuario->usuario . '/' . $expediente->ruta_constancia_fiscal) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -194,12 +193,12 @@
                                     <fieldset>
                                         <legend>Cargar NSS</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="nss @if ($expediente->ruta_nss) w-75 @else w-100 @endif">
+                                            <div class="nss @if ($expediente && $expediente->ruta_nss) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_nss" name="ruta_nss" data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_nss)
+                                            @if ($expediente && $expediente->ruta_nss)
                                                 <a href="{{ asset('storage/uploads/nss/' . $usuario->usuario . '/' . $expediente->ruta_nss) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -210,13 +209,13 @@
                                     <fieldset>
                                         <legend>Cargar Comprobante de Estudios</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="comp_estudios @if ($expediente->ruta_comp_estudios) w-75 @else w-100 @endif">
+                                            <div class="comp_estudios @if ($expediente && $expediente->ruta_comp_estudios) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_comp_estudios" name="ruta_comp_estudios"
                                                     data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_comp_estudios)
+                                            @if ($expediente && $expediente->ruta_comp_estudios)
                                                 <a href="{{ asset('storage/uploads/comp_estudios/' . $usuario->usuario . '/' . $expediente->ruta_comp_estudios) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -227,13 +226,13 @@
                                     <fieldset>
                                         <legend>Cargar Comprobante de Domicilio</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="comp_domicilio @if ($expediente->ruta_comp_domicilio) w-75 @else w-100 @endif">
+                                            <div class="comp_domicilio @if ($expediente && $expediente->ruta_comp_domicilio) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_comp_domicilio" name="ruta_comp_domicilio"
                                                     data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_comp_domicilio)
+                                            @if ($expediente && $expediente->ruta_comp_domicilio)
                                                 <a href="{{ asset('storage/uploads/comp_domicilio/' . $usuario->usuario . '/' . $expediente->ruta_comp_domicilio) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -244,12 +243,12 @@
                                     <fieldset>
                                         <legend>Cargar Estado Bancario</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="edo_bancario @if ($expediente->ruta_edo_bancario) w-75 @else w-100 @endif">
+                                            <div class="edo_bancario @if ($expediente && $expediente->ruta_edo_bancario) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_edo_bancario" name="ruta_edo_bancario" data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_edo_bancario)
+                                            @if ($expediente && $expediente->ruta_edo_bancario)
                                                 <a href="{{ asset('storage/uploads/edo_bancario/' . $usuario->usuario . '/' . $expediente->ruta_edo_bancario) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -260,13 +259,13 @@
                                     <fieldset>
                                         <legend>Cargar Aviso Ret. Infonavit</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="aviso_ret_infonavit @if ($expediente->ruta_aviso_ret_infonavit) w-75 @else w-100 @endif">
+                                            <div class="aviso_ret_infonavit @if ($expediente && $expediente->ruta_aviso_ret_infonavit) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_aviso_ret_infonavit" name="ruta_aviso_ret_infonavit"
                                                     data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_aviso_ret_infonavit)
+                                            @if ($expediente && $expediente->ruta_aviso_ret_infonavit)
                                                 <a href="{{ asset('storage/uploads/aviso_ret_infonavit/' . $usuario->usuario . '/' . $expediente->ruta_aviso_ret_infonavit) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
@@ -277,13 +276,13 @@
                                     <fieldset>
                                         <legend>Cargar Aviso Ret. Fonacot</legend>
                                         <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="aviso_ret_fonacot @if ($expediente->ruta_aviso_ret_fonacot) w-75 @else w-100 @endif">
+                                            <div class="aviso_ret_fonacot @if ($expediente && $expediente->ruta_aviso_ret_fonacot) w-75 @else w-100 @endif">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_aviso_ret_fonacot" name="ruta_aviso_ret_fonacot"
                                                     data-show-preview="true">
                                             </div>
 
-                                            @if ($expediente->ruta_aviso_ret_fonacot)
+                                            @if ($expediente && $expediente->ruta_aviso_ret_fonacot)
                                                 <a href="{{ asset('storage/uploads/aviso_ret_fonacot/' . $usuario->usuario . '/' . $expediente->ruta_aviso_ret_fonacot) }}"
                                                     target="_blank" class="btn btn-success w-25">Ver Archivo</a>
                                             @endif
