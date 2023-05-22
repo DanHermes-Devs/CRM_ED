@@ -54,7 +54,7 @@ class HomeController extends Controller
             // Procesar los resultados de la consulta
             while ($row = mysqli_fetch_assoc($result)) {
                 // Acceder a los datos de cada fila
-                dump($row);
+                dd($row);
             }
         } else {
             // Manejo del error de consulta
