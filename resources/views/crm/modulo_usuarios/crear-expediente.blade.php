@@ -104,10 +104,10 @@
                                             <label for="nombre" class="form-label">Proyecto:</label>
                                             <select name="id_proyecto" id="id_proyecto" class="form-select">
                                                 <option>-- Selecciona un proyecto --</option>
-                                                @foreach ($supervisores as $supervisor)
-                                                    <option value="{{ $supervisor->id }}"
-                                                        {{ isset($expediente) && $supervisor->id == $expediente->id_supervisor ? 'selected' : '' }}>
-                                                        {{ $supervisor->name }}</option>
+                                                @foreach ($proyectos as $proyecto)
+                                                    <option value="{{ $proyecto->id }}"
+                                                        {{ isset($expediente) && $proyecto->id == $expediente->id_proyecto ? 'selected' : '' }}>
+                                                        {{ $proyecto->proyecto }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
