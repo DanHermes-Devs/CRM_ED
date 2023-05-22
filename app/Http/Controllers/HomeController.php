@@ -37,6 +37,13 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
+    {        
+        $data = $this->consultaSQL();
+
+        return view('crm.index', compact('data'));
+    }
+
+    private function consultaSQL()
     {
         $query = "SELECT SUM(CASE skilldef WHEN 'fb_uimotor' THEN 1 ELSE 0 END) as leadsFb, SUM(CASE skilldef WHEN 'uimotor' THEN 1 ELSE 0 END) as leadsGoogle
         FROM (SELECT d.id,d.dateinsert,de.id_lead,l.skilldef 
@@ -64,11 +71,9 @@ class HomeController extends Controller
                 $data[] = $row;
             }
 
-            return view('crm.index')->with('data', $data);
+            return $data;
         } else {
             echo "Error al ejecutar la consulta: " . mysqli_error($this->connection);
         }
-
-        return view('crm.index');
     }
 }
