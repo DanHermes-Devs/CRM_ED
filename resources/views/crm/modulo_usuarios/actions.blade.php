@@ -8,6 +8,9 @@
         <a href="{{ route('editar-usuario', $id) }}" class="link-secondary">
             <i class="ri-pencil-line"></i>
         </a>
+        <a href="{{ route('create.expedient', $id) }}" class="link-info">
+            <i class="ri-contacts-book-upload-line"></i>
+        </a>
     @endcan
     @can('eliminar-usuario')
         <a href="javascript:void(0);" class="link-danger" data-id="{{ $id }}" id="eliminar_usuario">

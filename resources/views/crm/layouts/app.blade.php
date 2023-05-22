@@ -34,6 +34,10 @@
     <link href="{{ asset('./assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link rel="stylesheet" href="{{ asset('./assets/css/icons.min.css') }}">
+    <!-- default icons used in the plugin are from Bootstrap 5.x icon library (which can be enabled by loading CSS below) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css" crossorigin="anonymous">
+    <!-- the fileinput plugin styling CSS file -->
+    <link href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('./assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
@@ -169,24 +173,52 @@
                                 </li>
                             @endif
                             <li class="nav-item">
-                                <a class="nav-link menu-link" href="#ventas" data-bs-toggle="collapse"
-                                    role="button" aria-expanded="false" aria-controls="ventas">
+                                <a class="nav-link menu-link" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                    aria-controls="sidebarMultilevel">
                                     <i class="ri-folders-line"></i> <span data-key="t-dashboards">Módulos</span>
                                 </a>
-                                <div class="collapse menu-dropdown" id="ventas">
+                                <div class="menu-dropdown collapse" id="sidebarMultilevel" style="">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
-                                                Ventas
+                                            <a href="#modulo_seguros" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                aria-controls="modulo_seguros" data-key="t-level-1.2">
+                                                Módulo Seguros
                                             </a>
+                                            <div class="menu-dropdown collapse" id="modulo_seguros" style="">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
+                                                            Ventas
+                                                        </a>
+                                                    </li>
+                                                    @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Agente Renovaciones', 'Administrador', 'Supervisor', 'Coordinador']))
+                                                        <li class="nav-item">
+                                                            <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
+                                                                Cobranza
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                </ul>
+                                            </div>
                                         </li>
-                                        @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Agente Renovaciones', 'Administrador', 'Supervisor', 'Coordinador']))
-                                            <li class="nav-item">
-                                                <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
-                                                    Cobranza
-                                                </a>
-                                            </li>
-                                        @endif
+                                        <li class="nav-item">
+                                            <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                aria-controls="modulo_rrhh" data-key="t-level-1.2">
+                                                Módulo R.R.H.H.
+                                            </a>
+                                            <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
+                                                <ul class="nav nav-sm flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
+                                                            Todos los Usuarios
+                                                        </a>
+                                                        <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
+                                                            Roles
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -194,47 +226,28 @@
                             {{-- Solo lo puede ver administrador este bloque html --}}
                             @if (Auth::user()->hasRole('Administrador'))
                                 <li class="nav-item">
-                                    <a class="nav-link menu-link" href="#usersCRUD" data-bs-toggle="collapse"
-                                        role="button" aria-expanded="false" aria-controls="usersCRUD">
-                                        <i class="ri-team-line"></i> <span data-key="t-dashboards">Usuarios</span>
+                                    <a class="nav-link menu-link" href="#sidebarTables" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarTables">
+                                        <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Catálogos</span>
                                     </a>
-                                    <div class="collapse menu-dropdown" id="usersCRUD">
+                                    <div class="menu-dropdown collapse" id="sidebarTables" style="">
                                         <ul class="nav nav-sm flex-column">
                                             <li class="nav-item">
-                                                <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
-                                                    Todos los Usuarios
-                                                </a>
-                                                <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
-                                                    Roles
-                                                </a>
+                                                <a href="{{ route('paises.index') }}" class="nav-link" data-key="t-basic-tables">Paises</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{{ route('aseguradoras.index') }}" class="nav-link" data-key="t-grid-js">Aseguradoras</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{{ route('campaigns.index') }}" class="nav-link" data-key="t-list-js">Campañas</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{{ route('proyectos.index') }}" class="nav-link" data-key="t-list-js">Proyectos</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="{{ route('grupos.index') }}" class="nav-link" data-key="t-list-js">Grupos</a>
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-link" href="{{ route('paises.index') }}">
-                                        <i class="ri-road-map-line"></i> <span data-key="t-dashboards">Paises</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-link" href="{{ route('aseguradoras.index') }}">
-                                        <i class="ri-building-line"></i> <span data-key="t-dashboards">Aseguradoras</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-link" href="{{ route('campaigns.index') }}">
-                                        <i class="ri-medal-line"></i> <span data-key="t-dashboards">Campañas</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-link" href="{{ route('proyectos.index') }}">
-                                        <i class="ri-stack-line"></i> <span data-key="t-dashboards">Proyectos</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link menu-link" href="{{ route('grupos.index') }}">
-                                        <i class="ri-group-line"></i> <span data-key="t-dashboards">Grupos</span>
-                                    </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="{{ route('cronjobs.index') }}">
@@ -286,6 +299,16 @@
         <!-- END layout-wrapper -->
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
+    {{-- File input --}}
+    <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/buffer.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/filetype.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/piexif.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/sortable.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/fileinput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/locales/LANG.js"></script>
+
     <!-- JAVASCRIPT -->
     <script src="{{ asset('./assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>    
     <script src="{{ asset('./assets/libs/simplebar/simplebar.min.js') }}"></script>
@@ -315,6 +338,7 @@
 
     {{-- Spanish jS --}}
     <script src="{{ asset('js/Spanish.js')}}"></script>
+    <script src="{{ asset('js/es.js')}}"></script>
 
     <script>
         $.ajaxSetup({

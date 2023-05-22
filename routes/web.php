@@ -16,6 +16,7 @@ use App\Http\Controllers\CobranzaController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\API\ventas\VentasController;
+use App\Http\Controllers\PersonalFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/eliminar-usuario/{id}', [UsuarioController::class, 'destroy'])->name('eliminar-usuario');
     Route::get('/import-users', [UsuarioController::class, 'formImport'])->name('formImport');
     Route::post('/users-import', [UsuarioController::class, 'importUsers'])->name('importUsers');
+
+    // Rutas para el modulo de expedientes
+    Route::get('/cargar-expediente-usuario/{id}', [UsuarioController::class, 'createExpediente'])->name('create.expedient');
+    Route::post('/crear-expediente-usuario', [UsuarioController::class, 'crearExpediente'])->name('store.crearExpediente');
     
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);

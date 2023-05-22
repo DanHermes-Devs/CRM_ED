@@ -21,6 +21,13 @@
         </div>
         <!-- end page title -->
 
+
+        @foreach ($data as $row)
+            <p>{{ $row['leadsFb'] }}</p>
+            <p>{{ $row['leadsGoogle'] }}</p>
+        @endforeach
+
+
         <div class="row">
             <div class="col-xl-12">
                 <div class="card crm-widget">
