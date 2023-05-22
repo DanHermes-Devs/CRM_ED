@@ -7,6 +7,8 @@ use mysqli;
 
 class HomeController extends Controller
 {
+    private $connection;
+
     /**
      * Create a new controller instance.
      *
@@ -15,6 +17,18 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        // Conexion a la BD
+        $databaseName = 'ocmdb';
+        $hostName = '172.93.111.251';
+        $userName = 'root';
+        $passCode = '55R%@$2KqC68';
+
+        $this->connection = mysqli_connect($hostName, $userName, $passCode, $databaseName);
+
+        if (!$this->connection) {
+            die("Error al conectarse a la base de datos: " . mysqli_connect_error());
+        }
     }
 
     /**
@@ -24,13 +38,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $databaseName = 'ocmdb';
-        $hostName = '172.93.111.251';
-        $userName = 'root';
-        $passCode = '55R%@$2KqC68';
-
-        $connection = mysqli_connect($hostName, $userName, $passCode, $databaseName);
-
         $query = "SELECT SUM(CASE skilldef WHEN 'fb_uimotor' THEN 1 ELSE 0 END) as leadsFb, SUM(CASE skilldef WHEN 'uimotor' THEN 1 ELSE 0 END) as leadsGoogle
         FROM (SELECT d.id,d.dateinsert,de.id_lead,l.skilldef 
             FROM ocmdb.skill_fb_uimotor_data d
@@ -38,7 +45,7 @@ class HomeController extends Controller
                 ON d.id = de.id
             INNER JOIN ocmdb.ocm_skill_loads l
                 ON d.idload = l.idload
-            WHERE d.dateinsert BETWEEN '2023-05-19 00:000:00' AND '2023-05-19 23:59:59'
+            WHERE d.dateinsert BETWEEN '2023-05-19 00:00:00' AND '2023-05-19 23:59:59'
             AND de.id_lead <> ''
             UNION
             SELECT d.id,d.dateinsert,de.id_lead,l.skilldef  
@@ -47,29 +54,20 @@ class HomeController extends Controller
                 ON d.id = de.id
             INNER JOIN ocmdb.ocm_skill_loads l
                 ON d.idload = l.idload
-            WHERE d.dateinsert BETWEEN '2023-05-19 00:000:00' AND '2023-05-19 23:59:59'AND de.id_lead <> '') AS Leads";
-        $result = mysqli_query($connection, $query);
+            WHERE d.dateinsert BETWEEN '2023-05-19 00:00:00' AND '2023-05-19 23:59:59'AND de.id_lead <> '') AS Leads";
+
+        $result = mysqli_query($this->connection, $query);
 
         if ($result) {
-            // Procesar los resultados de la consulta
+            $data = [];
             while ($row = mysqli_fetch_assoc($result)) {
-                // Acceder a los datos de cada fila
-                dd($row);
+                $data[] = $row;
             }
+
+            return view('crm.index')->with('data', $data);
         } else {
-            // Manejo del error de consulta
-            echo "Error al ejecutar la consulta: " . mysqli_error($mysqli);
+            echo "Error al ejecutar la consulta: " . mysqli_error($this->connection);
         }
-
-        if (!$connection) {
-            die("Error al conectarse a la base de datos: " . mysqli_connect_error());
-        }else{
-            echo "Conexión exitosa a la base de datos";
-        }
-
-        // Aquí puedes realizar las consultas y operaciones necesarias utilizando la conexión
-
-        mysqli_close($connection);
 
         return view('crm.index');
     }
