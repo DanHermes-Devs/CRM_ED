@@ -247,7 +247,7 @@ class InsertDataToEndpoint extends Command
                     <tem:EnviaSMS>
                         <tem:Usuario>'.$this->user.'</tem:Usuario>
                         <tem:Password>'.$this->password.'</tem:Password>
-                        <tem:Telefonos>5518840878</tem:Telefonos>
+                        <tem:Telefonos>'.$receipt->venta->TelCelular.'</tem:Telefonos>
                         <tem:Mensaje>'.$smsText.'</tem:Mensaje>
                         <tem:codigoPais>52</tem:codigoPais>
                         <tem:SMSDosVias>0</tem:SMSDosVias>

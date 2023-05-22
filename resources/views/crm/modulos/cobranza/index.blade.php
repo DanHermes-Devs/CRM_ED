@@ -259,8 +259,8 @@
                             name: 'TelCelular'
                         },
                         {
-                            data: 'id',
-                            name: 'id'
+                            data: 'num_pago',
+                            name: 'num_pago'
                         },
                         {
                             data: 'fecha_proximo_pago',
