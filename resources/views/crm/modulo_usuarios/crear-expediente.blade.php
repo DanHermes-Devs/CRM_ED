@@ -18,6 +18,44 @@
         border-radius: 3px !important;
         margin-bottom: 10px !important;
     }
+
+    /*============================================= 
+    TABLET HORIZONTAL (LG revisamos en 1024px) 
+    =============================================*/ 
+    
+    @media (max-width:1199px) and (min-width:992px){ 
+    
+    } 
+    
+    /*============================================= 
+    TABLET VERTICAL (MD revisamos en 768px) 
+    =============================================*/ 
+    
+    @media (max-width:991px) and (min-width:768px){ 
+    
+    } 
+    
+    /*============================================= 
+    MÓVIL HORIZONTAL (SM revisamos en 576px) 
+    =============================================*/ 
+    
+    @media (max-width:767px) and (min-width:576px){ 
+
+    } 
+    
+    /*============================================= 
+    MOVIL VERTICAL (revisamos en 320px) 
+    =============================================*/ 
+    
+    @media (max-width:575px){
+        .flex-column .btn_responsive {
+            width: 100%!important;
+        }
+
+        .flex-column .input_responsive {
+            width: 100%!important;
+        }
+    }
 </style>
 @section('content')
     <div class="container-fluid">
@@ -126,15 +164,15 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar INE</legend>
-                                        <div class="mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="ine @if ($expediente && $expediente->ruta_ine) w-75 @else w-100 @endif">
+                                        <div class="mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="ine @if ($expediente && $expediente->ruta_ine) w-75 @else w-100 @endif input_responsive">
                                                 <input id="ruta_ine" name="ruta_ine" class="form-control w-100"
                                                     type="file" accept=".jpeg, .jpg, .png, .pdf"
                                                     data-show-preview="true">
                                             </div>
                                             @if ($expediente && $expediente->ruta_ine)
                                                 <a href="{{ asset('storage/uploads/ine/' . $usuario->usuario . '/' . $expediente->ruta_ine) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver INE</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -142,8 +180,8 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Acta de Nacimiento</legend>
-                                        <div class="mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="acta_nacimiento @if ($expediente && $expediente->ruta_acta_nacimiento) w-75 @else w-100 @endif">
+                                        <div class="mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="acta_nacimiento @if ($expediente && $expediente->ruta_acta_nacimiento) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_acta_nacimiento" name="ruta_acta_nacimiento"
                                                     data-show-preview="true">
@@ -151,7 +189,7 @@
 
                                             @if ($expediente && $expediente->ruta_acta_nacimiento)
                                                 <a href="{{ asset('storage/uploads/acta_nacimiento/' . $usuario->usuario . '/' . $expediente->ruta_acta_nacimiento) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Acta</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -159,15 +197,15 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar CURP</legend>
-                                        <div class="mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="curp @if ($expediente && $expediente->ruta_curp) w-75 @else w-100 @endif">
+                                        <div class="mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="curp @if ($expediente && $expediente->ruta_curp) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_curp" name="ruta_curp" data-show-preview="true">
                                             </div>
 
                                             @if ($expediente && $expediente->ruta_curp)
                                                 <a href="{{ asset('storage/uploads/curp/' . $usuario->usuario . '/' . $expediente->ruta_curp) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -175,8 +213,8 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Constancia Fiscal</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="constancia_fiscal @if ($expediente && $expediente->ruta_constancia_fiscal) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="constancia_fiscal @if ($expediente && $expediente->ruta_constancia_fiscal) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_constancia_fiscal" name="ruta_constancia_fiscal"
                                                     data-show-preview="true">
@@ -184,7 +222,7 @@
 
                                             @if ($expediente && $expediente->ruta_constancia_fiscal)
                                                 <a href="{{ asset('storage/uploads/constancia_fiscal/' . $usuario->usuario . '/' . $expediente->ruta_constancia_fiscal) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -192,15 +230,15 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar NSS</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="nss @if ($expediente && $expediente->ruta_nss) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="nss @if ($expediente && $expediente->ruta_nss) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_nss" name="ruta_nss" data-show-preview="true">
                                             </div>
 
                                             @if ($expediente && $expediente->ruta_nss)
                                                 <a href="{{ asset('storage/uploads/nss/' . $usuario->usuario . '/' . $expediente->ruta_nss) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -208,8 +246,8 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Comprobante de Estudios</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="comp_estudios @if ($expediente && $expediente->ruta_comp_estudios) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="comp_estudios @if ($expediente && $expediente->ruta_comp_estudios) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_comp_estudios" name="ruta_comp_estudios"
                                                     data-show-preview="true">
@@ -217,7 +255,7 @@
 
                                             @if ($expediente && $expediente->ruta_comp_estudios)
                                                 <a href="{{ asset('storage/uploads/comp_estudios/' . $usuario->usuario . '/' . $expediente->ruta_comp_estudios) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -225,8 +263,8 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Comprobante de Domicilio</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="comp_domicilio @if ($expediente && $expediente->ruta_comp_domicilio) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="comp_domicilio @if ($expediente && $expediente->ruta_comp_domicilio) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_comp_domicilio" name="ruta_comp_domicilio"
                                                     data-show-preview="true">
@@ -234,7 +272,7 @@
 
                                             @if ($expediente && $expediente->ruta_comp_domicilio)
                                                 <a href="{{ asset('storage/uploads/comp_domicilio/' . $usuario->usuario . '/' . $expediente->ruta_comp_domicilio) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -242,15 +280,15 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Estado Bancario</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="edo_bancario @if ($expediente && $expediente->ruta_edo_bancario) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="edo_bancario @if ($expediente && $expediente->ruta_edo_bancario) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_edo_bancario" name="ruta_edo_bancario" data-show-preview="true">
                                             </div>
 
                                             @if ($expediente && $expediente->ruta_edo_bancario)
                                                 <a href="{{ asset('storage/uploads/edo_bancario/' . $usuario->usuario . '/' . $expediente->ruta_edo_bancario) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -258,8 +296,8 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Aviso Ret. Infonavit</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="aviso_ret_infonavit @if ($expediente && $expediente->ruta_aviso_ret_infonavit) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="aviso_ret_infonavit @if ($expediente && $expediente->ruta_aviso_ret_infonavit) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_aviso_ret_infonavit" name="ruta_aviso_ret_infonavit"
                                                     data-show-preview="true">
@@ -267,7 +305,7 @@
 
                                             @if ($expediente && $expediente->ruta_aviso_ret_infonavit)
                                                 <a href="{{ asset('storage/uploads/aviso_ret_infonavit/' . $usuario->usuario . '/' . $expediente->ruta_aviso_ret_infonavit) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
@@ -275,8 +313,8 @@
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar Aviso Ret. Fonacot</legend>
-                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100">
-                                            <div class="aviso_ret_fonacot @if ($expediente && $expediente->ruta_aviso_ret_fonacot) w-75 @else w-100 @endif">
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="aviso_ret_fonacot @if ($expediente && $expediente->ruta_aviso_ret_fonacot) w-75 @else w-100 @endif input_responsive">
                                                 <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
                                                     id="ruta_aviso_ret_fonacot" name="ruta_aviso_ret_fonacot"
                                                     data-show-preview="true">
@@ -284,7 +322,7 @@
 
                                             @if ($expediente && $expediente->ruta_aviso_ret_fonacot)
                                                 <a href="{{ asset('storage/uploads/aviso_ret_fonacot/' . $usuario->usuario . '/' . $expediente->ruta_aviso_ret_fonacot) }}"
-                                                    target="_blank" class="btn btn-success w-25">Ver Archivo</a>
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
                                             @endif
                                         </div>
                                     </fieldset>
