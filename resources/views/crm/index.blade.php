@@ -157,7 +157,7 @@
                                             </div>
                                             <div class="flex-grow-1 ms-3">
                                                 <h2 class="mb-0">
-                                                    <span class="counter-value" data-target="{{ optional($ventas[0])['Total'] ? $ventas[0]['Total'] : '' }}">0</span>
+                                                    <span class="counter-value" data-target="<?= (!empty($ventas[0]['Total'])) ? $ventas[0]['Total']: ''; ?>">0</span>
                                                 </h2>
                                             </div>
                                         </div>
@@ -166,7 +166,7 @@
                                                 <i class="ri-google-line display-6 text-muted"></i>
                                             </div>
                                             <div class="flex-grow-1 ms-3 ml-3">
-                                                <h2 class="mb-0"><span class="counter-value" data-target="{{ optional($ventas[1])['Total'] ? $ventas[1]['Total'] : '' }}">0</span></h2>
+                                                <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($ventas[1]['Total'])) ? $ventas[1]['Total']: ''; ?>">0</span></h2>
                                             </div>
                                         </div>
                                     </div>
