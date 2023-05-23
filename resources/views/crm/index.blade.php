@@ -79,15 +79,6 @@
                                 </select>
                             </div>
 
-<<<<<<< Updated upstream
-
-        @foreach ($data as $row)
-            <p>{{ $row['leadsFb'] }}</p>
-            <p>{{ $row['leadsGoogle'] }}</p>
-        @endforeach
-
-
-=======
                             <button type="button" id="buscarDatos" class="btn btn-primary d-flex align-items-center justify-content-center gap-1 fs-5">
                                 <i class="ri-search-line"></i>
                                 Buscar
@@ -101,7 +92,6 @@
             </div>
         </div>
     </div>
->>>>>>> Stashed changes
         <div class="row">
             <div class="col-xl-12">
                 <div class="card crm-widget">
@@ -166,7 +156,9 @@
                                                 <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                             </div>
                                             <div class="flex-grow-1 ms-3">
-                                                <h2 class="mb-0"><span class="counter-value" data-target="{{ optional($ventas[0])['Total'] ? $ventas[0]['Total'] : '' }}">0</span></h2>
+                                                <h2 class="mb-0">
+                                                    <span class="counter-value" data-target="{{ optional($ventas[0])['Total'] ? $ventas[0]['Total'] : '' }}">0</span>
+                                                </h2>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center">
