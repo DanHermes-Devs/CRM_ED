@@ -130,10 +130,11 @@ class VentasController extends Controller
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
             // Si la última gestión es 'VENTA'y 'RENOVACION', no permite modificar el campo UGestion
-            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION' && $venta->UGestion === null) {
+            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION') {
                 if ($venta->UGestion !== 'RENOVACION') {
                     $venta->UGestion = $request->UGestion;
                 }
+
                 $venta->Fpreventa = Carbon::now();
     
                 // Guarda los valores actuales de MesBdd y AnioBdd antes de actualizar el registro
@@ -145,6 +146,7 @@ class VentasController extends Controller
                 // Restaura los valores de MesBdd y AnioBdd que se guardaron previamente
                 $venta->MesBdd = $currentMesBdd;
                 $venta->AnioBdd = $currentAnioBdd;
+
             } else {
                 if ($request->Codificacion === 'RENOVACION') {
                     // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
@@ -183,7 +185,7 @@ class VentasController extends Controller
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
                 $ventaExistente = Venta::where('nSerie', $request->nSerie)
-                    ->where('tVenta', 'VENTA NUEVA')
+                    ->where('tVenta', 'VENTA')
                     ->first();
 
                 // Obtiene la fecha actual
@@ -197,7 +199,7 @@ class VentasController extends Controller
                     if ($diasDiferencia <= 30) {
                         $venta->tVenta = 'VENTA DUPLICADA';
                     } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
-                        $venta->tVenta = 'VENTA NUEVA';
+                        $venta->tVenta = 'VENTA';
                     } else {
                         $venta->tVenta = 'RENOVACION';
                     }
@@ -214,7 +216,7 @@ class VentasController extends Controller
                         $venta->tVenta = 'POSIBLE DUPLICIDAD';
                     } else {
                         // Si no hay una venta existente con el mismo nSerie y tVenta 'VENTA NUEVA', asigna tVenta enviado en la solicitud
-                        $venta->tVenta = 'VENTA NUEVA';
+                        $venta->tVenta = 'VENTA';
                     }
                 }
             }
