@@ -38,13 +38,13 @@
                         @endif
                         <div class="d-flex flex-column align-items-end justify-content-center">
                             <div class="d-flex gap-3">
-                                @can('crear-usuario')
+                                @can('crear-usuarios')
                                     <a href="{{ route('formImport') }}" class="btn btn-warning waves-effect waves-light mb-3 d-flex align-items-center gap-1">
                                         <i class="ri-file-excel-2-line"></i>
                                         Importar Usuarios
                                     </a>
                                 @endcan
-                                @can('crear-usuario')
+                                @can('crear-usuarios')
                                     <a href="{{ route('crear-usuario') }}" class="btn btn-primary waves-effect waves-light mb-3 d-flex align-items-center gap-1">
                                         <i class="ri-add-circle-line"></i>
                                         Agregar usuario

@@ -1,10 +1,5 @@
 <div class="hstack gap-3 fs-20">
-    {{-- @can('ver-usuario')
-        <a href="" class="link-success">
-            <i class="ri-eye-line"></i>
-        </a>
-    @endcan --}}
-    @can('editar-usuario')
+    @can('editar-usuarios')
         <a href="{{ route('editar-usuario', $id) }}" class="link-secondary">
             <i class="ri-pencil-line"></i>
         </a>
@@ -12,7 +7,7 @@
             <i class="ri-contacts-book-upload-line"></i>
         </a>
     @endcan
-    @can('eliminar-usuario')
+    @can('borrar-usuarios')
         <a href="javascript:void(0);" class="link-danger" data-id="{{ $id }}" id="eliminar_usuario">
             <i class="ri-delete-bin-5-line"></i>
         </a>
