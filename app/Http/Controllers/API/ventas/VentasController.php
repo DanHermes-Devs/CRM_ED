@@ -441,7 +441,8 @@ class VentasController extends Controller
                         'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
                         'agente_cob_id' => $i == 1 ? $usuario->id : null,
                         'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                        'estado_pago' => 'PENDIENTE'
+                        'estado_pago' => 'PENDIENTE',
+                        'contactId' => $venta->contactId,
                     ]);
 
                     $receipt->save();
