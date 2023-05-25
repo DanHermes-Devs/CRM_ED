@@ -37,6 +37,7 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
+    Route::get('/filterODM', [HomeController::class, 'filter'])->name('filter-dashboard');
 
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
     Route::get('/crear-usuario', [UsuarioController::class, 'create'])->name('crear-usuario');
