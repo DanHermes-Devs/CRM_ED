@@ -624,7 +624,7 @@
             }],
             chart: {
                 type: "bar",
-                height: 441,
+                height: 341,
                 toolbar: {
                     show: !1
                 }
@@ -672,8 +672,9 @@
                         return e
                     }
                 },
-                tickAmount: 20,
-                min: 0
+                tickAmount: 1,
+                min: 0,
+                max: {{ $total }}
             },
             fill: {
                 opacity: 1
