@@ -361,7 +361,7 @@
 
     <div class="row">
         <div class="col-xl-9">
-            <div class="card">
+            <div class="card card-height-100">
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Llamadas por agente</h4>
                 </div><!-- end card header -->
@@ -545,7 +545,7 @@
             ],
             chart: {
                 type: "bar",
-                height: 441,
+                height: 341,
                 toolbar: {
                     show: !1
                 }
