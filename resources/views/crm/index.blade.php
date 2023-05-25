@@ -901,8 +901,9 @@
                     return  e
                 }
             },
-            tickAmount: 4,
-            min: 0
+            tickAmount: 2,
+            min: 0,
+            max: {{ $conteo[0]['leadsFb'] + $conteo[0]['leadsGoogle'] }}
         },
         fill: {
             opacity: 1
@@ -978,8 +979,9 @@
                     return  e
                 }
             },
-            tickAmount: 20,
-            min: 0
+            tickAmount: 2,
+            min: 0,
+            max: {{ $total }}
         },
         fill: {
             opacity: 1

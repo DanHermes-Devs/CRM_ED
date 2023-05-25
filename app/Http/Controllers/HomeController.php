@@ -82,8 +82,10 @@ class HomeController extends Controller
             'fecha_inicio' => '',
             'fecha_fin' => ''
         ];
-        // dd($lYvAYc);
-        return view('crm.index', compact('conteo','llamadas','ventas','lYvAYc','tipificacion','values'));
+        $total = 0;
+        foreach ($tipificacion as $item) { $total += $item['Total']; }
+        // dd($total);
+        return view('crm.index', compact('conteo','llamadas','ventas','lYvAYc','tipificacion','values','total'));
     }
 
 //======================================================================
@@ -137,7 +139,9 @@ class HomeController extends Controller
             $tipificacion = $this->rcXcampPRA($tableFb, $skillDefFb, $request->fecha_inicio,$request->fecha_fin);
         }
         $values = $request;
-        return view('crm.index', compact('conteo','llamadas','ventas','lYvAYc','tipificacion','values'));
+        $total = 0;
+        foreach ($tipificacion as $item) { $total += $item['Total']; }
+        return view('crm.index', compact('conteo','llamadas','ventas','lYvAYc','tipificacion','values','total'));
     }
 
 //======================================================================
