@@ -103,20 +103,20 @@
                                 <div class="py-4 px-3">
                                     <h5 class="text-muted text-uppercase fs-13">LEADS <i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
                                     </h5>
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
+                                            <div class="flex-grow-1">
                                                 <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($conteo[0]['leadsFb'])) ? $conteo[0]['leadsFb']: ''; ?>">0</span></h2>
                                             </div>
                                         </div>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-google-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
+                                            <div class="flex-grow-1">
                                                 <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($conteo[0]['leadsGoogle'])) ? $conteo[0]['leadsGoogle']: ''; ?>">0</span></h2>
                                             </div>
                                         </div>
@@ -127,20 +127,20 @@
                                 <div class="mt-3 mt-md-0 py-4 px-3">
                                     <h5 class="text-muted text-uppercase fs-13">LLAMADAS <i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
                                     </h5>
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
+                                            <div class="flex-grow-1">
                                                 <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($llamadas[0]['TOTAL'])) ? $llamadas[0]['TOTAL']: ''; ?>">0</span></h2>
                                             </div>
                                         </div>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-google-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3 ml-3">
+                                            <div class="flex-grow-1">
                                                 <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($llamadas[1]['TOTAL'])) ? $llamadas[1]['TOTAL']: ''; ?>">0</span></h2>
                                             </div>
                                         </div>
@@ -152,22 +152,22 @@
                                     <h5 class="text-muted text-uppercase fs-13">Ventas Realizadas 
                                     <i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
                                     </h5>
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
+                                            <div class="flex-grow-1">
                                                 <h2 class="mb-0">
                                                     <span class="counter-value" data-target="<?= (!empty($ventas[0]['Total'])) ? $ventas[0]['Total']: ''; ?>">0</span>
                                                 </h2>
                                             </div>
                                         </div>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-google-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3 ml-3">
+                                            <div class="flex-grow-1">
                                                 <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($ventas[1]['Total'])) ? $ventas[1]['Total']: ''; ?>">0</span></h2>
                                             </div>
                                         </div>
@@ -179,13 +179,12 @@
                                     <h5 class="text-muted text-uppercase fs-13">Ratio 
                                     <i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
                                     </h5>
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
+                                            <div class="flex-grow-1">
                                             <?php 
                                                 $lf = $conteo[0]['leadsFb'];
                                                 $vf = empty($ventas[0]['Total'])? 0 : $ventas[0]['Total'];
@@ -194,11 +193,11 @@
                                                 <h2 class="mb-0"><span class="counter-value" data-target="<?= (!empty($ratioFb)) ? $ratioFb: ''; ?>">0</span>% </h2>
                                             </div>
                                         </div>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center gap-1">
                                             <div class="flex-shrink-0">
                                                 <i class="ri-google-line display-6 text-muted"></i>
                                             </div>
-                                            <div class="flex-grow-1 ms-3 ml-3">
+                                            <div class="flex-grow-1">
                                             <?php 
                                                 $lg = $conteo[0]['leadsGoogle'];
                                                 $vg = empty($ventas[1]['Total'])? 0 : $ventas[1]['Total'];
