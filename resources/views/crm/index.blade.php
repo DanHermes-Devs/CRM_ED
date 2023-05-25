@@ -311,7 +311,7 @@
         
 
         <div class="row">
-            <div class="col-xl-10">
+            <div class="col-xl-9">
                 <div class="card card-height-100">
                     <div class="card-header align-items-center d-flex">
                         <h4 class="card-title mb-0 flex-grow-1">Llamadas por agente</h4>
@@ -324,8 +324,8 @@
                                     <tr class="text-muted">
                                         <th scope="col" style="width: 20%;">Usuario</th>
                                         <th scope="col" >Nombre del agente</th>
-                                        <th scope="col">Llamadas Totales</th>
-                                        <th scope="col" style="width: 16%;">Llamadas Primer Contacto</th>
+                                        <th scope="col">Totales</th>
+                                        <th scope="col" style="width: 16%;">Primer Contacto</th>
                                         <th scope="col" style="width: 16%;">Cotizaciones</th>
                                         <th scope="col" style="width: 16%;">Ratio</th>
                                     </tr>
@@ -347,7 +347,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xxl-2 col-md-6">
+            <div class="col-xxl-3">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
                         <h4 class="card-title mb-0 flex-grow-1">Leads</h4>
