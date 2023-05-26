@@ -77,6 +77,10 @@
 
                             {{-- Capturamos el rol del usuario conectado --}}
                             <input type="hidden" name="rol" value="{{ auth()->user()->roles->first()->name }}">
+                            {{-- Capturamos el usuario autenticado --}}
+                            <input type="hidden" name="user" id="user" value="{{ auth()->user()->id }}">
+
+
 
                             @can('exportar-ventas')
                                 {{-- Validamos si el usuario autenticado tiene el rol supervisor o coordinador --}}
@@ -127,8 +131,14 @@
                             <div class="row">
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
-                                        <label for="telefono">Teléfono:</label>
+                                        <label for="telefono">Teléfono Fijo:</label>
                                         <input type="text" name="telefono" id="telefono" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="celular">Teléfono Celular:</label>
+                                        <input type="text" name="celular" id="celular" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4">
@@ -303,12 +313,14 @@
             var numero_serie = $('#numero_serie').val();
             var numero_poliza = $('#numero_poliza').val();
             var telefono = $('#telefono').val();
+            var celular = $('#celular').val();
             var tipo_venta = $('#tipo_venta').val();
             var nombre_cliente = $('#nombre_cliente').val();
             var supervisor = $('#supervisor').val();
             var agente = $('#agente').val();
             var mes_bdd = $('#mes_bdd').val();
             var anio_bdd = $('#anio_bdd').val();
+            var user = $('#user').val();
 
             $('#tabla_ventas').DataTable({
                 processing: true,
@@ -326,12 +338,14 @@
                         numero_serie: numero_serie,
                         numero_poliza: numero_poliza,
                         telefono: telefono,
+                        celular: celular,
                         tipo_venta: tipo_venta,
                         nombre_cliente: nombre_cliente,
                         supervisor: supervisor,
                         agente: agente,
                         mes_bdd: mes_bdd,
                         anio_bdd: anio_bdd,
+                        user: user,
                     },
                 },
                 columns: [
