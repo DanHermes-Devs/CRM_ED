@@ -147,6 +147,11 @@ class VentasController extends Controller
                 $venta->MesBdd = $currentMesBdd;
                 $venta->AnioBdd = $currentAnioBdd;
 
+                $fNacimiento = $request->fNacimiento;
+                $fechaNacimiento = Carbon::createFromFormat('d-m-Y', $fNacimiento)->format('Y-m-d');
+
+                $venta->fNacimiento = $fechaNacimiento;
+
             } else {
                 if ($request->Codificacion === 'RENOVACION') {
                     // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
@@ -165,6 +170,11 @@ class VentasController extends Controller
                         $venta->tVenta = 'RENOVACION';
     
                         $venta->fill($request->all());
+
+                        $fNacimiento = $request->fNacimiento;
+                        $fechaNacimiento = Carbon::createFromFormat('d-m-Y', $fNacimiento)->format('Y-m-d');
+
+                        $venta->fNacimiento = $fechaNacimiento;
                     }
                 } else {
                     return response()->json([
@@ -181,6 +191,11 @@ class VentasController extends Controller
             $venta->Fpreventa = Carbon::now();
 
             $venta->fill($request->all());
+
+            $fNacimiento = $request->fNacimiento;
+            $fechaNacimiento = Carbon::createFromFormat('d-m-Y', $fNacimiento)->format('Y-m-d');
+
+            $venta->fNacimiento = $fechaNacimiento;
 
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
