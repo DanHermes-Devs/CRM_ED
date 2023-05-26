@@ -187,58 +187,63 @@
                                     </a>
                                 </li>
                             @endif
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                    aria-controls="sidebarMultilevel">
-                                    <i class="ri-folders-line"></i> <span data-key="t-dashboards">Módulos</span>
-                                </a>
-                                <div class="menu-dropdown collapse" id="sidebarMultilevel" style="">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="#modulo_seguros" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                aria-controls="modulo_seguros" data-key="t-level-1.2">
-                                                Módulo Seguros
-                                            </a>
-                                            <div class="menu-dropdown collapse" id="modulo_seguros" style="">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
-                                                            Ventas
-                                                        </a>
-                                                    </li>
-                                                    @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Administrador', 'Supervisor', 'Coordinador']))
-                                                        <li class="nav-item">
-                                                            <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
-                                                                Cobranza
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
+
+                            {{-- Si el usuario es director, no mostramos el contenido h1 hola --}}
+                            @if(Auth::user()->hasAnyRole(['Administrador', 'Supervisor', 'Coordinador', 'Agente de ventas', 'Agente de Cobranza', 'Agente Renovaciones']))
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                        aria-controls="sidebarMultilevel">
+                                        <i class="ri-folders-line"></i> <span data-key="t-dashboards">Módulos</span>
+                                    </a>
+
+                                    <div class="menu-dropdown collapse" id="sidebarMultilevel" style="">
+                                        <ul class="nav nav-sm flex-column">
                                             <li class="nav-item">
-                                                <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                    aria-controls="modulo_rrhh" data-key="t-level-1.2">
-                                                    Módulo R.R.H.H.
+                                                <a href="#modulo_seguros" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="modulo_seguros" data-key="t-level-1.2">
+                                                    Módulo Seguros
                                                 </a>
-                                                <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
+                                                <div class="menu-dropdown collapse" id="modulo_seguros" style="">
                                                     <ul class="nav nav-sm flex-column">
                                                         <li class="nav-item">
-                                                            <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
-                                                                Todos los Usuarios
-                                                            </a>
-                                                            <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
-                                                                Roles
+                                                            <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
+                                                                Ventas
                                                             </a>
                                                         </li>
+                                                        @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Administrador', 'Supervisor', 'Coordinador']))
+                                                            <li class="nav-item">
+                                                                <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
+                                                                    Cobranza
+                                                                </a>
+                                                            </li>
+                                                        @endif
                                                     </ul>
                                                 </div>
                                             </li>
-                                        @endif
-                                    </ul>
-                                </div>
-                            </li>
+                                            @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
+                                                <li class="nav-item">
+                                                    <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                        aria-controls="modulo_rrhh" data-key="t-level-1.2">
+                                                        Módulo R.R.H.H.
+                                                    </a>
+                                                    <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
+                                                        <ul class="nav nav-sm flex-column">
+                                                            <li class="nav-item">
+                                                                <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
+                                                                    Todos los Usuarios
+                                                                </a>
+                                                                <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
+                                                                    Roles
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </li>
+                            @endif
 
                             {{-- Solo lo puede ver administrador este bloque html --}}
                             @if (Auth::user()->hasRole('Administrador'))
