@@ -94,4 +94,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Incident::class, 'id_usuario');
     }
+
+    // Relacion con attendances
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'id_usuario');
+    }
+
+    // Relacion con education
+    public function educations()
+    {
+        return $this->hasMany(Education::class, 'user_id');
+    }
 }
