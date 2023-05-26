@@ -29,6 +29,33 @@ class User extends Authenticatable
         'apellido_materno',
         'estatus',
         'fecha_ultimo_login',
+        'id_superior',
+        'id_campana',
+        'sexo',
+        'fecha_nacimiento',
+        'rfc',
+        'curp',
+        'estado_civil',
+        'no_imss',
+        'cr_infonavit',
+        'cr_fonacot',
+        'tipo_sangre',
+        'ba_nomina',
+        'cta_clabe',
+        'alergias',
+        'padecimientos',
+        'tel_casa',
+        'tel_celular',
+        'persona_emergencia',
+        'tel_emergencia',
+        'esquema_laboral',
+        'proyecto_asignado',
+        'turno',
+        'horario',
+        'fecha_ingreso',
+        'fecha_baja',
+        'motivo_baja',
+        'observaciones',
     ];
 
     /**
@@ -60,5 +87,11 @@ class User extends Authenticatable
     public function receipts()
     {
         return $this->hasMany(Receipt::class, 'agente_cob_id');
+    }
+
+    // Relacion con incidents
+    public function incidents()
+    {
+        return $this->hasMany(Incident::class, 'id_usuario');
     }
 }

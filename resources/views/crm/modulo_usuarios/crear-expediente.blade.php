@@ -118,6 +118,13 @@
                                     </div>
                                     <div class="col-12 col-md-3">
                                         <div class="mb-3">
+                                            <label for="perfil" class="form-label">Perfil:</label>
+                                            <input type="text" class="form-control" id="perfil" name="perfil"
+                                                placeholder="perfil" value="{{ $usuario->roles->first()->name }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="mb-3">
                                             <label for="nombre" class="form-label">Nombre del supervisor:</label>
                                             <select name="id_supervisor" id="id_supervisor"
                                                 class="form-select @error('id_supervisor') is-invalid @enderror">
@@ -150,17 +157,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
-                                        <div class="mb-3">
-                                            <label for="perfil" class="form-label">Perfil:</label>
-                                            <input type="text" class="form-control" id="perfil" name="perfil"
-                                                placeholder="perfil" value="{{ $usuario->roles->first()->name }}" readonly>
-                                        </div>
-                                    </div>
                                 </div>
                             </fieldset>
 
                             <div class="row">
+                                <div class="ml-3 mr-3">
+                                    <div class="alert alert-warning">
+                                        En caso de que el archivo PDF tenga un peso mayor a 2MB, favor de comprimirlo en 
+                                        <a href="https://www.ilovepdf.com/es/comprimir_pdf" target="_blank" style="text-decoration: underline!important;" noreferrer>I❤PDF</a>
+                                    </div>
+                                </div>
                                 <div class="col-12 col-md-6 mb-3">
                                     <fieldset>
                                         <legend>Cargar INE</legend>
