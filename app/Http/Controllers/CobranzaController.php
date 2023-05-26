@@ -190,6 +190,7 @@ class CobranzaController extends Controller
         // Actualizamos los datos del recibo
         $recibo->prima_neta_cobrada = $request->prima_cobrada;
         $recibo->estado_pago = $request->estado_pago;
+        $recibo->observations = $request->observations;
 
         // Guardamos los cambios
         $recibo->save();
