@@ -114,8 +114,7 @@
                             <div class="row row-cols-xxl-4 row-cols-md-3 row-cols-1 g-0">
                                 <div class="col">
                                     <div class="py-4 px-3">
-                                        <h5 class="text-muted text-uppercase fs-13">LEADS <i
-                                                class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
+                                        <h5 class="text-muted text-uppercase fs-13">LEADS <!--<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>-->
                                         </h5>
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="d-flex align-items-center gap-1">
@@ -143,8 +142,7 @@
                                 </div><!-- end col -->
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-4 px-3">
-                                        <h5 class="text-muted text-uppercase fs-13">LLAMADAS <i
-                                                class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
+                                        <h5 class="text-muted text-uppercase fs-13">LLAMADAS <!--<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>-->
                                         </h5>
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="d-flex align-items-center gap-1">
@@ -173,8 +171,7 @@
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-4 px-3">
                                         <h5 class="text-muted text-uppercase fs-13">Ventas Realizadas
-                                            <i
-                                                class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
+                                            <!--<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>-->
                                         </h5>
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="d-flex align-items-center gap-1">
@@ -204,8 +201,7 @@
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-4 px-3">
                                         <h5 class="text-muted text-uppercase fs-13">Ratio
-                                            <i
-                                                class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
+                                            <!--<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>-->
                                         </h5>
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="d-flex align-items-center gap-1">
@@ -269,8 +265,7 @@
                     <div class="row row-cols-xxl-4 row-cols-md-3 row-cols-1 g-0">
                         <div class="col">
                             <div class="py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">LEADS <i
-                                        class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">LEADS <!--<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>-->
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
@@ -288,8 +283,7 @@
                         </div><!-- end col -->
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
-                                <h5 class="text-muted text-uppercase fs-13">LLAMADAS <i
-                                        class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
+                                <h5 class="text-muted text-uppercase fs-13">LLAMADAS <!--<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>-->
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
@@ -309,7 +303,7 @@
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Ventas Realizadas
-                                    <i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
+                                    <!--<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>-->
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
@@ -329,7 +323,7 @@
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Ratio
-                                    <i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
+                                    <!--<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>-->
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
