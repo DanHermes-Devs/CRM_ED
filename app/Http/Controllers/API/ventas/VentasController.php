@@ -49,6 +49,7 @@ class VentasController extends Controller
             'nSerie' => 'numero_serie',
             'nPoliza' => 'numero_poliza',
             'TelFijo' => 'telefono',
+            'TelCelular' => 'celular',
             'Nombre' => 'nombre_cliente',
         ];
 
@@ -59,7 +60,7 @@ class VentasController extends Controller
         }
 
         // Filtramos por agente
-        $usuario = User::find($request->agente);
+        $usuario = User::find($request->user);
 
         // Búsqueda por tipo de venta
         if ($request->filled('tipo_venta')) {
@@ -83,9 +84,10 @@ class VentasController extends Controller
 
         if ($rol == 'Agente de Ventas') {
             $resultados = $resultados->where('tVenta', 'VENTA')
-                ->where('UGestion', 'PREVENTA');
+                ->where('UGestion', 'VENTA')
+                ->where('LoginOcm', 'Agente2');
         } elseif ($rol == 'Agente Renovaciones') {
-            $resultados = $resultados->where('tVenta', 'RENOVACION');
+            $resultados = $resultados->where('tVenta', 'RENOVACION')->where('LoginOcm', $usuario->usuario);
         } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
         } else {
