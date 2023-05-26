@@ -201,24 +201,26 @@
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="nav-item">
-                                            <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                aria-controls="modulo_rrhh" data-key="t-level-1.2">
-                                                Módulo R.R.H.H.
-                                            </a>
-                                            <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
-                                                            Todos los Usuarios
-                                                        </a>
-                                                        <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
-                                                            Roles
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
+                                        @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
+                                            <li class="nav-item">
+                                                <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="modulo_rrhh" data-key="t-level-1.2">
+                                                    Módulo R.R.H.H.
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
+                                                                Todos los Usuarios
+                                                            </a>
+                                                            <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
+                                                                Roles
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>
