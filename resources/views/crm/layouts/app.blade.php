@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-layout-mode="light" data-layout-width="fluid" data-layout-position="fixed" data-layout-style="default">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="sm" data-sidebar-image="none" data-layout-style="default" data-layout-mode="light" data-layout-width="fluid" data-layout-position="fixed">
 
 <head>
     <meta charset="utf-8">
@@ -98,6 +98,12 @@
                                     <i class='bx bx-moon fs-22'></i>
                                 </button>
                             </div>
+
+                            <div class="ms-1 header-item d-none d-sm-flex">
+                                <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen">
+                                    <i class="bx bx-fullscreen fs-22"></i>
+                                </button>
+                            </div>
     
                             <div class="dropdown ms-sm-3 header-item topbar-user">
                                 <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
@@ -142,24 +148,27 @@
             <!-- ========== App Menu ========== -->
             <div class="app-menu navbar-menu">
                 <!-- LOGO -->
+
                 <div class="navbar-brand-box">
                     <!-- Dark Logo-->
                     <a href="index.html" class="logo logo-dark">
-                        <span class="logo-lg">
-                            <img src="{{ asset('./assets/images/logo_ed.svg') }}" style="padding: 1rem; width: 50%;">
-                        </span>
-                    </a>
-                    <a href="index.html" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" style="padding: 1rem; width: 100%;">
+                            <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" style="padding: 1rem; width: 50%;">
+                            <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" alt="" height="17">
                         </span>
                     </a>
                     <!-- Light Logo-->
-                    <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
-                        id="vertical-hover">
+                    <a href="index.html" class="logo logo-light">
+                        <span class="logo-sm">
+                            <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" class="w-100 py-3">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" class="w-50 py-4">
+                        </span>
+                    </a>
+                    <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
                         <i class="ri-record-circle-line"></i>
                     </button>
                 </div>
