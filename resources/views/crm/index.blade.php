@@ -528,15 +528,20 @@
             }
         }
         var areachartSalesColors = getChartColorsArray("leads");
+        @if ($values->campana != 'PRA')
+            var dataFin = [{{ $conteo[0]['leadsFb'] + $conteo[0]['leadsGoogle'] }}];
+        @else
+            var dataFin = [{{ $conteo[0]['leadsFb'] }}];
+        @endif;
         areachartSalesColors && (options = {
             series: [{
                     name: "total",
-                    data: [{{ $conteo[0]['leadsFb'] + $conteo[0]['leadsGoogle'] }}]
+                    data: dataFin
                 }, {
                     name: "Facebook",
                     data: [{{ $conteo[0]['leadsFb'] }}]
                 }
-                @if ($conteo[0]['leadsGoogle'])
+                @if ($values->campana != 'PRA')
                     , {
                         name: "Google",
                         data: [{{ $conteo[0]['leadsGoogle'] }}]
