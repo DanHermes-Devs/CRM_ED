@@ -56,6 +56,7 @@
                             </a>
                         </div>
                     @endif
+                    
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
@@ -146,13 +147,13 @@
                                         <label for="tipo_venta">Tipo de venta:</label>
                                         <select name="tipo_venta" id="tipo_venta" class="form-select">
                                             <option value="">-- Selecciona --</option>
-                                            @if (!auth()->user()->hasAnyRole(['Agente de Ventas']))
-                                                <option value="VENTA">Venta nueva</option>
+                                            @if (auth()->user()->hasAnyRole(['Agente de Ventas']))
+                                                <option value="VENTA">VENTA NUEVA</option>
                                             @endif
-                                            @if (!auth()->user()->hasAnyRole(['Agente Renovaciones']))
-                                                <option value="RENOVACION">Renovaciones</option>
+                                            @if (auth()->user()->hasAnyRole(['Agente Renovaciones']))
+                                                <option value="RENOVACION">RENOVACIONES</option>
                                             @endif
-                                            <option value="POSIBLE DUPLICIDAD">Posible Duplicidad</option>
+                                            <option value="POSIBLE DUPLICIDAD">POSIBLE DUPLICIDAD</option>
                                             <option value="ULTIMA GESTION">ÚLTIMA GESTIÓN</option>
                                         </select>
                                     </div>
