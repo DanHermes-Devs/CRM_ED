@@ -763,5 +763,7 @@
                 type: "solid"
             }
         }, (chart = new ApexCharts(document.querySelector("#deals"), options)).render());
+        function reloadPage() { location.reload();}
+        setInterval(reloadPage, 60000);
     </script>
 @endsection
