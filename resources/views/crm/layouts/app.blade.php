@@ -85,8 +85,14 @@
                                     </form>
                                 </div>
                             </div>
+
+                            <div class="header-item">
+                                <div class="alert alert-success alert-border-left mb-0" role="alert">
+                                    <strong>{{ Auth::user()->roles->first()->name }}</strong>
+                                </div>
+                            </div>
     
-                            <div class="ms-1 header-item d-none d-sm-flex">
+                            <div class="ms-1 header-item d-none">
                                 <button type="button"
                                     class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
                                     <i class='bx bx-moon fs-22'></i>
@@ -165,7 +171,7 @@
                         </div>
                         <ul class="navbar-nav" id="navbar-nav">
                             <li class="menu-title"><span data-key="t-menu">Menu</span></li>
-                            @if (Auth::user()->hasRole('Administrador'))
+                            @if (Auth::user()->hasAnyRole(['Administrador', 'Director', 'Supervisor', 'Coordinador']))
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="{{ route('dasboard') }}">
                                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboard</span>
@@ -191,7 +197,7 @@
                                                             Ventas
                                                         </a>
                                                     </li>
-                                                    @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Agente Renovaciones', 'Administrador', 'Supervisor', 'Coordinador']))
+                                                    @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Administrador', 'Supervisor', 'Coordinador']))
                                                         <li class="nav-item">
                                                             <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
                                                                 Cobranza
@@ -201,24 +207,26 @@
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="nav-item">
-                                            <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                aria-controls="modulo_rrhh" data-key="t-level-1.2">
-                                                Módulo R.R.H.H.
-                                            </a>
-                                            <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
-                                                <ul class="nav nav-sm flex-column">
-                                                    <li class="nav-item">
-                                                        <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
-                                                            Todos los Usuarios
-                                                        </a>
-                                                        <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
-                                                            Roles
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
+                                        @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
+                                            <li class="nav-item">
+                                                <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="modulo_rrhh" data-key="t-level-1.2">
+                                                    Módulo R.R.H.H.
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
+                                                                Todos los Usuarios
+                                                            </a>
+                                                            <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
+                                                                Roles
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>

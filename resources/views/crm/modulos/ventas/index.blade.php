@@ -56,6 +56,7 @@
                             </a>
                         </div>
                     @endif
+                    
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
@@ -77,6 +78,10 @@
 
                             {{-- Capturamos el rol del usuario conectado --}}
                             <input type="hidden" name="rol" value="{{ auth()->user()->roles->first()->name }}">
+                            {{-- Capturamos el usuario autenticado --}}
+                            <input type="hidden" name="user" id="user" value="{{ auth()->user()->id }}">
+
+
 
                             @can('exportar-ventas')
                                 {{-- Validamos si el usuario autenticado tiene el rol supervisor o coordinador --}}
@@ -127,8 +132,14 @@
                             <div class="row">
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
-                                        <label for="telefono">Teléfono:</label>
+                                        <label for="telefono">Teléfono Fijo:</label>
                                         <input type="text" name="telefono" id="telefono" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="celular">Teléfono Celular:</label>
+                                        <input type="text" name="celular" id="celular" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4">
@@ -136,13 +147,13 @@
                                         <label for="tipo_venta">Tipo de venta:</label>
                                         <select name="tipo_venta" id="tipo_venta" class="form-select">
                                             <option value="">-- Selecciona --</option>
-                                            @if (!auth()->user()->hasAnyRole(['Agente de Ventas']))
-                                                <option value="VENTA">Venta nueva</option>
+                                            @if (auth()->user()->hasAnyRole(['Agente de Ventas']))
+                                                <option value="VENTA">VENTA NUEVA</option>
                                             @endif
-                                            @if (!auth()->user()->hasAnyRole(['Agente Renovaciones']))
-                                                <option value="RENOVACION">Renovaciones</option>
+                                            @if (auth()->user()->hasAnyRole(['Agente Renovaciones']))
+                                                <option value="RENOVACION">RENOVACIONES</option>
                                             @endif
-                                            <option value="POSIBLE DUPLICIDAD">Posible Duplicidad</option>
+                                            <option value="POSIBLE DUPLICIDAD">POSIBLE DUPLICIDAD</option>
                                             <option value="ULTIMA GESTION">ÚLTIMA GESTIÓN</option>
                                         </select>
                                     </div>
@@ -303,12 +314,14 @@
             var numero_serie = $('#numero_serie').val();
             var numero_poliza = $('#numero_poliza').val();
             var telefono = $('#telefono').val();
+            var celular = $('#celular').val();
             var tipo_venta = $('#tipo_venta').val();
             var nombre_cliente = $('#nombre_cliente').val();
             var supervisor = $('#supervisor').val();
             var agente = $('#agente').val();
             var mes_bdd = $('#mes_bdd').val();
             var anio_bdd = $('#anio_bdd').val();
+            var user = $('#user').val();
 
             $('#tabla_ventas').DataTable({
                 processing: true,
@@ -326,12 +339,14 @@
                         numero_serie: numero_serie,
                         numero_poliza: numero_poliza,
                         telefono: telefono,
+                        celular: celular,
                         tipo_venta: tipo_venta,
                         nombre_cliente: nombre_cliente,
                         supervisor: supervisor,
                         agente: agente,
                         mes_bdd: mes_bdd,
                         anio_bdd: anio_bdd,
+                        user: user,
                     },
                 },
                 columns: [

@@ -24,7 +24,7 @@
     }
 
     .mr_3 {
-        margin-right: 1rem!important;
+        margin-right: 1rem !important;
     }
 </style>
 @section('content')
@@ -135,10 +135,10 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal para reasignar recibo -->
-    <div class="modal fade" id="reasignarReciboModal" tabindex="-1" role="dialog" aria-labelledby="reasignarReciboModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="reasignarReciboModal" tabindex="-1" role="dialog"
+        aria-labelledby="reasignarReciboModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -163,10 +163,10 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal para reasignar recibo -->
-    <div class="modal fade" id="editarReciboModal" tabindex="-1" role="dialog" aria-labelledby="editarReciboModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="editarReciboModal" tabindex="-1" role="dialog"
+        aria-labelledby="editarReciboModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -187,7 +187,12 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="prima_cobrada" class="form-label">Prima Cobrada:</label>
-                            <input type="text" pattern="^\d*(\.\d{0,2})?$" class="form-control" id="prima_cobrada" name="prima_cobrada">
+                            <input type="text" pattern="^\d*(\.\d{0,2})?$" class="form-control" id="prima_cobrada"
+                                name="prima_cobrada">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="observations" class="form-label">Observaciones:</label>
+                            <textarea class="form-control" id="observations" name="observations" rows="3"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Editar</button>
                     </form>
@@ -202,7 +207,9 @@
             var end_date = null;
 
             $('#fecha_pago_1').daterangepicker({
-                maxSpan: { days: 7 },
+                maxSpan: {
+                    days: 7
+                },
                 locale: {
                     format: 'DD/MM/YYYY',
                     applyLabel: 'Aplicar',
@@ -244,19 +251,27 @@
                     },
                     columns: [{
                             data: 'venta.contactId',
-                            name: 'contactId'
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
                         },
                         {
                             data: 'venta.Nombre',
-                            name: 'NombreDeCliente'
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
                         },
                         {
                             data: 'venta.nPoliza',
-                            name: 'nPoliza'
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
                         },
                         {
                             data: 'venta.TelCelular',
-                            name: 'TelCelular'
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
                         },
                         {
                             data: 'num_pago',
@@ -291,7 +306,7 @@
                 $('#recibo_id').val(reciboId);
                 $('#asignarReciboModal').modal('show');
             });
-            
+
             $(document).on('click', '.editar-recibo', function(e) {
                 e.preventDefault();
                 var reciboId = $(this).data('id');
@@ -306,22 +321,24 @@
                     url: url,
                     method: 'GET',
                     success: function(response) {
-                        if(response.code == 200){
+                        if (response.code == 200) {
                             // Pintamos los datos en los inputs
                             $('#prima_cobrada').val(response.recibo.prima_neta_cobrada);
                             $('#estado_pago_edit').val(response.recibo.estado_pago);
+                            $('#observations').val(response.recibo.observations);
                         }
                     }
                 });
             });
 
 
-            $('#editarReciboForm').on('submit', function(e){
+            $('#editarReciboForm').on('submit', function(e) {
                 e.preventDefault();
 
                 var reciboId = $('#editar_recibo_id').val();
                 var prima_cobrada = $('#prima_cobrada').val();
                 var estado_pago = $('#estado_pago_edit').val();
+                var observations = $('#observations').val();
 
                 var route = '{{ route('cobranza.update', ':id') }}';
                 var url = route.replace(':id', reciboId);
@@ -332,14 +349,15 @@
                     data: {
                         recibo_id: reciboId,
                         prima_cobrada: prima_cobrada,
-                        estado_pago: estado_pago
+                        estado_pago: estado_pago,
+                        observations: observations
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response){
+                    success: function(response) {
                         // Si el response.code es igual a 200 mandamos un sweet alert de éxito
-                        if(response.code == 200){
+                        if (response.code == 200) {
                             Swal.fire(
                                 'Éxito',
                                 response.message,
@@ -353,7 +371,8 @@
                         $('#tabla_cobranza').DataTable().ajax.reload();
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        if(jqXHR.status == 422) { // Cuando la respuesta de Laravel es 422, significa que hay un error de validación
+                        if (jqXHR.status ==
+                            422) { // Cuando la respuesta de Laravel es 422, significa que hay un error de validación
                             let errors = jqXHR.responseJSON.errors;
                             let errorMessage = '';
 
@@ -406,7 +425,7 @@
                         $('#asignarReciboForm').trigger('reset');
                         $('#tabla_cobranza').DataTable().ajax.reload();
                         // Sweetalert2
-                        if(response.code == 200) {
+                        if (response.code == 200) {
                             Swal.fire({
                                 title: '¡Éxito!',
                                 text: 'El recibo ha sido asignado correctamente.',
@@ -466,7 +485,7 @@
                         $('#reasignarReciboForm').trigger('reset');
                         $('#tabla_cobranza').DataTable().ajax.reload();
                         // Sweetalert2
-                        if(response.code == 200) {
+                        if (response.code == 200) {
                             Swal.fire({
                                 title: '¡Éxito!',
                                 text: 'El recibo ha sido asignado correctamente.',

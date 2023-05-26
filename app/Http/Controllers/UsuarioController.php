@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Project;
 use App\Models\Usuario;
+use App\Models\Campaign;
+use App\Models\Incident;
 use Illuminate\Support\Arr;
 use App\Imports\UsersImport;
 use App\Models\PersonalFile;
@@ -56,7 +58,11 @@ class UsuarioController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
-        return view('crm.modulo_usuarios.create', compact('roles'));
+        
+        // Mostramos las campañas
+        $campanas = Campaign::all();
+
+        return view('crm.modulo_usuarios.create', compact('roles', 'campanas'));
     }
 
     /**
@@ -96,6 +102,32 @@ class UsuarioController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'estatus' => $request->estatus,
+            'id_campana' => $request->id_campana,
+            'sexo' => $request->sexo,
+            'fecha_nacimiento' => $request->fecha_nacimiento,
+            'rfc' => $request->rfc,
+            'curp' => $request->curp,
+            'estado_civil' => $request->estado_civil,
+            'no_imss' => $request->no_imss,
+            'cr_infonavit' => $request->cr_infonavit,
+            'cr_fonacot' => $request->cr_fonacot,
+            'tipo_sangre' => $request->tipo_sangre,
+            'ba_nomina' => $request->ba_nomina,
+            'cta_clabe' => $request->cta_clabe,
+            'alergias' => $request->alergias,
+            'padecimientos' => $request->padecimientos,
+            'tel_casa' => $request->tel_casa,
+            'tel_celular' => $request->tel_celular,
+            'persona_emergencia' => $request->persona_emergencia,
+            'tel_emergencia' => $request->tel_emergencia,
+            'esquema_laboral' => $request->esquema_laboral,
+            'proyecto_asignado' => $request->proyecto_asignado,
+            'turno' => $request->turno,
+            'horario' => $request->horario,
+            'fecha_ingreso' => $request->fecha_ingreso,
+            'fecha_baja' => $request->fecha_baja,
+            'motivo_baja' => $request->motivo_baja,
+            'observaciones' => $request->observaciones,
         ])->assignRole($request->input('roles'));
 
         Log::channel('registerUsers')->info('Nuevo usuario registrado: ' . $request->name);
@@ -127,7 +159,13 @@ class UsuarioController extends Controller
         $roles = Role::pluck('name', 'name')->all();
         $usuarioRole = $usuario->roles->pluck('name', 'name')->all();
 
-        return view('crm.modulo_usuarios.edit', compact('usuario', 'roles', 'usuarioRole'));
+        // Mostramos las campañas
+        $campanas = Campaign::all();
+
+        // Mostramos el proyecto que tiene asignado
+        $user = PersonalFile::where('id_usuario', $id)->pluck('id_proyecto');
+
+        return view('crm.modulo_usuarios.edit', compact('usuario', 'roles', 'usuarioRole', 'campanas'));
     }
 
     /**
@@ -339,5 +377,26 @@ class UsuarioController extends Controller
         } else {
             return back()->with('error', 'Ocurrió un error al crear el expediente.');
         }
+    }
+
+    // Método para las incidencias
+    public function incidents($id)
+    {
+        $usuario = User::findOrFail($id);
+        return view('crm.modulo_usuarios.incidents', compact('usuario'));
+    }
+
+    // Método para guardar las incidencias
+    public function crearIncidencia(Request $request)
+    {
+        $incidencia = new Incident;
+        $incidencia->id_usuario = $request->id_usuario;
+        $incidencia->tipo_incidencia = $request->tipo_incidencia;
+        $incidencia->fecha_desde = $request->fecha_desde;
+        $incidencia->fecha_hasta = $request->fecha_hasta;
+        $incidencia->observaciones = $request->observaciones;
+        $incidencia->save();
+
+        return back()->with('success', 'Incidencia guardada con éxito.');
     }
 }
