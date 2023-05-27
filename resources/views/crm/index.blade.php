@@ -53,8 +53,8 @@
                                 <div class="form-group">
                                     <label for="campana">Campaña:</label>
                                     {{-- Mostramos un select con las campañas en duro activas --}}
-                                    <select name="campana" id="campana" class="form-select">
-                                        <option value="0">-- Selecciona --</option>
+                                    <select name="campana" id="campana" class="form-select" >
+                                        <option value="0" disabled>-- Selecciona --</option>
                                         <option value="UNI"
                                             <?= $values->campana ? ($values->campana == 'UNI' ? 'selected="selected"' : '') : '' ?>>
                                             Universidad Insurgentes</option>

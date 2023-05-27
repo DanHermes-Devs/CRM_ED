@@ -119,7 +119,7 @@ class HomeController extends Controller
                 $skillDefGo = 'uimotor';
             break;
             default:
-                $tableFb = 'skill_fb_uimotor_dataextren';
+                $tableFb = 'skill_fb_uimotor_data';
                 $tableGo = 'skill_uimotor_data';
                 $skillDefFb = 'fb_uimotor';
                 $skillDefGo = 'uimotor';
