@@ -353,7 +353,7 @@
                     {data: 'contactId', name: 'contactId'},
                     {data: 'tVenta', name: 'tVenta'},
                     {data: 'UGestion', name: 'UGestion'},
-                    {data: 'nPoliza', name: 'nPoliza'},
+                    {data: 'nueva_poliza', name: 'nueva_poliza'},
                     {data: 'Aseguradora', name: 'Aseguradora'},
                     {data: 'PncTotal', name: 'PncTotal'},
                     {data: 'FrePago', name: 'FrePago'},
