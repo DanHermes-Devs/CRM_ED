@@ -183,6 +183,9 @@ class VentasController extends Controller
                     if ($ventaRenovacion) {
                         $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                         $venta->tVenta = 'RENOVACION';
+
+                        // Guardamos todos los valores que vienen actualizados en la solicitud
+                        $venta->fill($request->all());
                     } else {
                         $venta = new Venta;
                         $venta->contactId = $request->contactId;
