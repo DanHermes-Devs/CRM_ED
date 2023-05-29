@@ -67,6 +67,7 @@ class VentasController extends Controller
             'ContactID' => 'lead',
             'nSerie' => 'numero_serie',
             'nPoliza' => 'numero_poliza',
+            'TelFijo' => 'telefono',
             'TelCelular' => 'celular',
             'Nombre' => 'nombre_cliente',
         ];
