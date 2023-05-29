@@ -56,6 +56,7 @@ class Venta extends Model
         'tPoliza',
         'Paquete',
         'nPoliza',
+        'nueva_poliza',
         'Aseguradora',
         'fPago',
         'FrePago',
