@@ -72,6 +72,7 @@ class Venta extends Model
         'FechaProximoPago',
         'FechaPagoReal',
         'PrimaNetaCobrada',
+        'PrimaNetaAnual',
         'AgenteCob',
         'TipoPago',
         'EstadoDePago',
