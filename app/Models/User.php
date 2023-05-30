@@ -51,7 +51,8 @@ class User extends Authenticatable
         'esquema_laboral',
         'proyecto_asignado',
         'turno',
-        'horario',
+        'hora_entrada',
+        'hora_salida',
         'fecha_ingreso',
         'fecha_baja',
         'motivo_baja',
@@ -98,7 +99,7 @@ class User extends Authenticatable
     // Relacion con attendances
     public function attendances()
     {
-        return $this->hasMany(Attendance::class, 'id_usuario');
+        return $this->hasMany(Attendance::class, 'agent_id');
     }
 
     // Relacion con education

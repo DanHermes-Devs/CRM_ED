@@ -16,6 +16,8 @@ use App\Http\Controllers\CobranzaController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\API\ventas\VentasController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\PersonalFileController;
 
 /*
@@ -51,6 +53,10 @@ Route::group(['middleware' => ['auth']], function () {
     // Rutas para el modulo de expedientes
     Route::get('/cargar-expediente-usuario/{id}', [UsuarioController::class, 'createExpediente'])->name('create.expedient');
     Route::post('/crear-expediente-usuario', [UsuarioController::class, 'crearExpediente'])->name('store.crearExpediente');
+
+    // Rutas para las asistencias
+    Route::get('/asistencias', [AttendanceController::class, 'index'])->name('asistencias');
+    Route::get('/get-user-incidencia/{id}', [IncidentController::class, 'index'])->name('consultar-usuario');
     
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);

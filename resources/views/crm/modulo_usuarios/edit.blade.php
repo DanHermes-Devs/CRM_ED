@@ -388,13 +388,26 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-3">
+                                <div class="mb-3">
+                                    <label for="hora_entrada" class="form-label">Hora Entrada:</label>
+                                    <input type="time" class="form-control @error('hora_entrada') is-invalid @enderror" id="hora_entrada" name="hora_entrada" value="{{ $usuario->hora_entrada }}">
+    
+                                    @error('hora_entrada')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
                             
                             <div class="col-12 col-md-3">
                                 <div class="mb-3">
-                                    <label for="horario" class="form-label">Horario:</label>
-                                    <input type="text" class="form-control @error('horario') is-invalid @enderror" id="horario" name="horario" value="{{ $usuario->horario }}">
+                                    <label for="hora_salida" class="form-label">Hora Salida:</label>
+                                    <input type="time" class="form-control @error('hora_salida') is-invalid @enderror" id="hora_salida" name="hora_salida" value="{{ $usuario->hora_salida }}">
     
-                                    @error('horario')
+                                    @error('hora_salida')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
                                         </span>
@@ -426,8 +439,9 @@
                                         </span>
                                     @enderror
                                 </div>
-                            </div>
-                            
+                            </div>                        
+                        </div>
+                        <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label for="motivo_baja" class="form-label">Motivo de la Baja:</label>
