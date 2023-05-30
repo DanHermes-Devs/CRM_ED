@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dbcdbee94ab2dfde9081e23995b394f0",
+    "content-hash": "da87dc3c3f08518a4dd98004d900f290",
     "packages": [
         {
             "name": "brick/math",
@@ -2841,25 +2841,25 @@
         },
         {
             "name": "orangehill/iseed",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orangehill/iseed.git",
-                "reference": "11f4355cdffc570eb231259f8700d760215df3fe"
+                "reference": "92b98c8bda6280afa0fac016b1b49caf6f57f18d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orangehill/iseed/zipball/11f4355cdffc570eb231259f8700d760215df3fe",
-                "reference": "11f4355cdffc570eb231259f8700d760215df3fe",
+                "url": "https://api.github.com/repos/orangehill/iseed/zipball/92b98c8bda6280afa0fac016b1b49caf6f57f18d",
+                "reference": "92b98c8bda6280afa0fac016b1b49caf6f57f18d",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0|^10.0",
                 "php": "^7.2|^8.0.2"
             },
             "require-dev": {
-                "illuminate/filesystem": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/filesystem": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0|^10.0",
+                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0|^10.0",
                 "mockery/mockery": "^1.0.0",
                 "phpunit/phpunit": "^8.0"
             },
@@ -2898,9 +2898,9 @@
             ],
             "support": {
                 "issues": "https://github.com/orangehill/iseed/issues",
-                "source": "https://github.com/orangehill/iseed/tree/v3.0.2"
+                "source": "https://github.com/orangehill/iseed/tree/v3.0.3"
             },
-            "time": "2022-02-11T07:31:08+00:00"
+            "time": "2023-03-27T06:14:43+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -3750,6 +3750,66 @@
             "time": "2021-09-25T23:10:38+00:00"
         },
         {
+            "name": "spatie/db-dumper",
+            "version": "2.21.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/db-dumper.git",
+                "reference": "05e5955fb882008a8947c5a45146d86cfafa10d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/db-dumper/zipball/05e5955fb882008a8947c5a45146d86cfafa10d1",
+                "reference": "05e5955fb882008a8947c5a45146d86cfafa10d1",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0",
+                "symfony/process": "^4.2|^5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\DbDumper\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Dump databases",
+            "homepage": "https://github.com/spatie/db-dumper",
+            "keywords": [
+                "database",
+                "db-dumper",
+                "dump",
+                "mysqldump",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/db-dumper/issues",
+                "source": "https://github.com/spatie/db-dumper/tree/2.21.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-02-24T14:56:42+00:00"
+        },
+        {
             "name": "spatie/image-optimizer",
             "version": "1.6.4",
             "source": {
@@ -3803,6 +3863,96 @@
                 "source": "https://github.com/spatie/image-optimizer/tree/1.6.4"
             },
             "time": "2023-03-10T08:43:19+00:00"
+        },
+        {
+            "name": "spatie/laravel-backup",
+            "version": "6.16.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-backup.git",
+                "reference": "332fae80b12cacb9e4161824ba195d984b28c8fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/332fae80b12cacb9e4161824ba195d984b28c8fb",
+                "reference": "332fae80b12cacb9e4161824ba195d984b28c8fb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zip": "^1.14.0",
+                "illuminate/console": "^6.0|^7.0|^8.0",
+                "illuminate/contracts": "^6.0|^7.0|^8.0",
+                "illuminate/events": "^6.0|^7.0|^8.0",
+                "illuminate/filesystem": "^6.0|^7.0|^8.0",
+                "illuminate/notifications": "^6.0|^7.0|^8.0",
+                "illuminate/support": "^6.0|^7.0|^8.0",
+                "league/flysystem": "^1.0.49",
+                "php": "^7.3|^8.0",
+                "spatie/db-dumper": "^2.12",
+                "spatie/temporary-directory": "^1.1",
+                "symfony/finder": "^4.2|^5.0"
+            },
+            "require-dev": {
+                "laravel/slack-notification-channel": "^2.3",
+                "league/flysystem-aws-s3-v3": "^1.0",
+                "mockery/mockery": "^1.4.2",
+                "orchestra/testbench": "4.*|5.*|6.*",
+                "phpunit/phpunit": "^8.4|^9.0"
+            },
+            "suggest": {
+                "laravel/slack-notification-channel": "Required for sending notifications via Slack"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Backup\\BackupServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Helpers/functions.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Backup\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel package to backup your application",
+            "homepage": "https://github.com/spatie/laravel-backup",
+            "keywords": [
+                "backup",
+                "database",
+                "laravel-backup",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-backup/issues",
+                "source": "https://github.com/spatie/laravel-backup/tree/6.16.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/spatie",
+                    "type": "github"
+                },
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "other"
+                }
+            ],
+            "time": "2021-09-12T10:04:18+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -3885,6 +4035,57 @@
                 }
             ],
             "time": "2023-02-06T21:37:02+00:00"
+        },
+        {
+            "name": "spatie/temporary-directory",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/temporary-directory.git",
+                "reference": "f517729b3793bca58f847c5fd383ec16f03ffec6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/f517729b3793bca58f847c5fd383ec16f03ffec6",
+                "reference": "f517729b3793bca58f847c5fd383ec16f03ffec6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\TemporaryDirectory\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Vanderbist",
+                    "email": "alex@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easily create, use and destroy temporary directories",
+            "homepage": "https://github.com/spatie/temporary-directory",
+            "keywords": [
+                "php",
+                "spatie",
+                "temporary-directory"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/temporary-directory/issues",
+                "source": "https://github.com/spatie/temporary-directory/tree/1.3.0"
+            },
+            "time": "2020-11-09T15:54:21+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -6523,6 +6724,90 @@
     ],
     "packages-dev": [
         {
+            "name": "barryvdh/laravel-debugbar",
+            "version": "v3.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-debugbar.git",
+                "reference": "3372ed65e6d2039d663ed19aa699956f9d346271"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/3372ed65e6d2039d663ed19aa699956f9d346271",
+                "reference": "3372ed65e6d2039d663ed19aa699956f9d346271",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/routing": "^7|^8|^9",
+                "illuminate/session": "^7|^8|^9",
+                "illuminate/support": "^7|^8|^9",
+                "maximebf/debugbar": "^1.17.2",
+                "php": ">=7.2.5",
+                "symfony/finder": "^5|^6"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.3.3",
+                "orchestra/testbench-dusk": "^5|^6|^7",
+                "phpunit/phpunit": "^8.5|^9.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.6-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Barryvdh\\Debugbar\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Debugbar": "Barryvdh\\Debugbar\\Facades\\Debugbar"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Barryvdh\\Debugbar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "PHP Debugbar integration for Laravel",
+            "keywords": [
+                "debug",
+                "debugbar",
+                "laravel",
+                "profiler",
+                "webprofiler"
+            ],
+            "support": {
+                "issues": "https://github.com/barryvdh/laravel-debugbar/issues",
+                "source": "https://github.com/barryvdh/laravel-debugbar/tree/v3.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://fruitcake.nl",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-07-11T09:26:42+00:00"
+        },
+        {
             "name": "doctrine/instantiator",
             "version": "1.5.0",
             "source": {
@@ -7175,6 +7460,72 @@
             },
             "abandoned": "spatie/laravel-html",
             "time": "2023-04-25T02:46:11+00:00"
+        },
+        {
+            "name": "maximebf/debugbar",
+            "version": "v1.18.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maximebf/php-debugbar.git",
+                "reference": "17dcf3f6ed112bb85a37cf13538fd8de49f5c274"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/17dcf3f6ed112bb85a37cf13538fd8de49f5c274",
+                "reference": "17dcf3f6ed112bb85a37cf13538fd8de49f5c274",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8",
+                "psr/log": "^1|^2|^3",
+                "symfony/var-dumper": "^4|^5|^6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=7.5.20 <10.0",
+                "twig/twig": "^1.38|^2.7|^3.0"
+            },
+            "suggest": {
+                "kriswallsmith/assetic": "The best way to manage assets",
+                "monolog/monolog": "Log using Monolog",
+                "predis/predis": "Redis storage"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.18-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DebugBar\\": "src/DebugBar/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maxime Bouroumeau-Fuseau",
+                    "email": "maxime.bouroumeau@gmail.com",
+                    "homepage": "http://maximebf.com"
+                },
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Debug bar in the browser for php application",
+            "homepage": "https://github.com/maximebf/php-debugbar",
+            "keywords": [
+                "debug",
+                "debugbar"
+            ],
+            "support": {
+                "issues": "https://github.com/maximebf/php-debugbar/issues",
+                "source": "https://github.com/maximebf/php-debugbar/tree/v1.18.2"
+            },
+            "time": "2023-02-04T15:27:00+00:00"
         },
         {
             "name": "mockery/mockery",
