@@ -300,9 +300,10 @@ class InsertDataToEndpoint extends Command
     public function sendPaymentPendingRecordsToOCM($url_ocm, $skilldata, $idload)
     {
         // Obtenemos todos los recibos pendientes de pago que cumplen las condiciones
+        $fechaLimite = Carbon::now()->subDays(3)->toDateString();
+
         $receipts = Receipt::where('estado_pago', 'PENDIENTE')
-            ->with('venta') // Cargamos la relación 'venta' para cada recibo
-            ->where('fecha_proximo_pago', '<=', Carbon::now()->addDays(3))
+            ->whereDate('fecha_pago_real', $fechaLimite)
             ->get();
 
         // Recorremos cada uno de los recibos obtenidos
