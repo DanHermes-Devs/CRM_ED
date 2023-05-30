@@ -22,9 +22,8 @@ class CreateEducationTable extends Migration
             $table->string('fp_venta')->nullable();
             $table->string('campana')->nullable();
             $table->string('agent_OCM')->nullable();
-            $table->foreign('agent_intra')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('agent_name')->references('name')->on('users')->onDelete('cascade');
-            $table->foreign('supervisor')->references('id_superior')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('agent_intra');
+            $table->unsignedBigInteger('supervisor');
             $table->string('codification')->nullable();
             $table->string('client_name')->nullable();
             $table->string('client_landline')->nullable();
@@ -41,7 +40,10 @@ class CreateEducationTable extends Migration
             $table->string('status')->nullable();
             $table->string('documents_portal')->nullable();
             $table->string('account_UIN')->nullable();
-            // $table->timestamps();
+            $table->timestamps();
+
+            $table->foreign('agent_intra')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('supervisor')->references('id_superior')->on('users')->onDelete('cascade');
         });
     }
 
