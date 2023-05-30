@@ -62,9 +62,9 @@
                                 </span>
                             </button>
                         </div>
-    
+
                         <div class="d-flex align-items-center">
-    
+
                             <div class="dropdown d-md-none topbar-head-dropdown header-item">
                                 <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
                                     id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -91,7 +91,7 @@
                                     <strong>{{ Auth::user()->roles->first()->name }}</strong>
                                 </div>
                             </div>
-    
+
                             <div class="ms-1 header-item d-none">
                                 <button type="button"
                                     class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
@@ -104,7 +104,7 @@
                                     <i class="bx bx-fullscreen fs-22"></i>
                                 </button>
                             </div>
-    
+
                             <div class="dropdown ms-sm-3 header-item topbar-user">
                                 <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
@@ -172,10 +172,10 @@
                         <i class="ri-record-circle-line"></i>
                     </button>
                 </div>
-    
+
                 <div id="scrollbar">
                     <div class="container-fluid">
-    
+
                         <div id="two-column-menu">
                         </div>
                         <ul class="navbar-nav" id="navbar-nav">
@@ -217,6 +217,28 @@
                                                                 </a>
                                                             </li>
                                                         @endif
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#modulo_education" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="modulo_education" data-key="t-level-1.2">
+                                                    Módulo Educación
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="modulo_education" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="{{ route('educacion-uin.index') }}" class="nav-link" data-key="t-analytics">
+                                                                Ventas
+                                                            </a>
+                                                        </li>
+                                                        {{-- @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Administrador', 'Supervisor', 'Coordinador']))
+                                                            <li class="nav-item">
+                                                                <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
+                                                                    Cobranza
+                                                                </a>
+                                                            </li>
+                                                        @endif --}}
                                                     </ul>
                                                 </div>
                                             </li>
@@ -281,7 +303,7 @@
                     </div>
                     <!-- Sidebar -->
                 </div>
-    
+
                 <div class="sidebar-background"></div>
             </div>
             <!-- Left Sidebar End -->
@@ -332,7 +354,7 @@
     <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/locales/LANG.js"></script>
 
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('./assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>    
+    <script src="{{ asset('./assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('./assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('./assets/libs/node-waves/waves.min.js') }}"></script>
     <script src="{{ asset('./assets/libs/feather-icons/feather.min.js') }}"></script>

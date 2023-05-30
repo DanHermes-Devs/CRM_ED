@@ -15,7 +15,7 @@ class EducationController extends Controller
      */
     public function index()
     {
-        //
+        return view('crm.modulos.educacion.uin.index');
     }
 
     /**
@@ -26,7 +26,10 @@ class EducationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //PARA ALMACENAR LA INFORMACION
+        $education = new Education;
+        $education->fill($request->all());
+        $education->save();
     }
 
     /**

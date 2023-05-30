@@ -15,8 +15,9 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CobranzaController;
 use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\API\ventas\VentasController;
 use App\Http\Controllers\PersonalFileController;
+use App\Http\Controllers\API\ventas\VentasController;
+use App\Http\Controllers\API\Educacion\EducationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,11 +52,12 @@ Route::group(['middleware' => ['auth']], function () {
     // Rutas para el modulo de expedientes
     Route::get('/cargar-expediente-usuario/{id}', [UsuarioController::class, 'createExpediente'])->name('create.expedient');
     Route::post('/crear-expediente-usuario', [UsuarioController::class, 'crearExpediente'])->name('store.crearExpediente');
-    
+
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);
     Route::resource('/proyectos', ProjectController::class);
     Route::resource('/grupos', GroupController::class);
+    Route::resource('/educacion-uin', EducationController::class);
 
     Route::get('/cobranza', [CobranzaController::class, 'index'])->name('cobranza.index');
     Route::post('/cobranza/asignar/{recibo_id}', [CobranzaController::class, 'asignarRecibo'])->name('cobranza.asignar');
@@ -64,7 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'showCancelarRecibo'])->name('cobranza.cancelar.show');
     Route::post('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'cancelarRecibo'])->name('cobranza.cancelar');
-    
+
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/cronjobs', [CronJobController::class, 'index'])->name('cronjobs.index');
     Route::get('/crear-cronjob', [CronJobController::class, 'create'])->name('crear-cronjob');
