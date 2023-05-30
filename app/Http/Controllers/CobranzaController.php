@@ -24,7 +24,7 @@ class CobranzaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {   
         $agentes_ventas = User::whereHas('roles', function ($q) {
             $q->where('name', 'Agente de Cobranza');
             //   ->orWhere('name', 'Supervisor');

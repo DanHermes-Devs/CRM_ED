@@ -36,7 +36,8 @@ class AddRrhhFieldToUsersTable extends Migration
             $table->string('esquema_laboral')->nullable();
             $table->string('proyecto_asignado')->nullable();
             $table->string('turno')->nullable();
-            $table->string('horario')->nullable();
+            $table->string('hora_entrada')->nullable();
+            $table->string('hora_salida')->nullable();
             $table->string('fecha_ingreso')->nullable();
             $table->string('fecha_baja')->nullable();
             $table->string('motivo_baja')->nullable();

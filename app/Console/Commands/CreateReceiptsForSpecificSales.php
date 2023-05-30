@@ -21,7 +21,16 @@ class CreateReceiptsForSpecificSales extends Command
     {
         // Coloca aquí los IDs de los 98 registros específicos
         $specificSalesIds = [
-            '4012000182249',
+            '4012100089020',
+            '4012200065125',
+            '4012200064639',
+            '4312200001697',
+            '4012200064489',
+            '4012200064540',
+            '4312200001693',
+            '4012200064527',
+            '4312200001692',
+            '4012200064502',
         ];
 
         foreach ($specificSalesIds as $saleId) {
@@ -47,9 +56,9 @@ class CreateReceiptsForSpecificSales extends Command
                 ];
 
                 // Convertimos frecuenciaPago en Mayusculas
-                $frecuenciaPago = strtoupper($venta->FrePago);
+                $frecuenciaPago = strtoupper(trim($venta->FrePago));
 
-                // Verificar si la frecuencia de pago es válida
+                // Verificar si la frecuencia de pago es válida y quitamos espacios en blanco adelante y atrás
                 if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
                     $this->error("Frecuencia de pago '{$frecuenciaPago}' inválida para la venta con ContactID {$saleId}");
                     continue;

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
@@ -13,7 +14,9 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CobranzaController;
+use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\InsuranceController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PersonalFileController;
 use App\Http\Controllers\API\ventas\VentasController;
@@ -36,6 +39,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// Ruta para ejecutar un iSeed
+Route::get('/seeders-backup', function () {
+    Artisan::call('iseed users --force');
+    Artisan::call('iseed ventas --force');
+    Artisan::call('iseed attendances --force');
+    Artisan::call('iseed receipts --force');
+});
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
     Route::get('/filterODM', [HomeController::class, 'filter'])->name('filter-dashboard');
@@ -52,6 +63,10 @@ Route::group(['middleware' => ['auth']], function () {
     // Rutas para el modulo de expedientes
     Route::get('/cargar-expediente-usuario/{id}', [UsuarioController::class, 'createExpediente'])->name('create.expedient');
     Route::post('/crear-expediente-usuario', [UsuarioController::class, 'crearExpediente'])->name('store.crearExpediente');
+
+    // Rutas para las asistencias
+    Route::get('/asistencias', [AttendanceController::class, 'index'])->name('asistencias');
+    Route::get('/get-user-incidencia/{id}', [IncidentController::class, 'index'])->name('consultar-usuario');
 
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);

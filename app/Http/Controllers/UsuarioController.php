@@ -123,7 +123,8 @@ class UsuarioController extends Controller
             'esquema_laboral' => $request->esquema_laboral,
             'proyecto_asignado' => $request->proyecto_asignado,
             'turno' => $request->turno,
-            'horario' => $request->horario,
+            'hora_entrada' => $request->hora_entrada,
+            'hora_salida' => $request->hora_salida,
             'fecha_ingreso' => $request->fecha_ingreso,
             'fecha_baja' => $request->fecha_baja,
             'motivo_baja' => $request->motivo_baja,
@@ -378,6 +379,7 @@ class UsuarioController extends Controller
             return back()->with('error', 'Ocurrió un error al crear el expediente.');
         }
     }
+
 
     // Método para las incidencias
     public function incidents($id)

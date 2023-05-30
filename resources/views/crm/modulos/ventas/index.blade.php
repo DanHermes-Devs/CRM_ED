@@ -147,10 +147,10 @@
                                         <label for="tipo_venta">Tipo de venta:</label>
                                         <select name="tipo_venta" id="tipo_venta" class="form-select">
                                             <option value="">-- Selecciona --</option>
-                                            @if (auth()->user()->hasAnyRole(['Agente de Ventas']))
+                                            @if (auth()->user()->hasAnyRole(['Agente de Ventas', 'Coordinador']))
                                                 <option value="VENTA">VENTA NUEVA</option>
                                             @endif
-                                            @if (auth()->user()->hasAnyRole(['Agente Renovaciones']))
+                                            @if (auth()->user()->hasAnyRole(['Agente Renovaciones', 'Coordinador']))
                                                 <option value="RENOVACION">RENOVACIONES</option>
                                             @endif
                                             <option value="POSIBLE DUPLICIDAD">POSIBLE DUPLICIDAD</option>
@@ -261,7 +261,8 @@
                                 <th>ContactID</th>
                                 <th>Tipo de Venta</th>
                                 <th>Última Gestión</th>
-                                <th>Póliza</th>
+                                <th>Póliza Anterior</th>
+                                <th>Póliza Nueva</th>
                                 <th>Aseguradora</th>
                                 <th>Prima Total</th>
                                 <th>Frecuencia de Pago</th>
@@ -354,6 +355,7 @@
                     {data: 'tVenta', name: 'tVenta'},
                     {data: 'UGestion', name: 'UGestion'},
                     {data: 'nPoliza', name: 'nPoliza'},
+                    {data: 'nueva_poliza', name: 'nueva_poliza'},
                     {data: 'Aseguradora', name: 'Aseguradora'},
                     {data: 'PncTotal', name: 'PncTotal'},
                     {data: 'FrePago', name: 'FrePago'},
@@ -427,7 +429,7 @@
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){
                                 return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
                             }else {
-                                return `$${data}`;
+                                return `${data}`;
                             }
                         }
                     },
@@ -438,7 +440,7 @@
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){
                                 return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
                             }else {
-                                return `${data}`;
+                                return `$${data}`;
                             }
                         }
                     },
@@ -488,6 +490,17 @@
                     },
                     {
                         target: 11,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 10,
                         render: function(data, type, row) {
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){

@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Models\CronJobConfig;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Console\Commands\AttendancesCronJob;
 use App\Console\Commands\InsertDataToEndpoint;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -12,6 +13,7 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         InsertDataToEndpoint::class,
+        AttendancesCronJob::class
     ];
     /**
      * Define the application's command schedule.

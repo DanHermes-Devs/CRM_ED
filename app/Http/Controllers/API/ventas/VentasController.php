@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Exports\VentasExport;
 use App\Imports\VentasImport;
 use App\Exports\RegistrosExport;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,24 @@ class VentasController extends Controller
      */
     public function index(Request $request)
     {
+        // Forma de llamar un procedimiento almacenado
+        // $results = DB::select("CALL obtener_ventas_totales()");
+
+        // if ($results) {
+        //     foreach ($results as $row) {
+        //         // Acceder a los datos de cada fila
+        //         dump($row->id);
+        //     }
+        // } else {
+        //     // Manejo del error
+        //     $error = DB::selectOne('SELECT @@ERROR AS error');
+        //     if ($error) {
+        //         dump('Error al ejecutar el stored procedure: ' . $error->error);
+        //     } else {
+        //         dump('Error al ejecutar el stored procedure.');
+        //     }
+        // }
+
         $query = Venta::query();
 
         // Búsqueda por fecha de inicio y fin
@@ -55,7 +74,12 @@ class VentasController extends Controller
 
         foreach ($camposExactos as $campoDb => $campoReq) {
             if ($request->filled($campoReq)) {
-                $query->where($campoDb, $request->$campoReq);
+                if ($campoReq == 'numero_poliza') {
+                    $query->orWhere('nPoliza', $request->$campoReq)
+                        ->orWhere('nueva_poliza', $request->$campoReq);
+                } else {
+                    $query->where($campoDb, $request->$campoReq);
+                }
             }
         }
 
@@ -164,14 +188,7 @@ class VentasController extends Controller
                         $venta->contactId = $request->contactId;
                         $venta->UGestion = 'RENOVADA';
                         $venta->Fpreventa = Carbon::now();
-                        $venta->tVenta = 'RENOVACION';
-    
-                        $venta->fill($request->all());
-
-                        $fNacimiento = $request->fNacimiento;
-                        $fechaNacimiento = Carbon::createFromFormat('d-m-Y', $fNacimiento)->format('Y-m-d');
-
-                        $venta->fNacimiento = $fechaNacimiento;
+                        $venta->tVenta = 'RENOVACION';    
                     }
                 } else {
                     return response()->json([
