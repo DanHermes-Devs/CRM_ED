@@ -25,8 +25,8 @@ class VentasImport implements ToModel, WithValidation
         // Verifica si el ID ya existe en la base de datos
         $ventaExistente = Venta::find($row[0]);
         if ($ventaExistente) {
-            // Si el ID ya existe, no importa el registro y devuelve null
-            return null;
+            // Si el ID ya existe, asigna de forma automatica el ID al siguiente disponible
+            $row[0] = Venta::max('id') + 1;
         }
 
         $venta = new Venta([
@@ -70,7 +70,7 @@ class VentasImport implements ToModel, WithValidation
             'Legalizado' => $row[37],
             'nCotizacion' => $row[38],
             'FinVigencia' => !empty($row[39]) ? Carbon::createFromFormat('d/m/Y', $row[39])->format('Y-m-d') : null,
-            'FfVigencia' => $row[40],
+            'FfVigencia' => !empty($row[40]) ? Carbon::createFromFormat('d/m/Y', $row[40])->format('Y-m-d') : null,
             'tPoliza' => $this->parseDateTime($row[41], 'd/m/Y H:i'),
             'Paquete' => $row[42],
             'nPoliza' => $row[43],
