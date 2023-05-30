@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaisController;
 use App\Http\Controllers\RoleController;
@@ -13,12 +14,12 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CobranzaController;
-use App\Http\Controllers\InsuranceController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\API\ventas\VentasController;
-use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\InsuranceController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PersonalFileController;
+use App\Http\Controllers\API\ventas\VentasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,14 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+// Ruta para ejecutar un iSeed
+Route::get('/seeders-backup', function () {
+    Artisan::call('iseed users --force');
+    Artisan::call('iseed ventas --force');
+    Artisan::call('iseed attendances --force');
+    Artisan::call('iseed receipts --force');
+});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
