@@ -454,7 +454,28 @@ class VentasController extends Controller
 
                 for ($i = 1; $i <= $numRecibos; $i++) {
                     $finVigencia = Carbon::parse($venta->FinVigencia);
-                    $fechaProximoPago = $finVigencia->addMonths($i);
+
+                    // Calcular la fecha del próximo pago en función de la frecuencia de pago
+                    switch ($frecuenciaPago) {
+                        case 'ANUAL':
+                            $fechaProximoPago = $finVigencia->addYear();
+                            break;
+                        case 'SEMESTRAL':
+                            $fechaProximoPago = $finVigencia->addMonths(6);
+                            break;
+                        case 'TRIMESTRAL':
+                            $fechaProximoPago = $finVigencia->addMonths(3);
+                            break;
+                        case 'CUATRIMESTRAL':
+                            $fechaProximoPago = $finVigencia->addMonths(4);
+                            break;
+                        case 'MENSUAL':
+                            $fechaProximoPago = $finVigencia->addMonth();
+                            break;
+                        default:
+                            // Si la frecuencia de pago no está definida correctamente, salir del bucle
+                            break 2;
+                    }
 
                     $receipt = new Receipt([
                         'venta_id' => $venta->id,
@@ -470,10 +491,11 @@ class VentasController extends Controller
                     ]);
 
                     $receipt->save();
-                }      
+                }
             }
         }
     }
+
 
     public function actualizarEstadoRecibosYPago($venta_id, $num_pago)
     {
