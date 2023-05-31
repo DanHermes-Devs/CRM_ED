@@ -15,8 +15,26 @@
         }
     }
 
+    @media (min-width: 992px){
+        .modal-lg, .modal-xl {
+            max-width: 1200px!important;
+        }
+
+        #modal_dialog_asistenciaModal {
+            max-width: 700px!important;
+        }
+    }
+
+    table#tab_asistencias {
+        width: 100%!important;
+    }
+    
+    table#tab_incidencias {
+        width: 100%!important;
+    }
+
     #tabla_asistencias {
-        /* display: none; */
+        display: none;
     }
 
     div#tabla_asistencias_wrapper {
@@ -122,14 +140,14 @@
     <!-- container-fluid -->
 
     <div class="modal fade" id="incidenciaModal" tabindex="-1" aria-labelledby="incidenciaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lG">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="incidenciaModalLabel">Incidencias</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-12 col-md-6 mb-3">
                             <div class="form-label">Nombre Agente</div>
                             <input type="text" name="name_agent" id="name_agent" readonly class="form-control">
@@ -141,51 +159,130 @@
                         </div>
                     </div>
 
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <ul class="nav nav-tabs mb-4" id="nav-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                            <button class="nav-link active" id="tab-home-tab" data-bs-toggle="tab"
                                 data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
                                 aria-selected="true">Asistencias</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                            <button class="nav-link" id="tab-profile-tab" data-bs-toggle="tab"
                                 data-bs-target="#pills-profile" type="button" role="tab"
                                 aria-controls="pills-profile" aria-selected="false">Incidencias</button>
                         </li>
                     </ul>
-                    <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                            Tab de Asistencias
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="tab-home-tab" tabindex="0">
+                            <table id="tab_asistencias" class="table table-middle table-nowrap mb-0 display nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Entrada</th>
+                                        <th>Salida</th>
+                                        <th>Asistencia</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
-                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                            <div class="col-12">
-                                <div class="form-label">Tipo de Incidencia</div>
-                                <select class="form-select" name="tipo_incidencia">
-                                    <option>-- Selecciona una opción --</option>
-                                    <option value="A">ASISTENCIA</option>
-                                    <option value="C">CAPACITACIÓN</option>
-                                    <option value="V">VACACIONES</option>
-                                    <option value="F">FALTA</option>
-                                    <option value="FJ">FALTA JUSTIFICADA</option>
-                                    <option value="DL">DESCANSO LABORADO</option>
-                                    <option value="DFL">DIA FESTIVO LABORADO</option>
-                                    <option value="IE">INCAPACIDAD POR ENFERMEDAD</option>
-                                    <option value="IM">INCAPACIDAD POR MATERNIDAD</option>
-                                    <option value="IR">INCAPACIDAD POR RIESGO DE TRABAJO</option>
-                                    <option value="PD">PRIMA DOMINICAL</option>
-                                    <option value="D">DESCANSO</option>
-                                    <option value="PSG">PERMISO SIN GOCE DE SUELDO</option>
-                                    <option value="S">SUSPENSIÓN</option>
-                                    <option value="PP">PERMISO POR PATERNIDAD</option>
-                                    <option value="PDEF">PERMISO POR DEFUNCIÓN</option>
-                                </select>
-                            </div>
+                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="tab-profile-tab" tabindex="0">
+                            <form id="form">
+                                <div class="row align-items-end mb-4">
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-label">Tipo de Incidencia</div>
+                                        <select class="form-select" name="tipo_incidencia">
+                                            <option>-- Selecciona una opción --</option>
+                                            <option value="A">ASISTENCIA</option>
+                                            <option value="C">CAPACITACIÓN</option>
+                                            <option value="V">VACACIONES</option>
+                                            <option value="F">FALTA</option>
+                                            <option value="FJ">FALTA JUSTIFICADA</option>
+                                            <option value="DL">DESCANSO LABORADO</option>
+                                            <option value="DFL">DIA FESTIVO LABORADO</option>
+                                            <option value="IE">INCAPACIDAD POR ENFERMEDAD</option>
+                                            <option value="IM">INCAPACIDAD POR MATERNIDAD</option>
+                                            <option value="IR">INCAPACIDAD POR RIESGO DE TRABAJO</option>
+                                            <option value="PD">PRIMA DOMINICAL</option>
+                                            <option value="D">DESCANSO</option>
+                                            <option value="PSG">PERMISO SIN GOCE DE SUELDO</option>
+                                            <option value="S">SUSPENSIÓN</option>
+                                            <option value="PP">PERMISO POR PATERNIDAD</option>
+                                            <option value="PDEF">PERMISO POR DEFUNCIÓN</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 col-md-3">
+                                        <label for="fecha_inicio">Fecha Inicio:</label>
+                                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control">
+                                    </div>
+
+                                    <div class="col-12 col-md-3">
+                                        <label for="fecha_fin">Fecha Fin:</label>
+                                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control">
+                                    </div>
+                                    
+                                    <div class="col-12 col-md-3">
+                                        <input type="submit" value="Guardar Incidencia" id="guardar_incidencia" class="btn btn-primary">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <table id="tab_incidencias" class="table table-middle table-nowrap mb-0 display nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Agente</th>
+                                                <th>Tipo de Incidencia</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
+                </div> --}}
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="asistenciaModal" tabindex="-1" aria-labelledby="asistenciaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="modal_dialog_asistenciaModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="asistenciaModalLabel">Editar Asistencia</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="form_editar_asistencia">
+                        <div class="row mb-3">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="motivo" class="form-label">Motivo</label>
+                                <select name="motivo" id="motivo" class="form-select">
+                                    <option>-- Selecciona una opción --</option>
+                                    <option value="IE">INCAPACIDAD POR ENFERMEDAD</option>
+                                    <option value="IM">INCAPACIDAD POR MATERNIDAD</option>
+                                    <option value="IR">INCAPACIDAD POR RIESGO DE TRABAJO</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="documentacion" class="form-label">¿Cuenta con la documentación?</label>
+                                <select name="documentacion" id="documentacion" class="form-select">
+                                    <option>-- Selecciona una opción --</option>
+                                    <option value="SI">SI</option>
+                                    <option value="NO">NO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <input type="submit" value="Actualizar asistencia" class="btn btn-primary" disabled>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -294,6 +391,8 @@
 
             $('body').on('click', '.modal_show_incidencias', function(e) {
                 e.preventDefault();
+                $('#tab_asistencias').DataTable().destroy();
+                $('#tab_incidencias').DataTable().destroy();
                 var user_id = $(this).data('id');
                 $('#incidenciaModal').modal('show');
 
@@ -315,7 +414,174 @@
                     }
                 });
 
+                // Creamos la url para enviarla al controlador
+                var url_2 = "{{ route('consultar-asistencia-usuario', ':id') }}";
+                url_2 = url_2.replace(':id', user_id);
+
+                $('#tab_asistencias').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    bAutoWidth: true,
+                    ajax: {
+                        url: url_2,
+                        type: 'GET',
+                        data: {
+                            user_id: user_id,
+                        }
+                    },
+                    columns: [{
+                            data: 'fecha_login',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'hora_login',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'hora_logout',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'tipo_asistencia',
+                            render: function(data, type, row) {
+                                if(data == 'A'){
+                                    return `<span class="badge rounded-pill badge-soft-success badge-border text-success fs-5">ASISTENCIA</span>`;
+                                }else if(data == 'A+'){
+                                    return `<span class="badge rounded-pill badge-soft-success badge-border text-success fs-5">ASISTENCIA (+)</span>`;
+                                }else if(data == 'F'){
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border text-danger fs-5">FALTA</span>`;
+                                }else if(data == 'R'){
+                                    return `<span class="badge rounded-pill badge-soft-warning badge-border text-warning fs-5">RETARDO</span>`;
+                                }
+                            }
+                        },
+                        {
+                            data: 'action',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                    ],
+                    language: idiomaDataTable
+                });
+                
+                // Creamos la url para enviarla al controlador
+                var url_3 = "{{ route('consultar-incidencias-usuario', ':id') }}";
+                url_3 = url_3.replace(':id', user_id);
+
+                $('#tab_incidencias').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    bAutoWidth: true,
+                    ajax: {
+                        url: url_3,
+                        type: 'GET',
+                        data: {
+                            user_id: user_id,
+                        }
+                    },
+                    columns: [{
+                            data: 'formatted_date',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'agente',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'tipo_incidencia',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'fecha_desde',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'fecha_hasta',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                    ],
+                    language: idiomaDataTable
+                });
+
                 // $('#tabla_usuarios').DataTable().ajax.reload();
+            });
+
+            $('body').on('click', '#guardar_incidencia', function(e){
+                e.preventDefault();
+
+                var user_id = $('#user_id').val();
+                var usuario_name = $('#usuario_name').val();
+                var tipo_incidencia = $('select[name="tipo_incidencia"]').val();
+                var fecha_inicio = $('input[name="fecha_inicio"]').val();
+                var fecha_fin = $('input[name="fecha_fin"]').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('crear-incidencia') }}",
+                    data: {
+                        user_id: user_id,
+                        usuario_name: usuario_name,
+                        tipo_incidencia: tipo_incidencia,
+                        fecha_inicio: fecha_inicio,
+                        fecha_fin: fecha_fin,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if(response.code == 200){
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Incidencia Guardada',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $('#tab_incidencias').DataTable().ajax.reload();
+                        }
+                    }
+                });
+            });
+
+            $('body').on('click', '.modal_show_asistencia', function(e){
+                e.preventDefault();
+                $('#asistenciaModal').modal('show');
+                var asistencia_id = $(this).data('id');
+
+                // Si el select con id documentacion cambia de valor a si, se quita el atributo disabled del boton si es no, no deja guardar
+                $('#documentacion').on('change', function(){
+                    if($(this).val() == 'SI'){
+                        $('input[type="submit"]').removeAttr('disabled');
+
+                        $.ajax({
+                            type: "method",
+                            url: "url",
+                            data: "data",
+                            dataType: "dataType",
+                            success: function (response) {
+                                
+                            }
+                        });
+                    }else{
+                        $('input[type="submit"]').attr('disabled', 'disabled');
+                    }
+                });
             });
         });
     </script>

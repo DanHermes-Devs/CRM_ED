@@ -51,10 +51,14 @@ class AttendancesCronJob extends Command
             die("Error al conectarse a la base de datos: " . mysqli_connect_error());
         }
 
+        // Ponemos la fecha de ayer 29 de mayo del 2023
         $fecha_actual = Carbon::now()->format('Y-m-d');
+        // En la fecha ponemos un rango de fechas de hoy hasta 10 dias anteriores para actualizar en la bd
+        // $fecha_actual = Carbon::now()->subDays(3)->format('Y-m-d');
+
         $query = "SELECT agent, MIN(fecha) AS primer_login, MAX(fecha) AS primer_logout
         FROM ocm_log_agentstatus
-        WHERE DATE(fecha) = '$fecha_actual'
+        WHERE DATE(fecha) BETWEEN '2023-01-01' AND '$fecha_actual'
         AND (estado = 'LOGIN' OR estado = 'LOGOUT')
         GROUP BY agent;";
 
@@ -116,7 +120,7 @@ class AttendancesCronJob extends Command
                         elseif ($primer_logout === null) {
                             $attendance->tipo_asistencia = 'F';
                         }else{
-                            $attendance->tipo_asistencia = "Entro más temprano de lo normal";
+                            $attendance->tipo_asistencia = "A+";
                         }
 
                         $attendance->save();

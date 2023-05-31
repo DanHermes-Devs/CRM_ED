@@ -67,7 +67,11 @@ Route::group(['middleware' => ['auth']], function () {
     // Rutas para las asistencias
     Route::get('/asistencias', [AttendanceController::class, 'index'])->name('asistencias');
     Route::get('/get-user-incidencia/{id}', [IncidentController::class, 'index'])->name('consultar-usuario');
-
+    Route::get('/asistencia-usuario/{id}', [AttendanceController::class, 'asistenciaUsuario'])->name('consultar-asistencia-usuario');
+    Route::get('/incidencias-usuario/{id}', [IncidentController::class, 'incidenciasUsuario'])->name('consultar-incidencias-usuario');
+    Route::post('/crear-incidencia', [IncidentController::class, 'store'])->name('crear-incidencia');
+    Route::put('/actualizar-asistencia', [AttendanceController::class, 'actualizarAsistencia'])->name('actualizar-asistencia');
+    
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);
     Route::resource('/proyectos', ProjectController::class);

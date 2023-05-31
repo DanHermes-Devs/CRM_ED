@@ -30,13 +30,13 @@ class AttendanceController extends Controller
                 $query->where('tipo_asistencia', 'R');
             },
             'attendances as total_asistencias' => function ($query) {
-                $query->where('tipo_asistencia', 'A');
+                $query->whereIn('tipo_asistencia', ['A', 'A+']);
             },
             'attendances as total_faltas' => function ($query) {
                 $query->where('tipo_asistencia', 'F');
             },
             'attendances as total_entro_temprano' => function ($query) {
-                $query->where('tipo_asistencia', 'Entro más temprano de lo normal');
+                $query->where('tipo_asistencia', 'A+');
             }
         ])
         ->get();
@@ -59,14 +59,30 @@ class AttendanceController extends Controller
         return view('crm.modulo_usuarios.asistencias.asistencias', compact('campanas', 'supervisores', 'usuarios'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function asistenciaUsuario($id)
     {
-        //
+        $user = Attendance::where('agent_id', $id)->get();
+
+        if (request()->ajax()) {
+            return DataTables()
+                ->of($user)
+                ->addColumn('action', 'crm.modulo_usuarios.asistencias.actions_incidencias')
+                ->rawColumns(['action'])
+                ->escapeColumns([])
+                ->make(true);
+        }
+    }
+
+    public function actualizarAsistencia($id)
+    {
+        $asistencia = Attendance::findOrFail($id);
+        $asistencia->tipo_asistencia = request()->tipo_asistencia;
+        $asistencia->save();
+
+        return response()->json([
+            'code' => true,
+            'message' => 'Se actualizo la asistencia correctamente'
+        ]);
     }
 
     /**

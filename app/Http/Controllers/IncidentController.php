@@ -33,14 +33,17 @@ class IncidentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function incidenciasUsuario($id)
     {
-        //
+        $user = Incident::selectRaw('*, DATE_FORMAT(created_at, "%Y-%m-%d") as formatted_date')
+                ->where('agent_id', $id)
+                ->get();
+
+        if (request()->ajax()) {
+            return DataTables()
+                ->of($user)
+                ->make(true);
+        }
     }
 
     /**
@@ -51,7 +54,20 @@ class IncidentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $incidencia = new Incident();
+        $incidencia->agent_id = $request->user_id;
+        $incidencia->agente = $request->usuario_name;
+        $incidencia->login_ocm = $request->usuario_name;
+        $incidencia->tipo_incidencia = $request->tipo_incidencia;
+        $incidencia->fecha_desde = $request->fecha_inicio;
+        $incidencia->fecha_hasta = $request->fecha_fin;
+
+        $incidencia->save();
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Incidencia creada correctamente'
+        ]);
     }
 
     /**
