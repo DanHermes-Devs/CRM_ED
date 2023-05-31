@@ -363,7 +363,7 @@
                     {data: 'Fpreventa', name: 'Fpreventa'},
                     {data: 'LoginIntranet', name: 'LoginIntranet'},
                     {data: 'Supervisor', name: 'Supervisor'},
-                    {data: 'fvencimiento', name: 'fvencimiento'},
+                    {data: 'FinVigencia', name: 'FinVigencia'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
                 columnDefs: [
