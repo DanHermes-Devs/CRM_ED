@@ -27,6 +27,10 @@ class EducationController extends Controller
     public function store(Request $request)
     {
         //PARA ALMACENAR LA INFORMACION
+
+        dd($request->all());
+
+
         $education = new Education;
         $education->fill($request->all());
         $education->save();
