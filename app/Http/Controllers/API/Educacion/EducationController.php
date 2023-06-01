@@ -27,16 +27,16 @@ class EducationController extends Controller
     public function store(Request $request)
     {
         //PARA ALMACENAR LA INFORMACION
-
-        return response()->json([
-            "code" => 200,
-            "data" => $request->all()
-        ]);
-
-
         $education = new Education;
         $education->fill($request->all());
         $education->save();
+
+        return response()->json([
+            "code" => 200,
+            "message" => "Venta Guardada Correctamente",
+            "data" => $education
+        ]);
+
     }
 
     /**
