@@ -59,7 +59,6 @@ class EducationController extends Controller
         $education->client_state = $request->client_state;
         $education->client_sex = $request->client_sex;
         $education->client_birth = $request->client_birth;
-        $education->client_name = $request->client_name;
         //$education->fill($request->all());
         $education->save();
 
