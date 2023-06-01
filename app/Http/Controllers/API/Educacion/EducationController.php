@@ -40,17 +40,19 @@ class EducationController extends Controller
         //PARA ALMACENAR LA INFORMACION
         $education = new Education;
         $education->contact_id = $request->contact_id;
+        $education->usuario_ocm = $request->agente_OCM;
+        $education->usuario_crm = $request->agent_name;
+        $education->nombre_universidad = 'UIN';
         $education->fp_venta = Carbon::now();
         $education->campana = $request->campana;
-        $education->agent_OCM = $request->agente_OCM;
-        $education->agent_intra = $request->agente_intra;
-        $education->agent_name = $request->agent_name;
+        $education->agente_OCM = $request->agente_OCM;
+        //$education->agent_intra = $request->agente_intra;
+        //$education->supervisor = $request->supervisor;
         $education->codification = $request->codification;
         $education->client_name = $request->client_name;
         $education->client_landline = $request->client_landline;
         $education->client_celphone = $request->client_celphone;
-        $education->client_mail = $request->client_mail;
-        $education->client_modality = $request->client_modality;
+       $education->client_modality = $request->client_modality;
         $education->client_program = $request->client_program;
         $education->client_specialty = $request->client_specialty;
         $education->client_street = $request->client_street;
