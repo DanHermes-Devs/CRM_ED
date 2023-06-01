@@ -28,7 +28,10 @@ class EducationController extends Controller
     {
         //PARA ALMACENAR LA INFORMACION
 
-        dd($request->all());
+        return response()->json([
+            "code" => 200,
+            "data" => $request->all()
+        ]);
 
 
         $education = new Education;
