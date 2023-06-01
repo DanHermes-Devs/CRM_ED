@@ -189,7 +189,7 @@
                             @endif
 
                             {{-- Si el usuario es director, no mostramos el contenido h1 hola --}}
-                            @if(Auth::user()->hasAnyRole(['Administrador', 'Supervisor', 'Coordinador', 'Agente de ventas', 'Agente de Cobranza', 'Agente Renovaciones']))
+                            @if(Auth::user()->hasAnyRole(['Administrador', 'Supervisor', 'BI', 'Coordinador', 'Agente de ventas', 'Agente de Cobranza', 'Agente Renovaciones']))
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="true"
                                         aria-controls="sidebarMultilevel">
