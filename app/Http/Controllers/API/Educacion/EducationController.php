@@ -28,7 +28,7 @@ class EducationController extends Controller
     {
         //PARA ALMACENAR LA INFORMACION
         $education = new Education;
-        $education->fill($request->all());
+        $education->client_name = $request->client_name;
         $education->save();
 
         return response()->json([

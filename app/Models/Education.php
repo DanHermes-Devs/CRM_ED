@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Education extends Model
 {
     use HasFactory;
-
+    protected $table = 'education';
     protected $fillable = [
         'contact_id', // IDENTIFICADOR DE LA BASE DE DATOS
-        'fp_venta',//FECHA Y HORA QUE SE INGRESO LA PREVENTA DE OCM A LA INTRANET
         'campana', // MOTOR DE MARCACION
         'agent_OCM', // USUARIO OCM QUE INGRESO LA PREVENTA
         'agent_intra', // USUARIO DE LA INTRANET AL QUE PERTENECE LA PREVENTA
