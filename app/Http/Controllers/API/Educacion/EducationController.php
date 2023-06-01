@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Educacion;
 
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Education;
 use Illuminate\Http\Request;
@@ -13,8 +14,16 @@ class EducationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Education::query();
+
+        if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
+            $query->whereBetween('fp_venta', [$request->fecha_inicio, $request->fecha_fin]);
+        }
+
+
+
         return view('crm.modulos.educacion.uin.index');
     }
 
@@ -24,11 +33,34 @@ class EducationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+
     public function store(Request $request)
     {
         //PARA ALMACENAR LA INFORMACION
         $education = new Education;
+        $education->contact_id = $request->contact_id;
+        $education->fp_venta = Carbon::now();
+        $education->campana = $request->campana;
+        $education->agent_OCM = $request->agente_OCM;
+        $education->agent_intra = $request->agente_intra;
+        $education->agent_name = $request->agent_name;
+        $education->codification = $request->codification;
         $education->client_name = $request->client_name;
+        $education->client_landline = $request->client_landline;
+        $education->client_celphone = $request->client_celphone;
+        $education->client_mail = $request->client_mail;
+        $education->client_modality = $request->client_modality;
+        $education->client_program = $request->client_program;
+        $education->client_specialty = $request->client_specialty;
+        $education->client_street = $request->client_street;
+        $education->client_number = $request->client_number;
+        $education->client_delegation = $request->client_delegation;
+        $education->client_state = $request->client_state;
+        $education->client_sex = $request->client_sex;
+        $education->client_birth = $request->client_birth;
+        $education->client_name = $request->client_name;
+        //$education->fill($request->all());
         $education->save();
 
         return response()->json([
