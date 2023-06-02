@@ -47,6 +47,11 @@ Route::get('/seeders-backup', function () {
     Artisan::call('iseed receipts --force');
 });
 
+Route::middleware(['auth', 'role:Marketing Dashboard'])->group(function () {
+    // Rutas solo para el rol restringido
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
+});
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
     Route::get('/filterODM', [HomeController::class, 'filter'])->name('filter-dashboard');
@@ -71,7 +76,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/incidencias-usuario/{id}', [IncidentController::class, 'incidenciasUsuario'])->name('consultar-incidencias-usuario');
     Route::post('/crear-incidencia', [IncidentController::class, 'store'])->name('crear-incidencia');
     Route::put('/actualizar-asistencia', [AttendanceController::class, 'actualizarAsistencia'])->name('actualizar-asistencia');
-    
+
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);
     Route::resource('/proyectos', ProjectController::class);

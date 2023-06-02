@@ -43,7 +43,7 @@ class CreateEducationTable extends Migration
             $table->timestamps();
 
             $table->foreign('agent_intra')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('supervisor')->references('id_superior')->on('users')->onDelete('cascade');
+            $table->foreign('supervisor')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
