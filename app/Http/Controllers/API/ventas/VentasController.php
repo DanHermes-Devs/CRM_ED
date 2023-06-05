@@ -30,6 +30,24 @@ class VentasController extends Controller
         $this->middleware('auth')->except('store');
     }
 
+    // Forma de llamar un procedimiento almacenado
+    // $results = DB::select("CALL obtener_ventas_totales()");
+
+    // if ($results) {
+    //     foreach ($results as $row) {
+    //         // Acceder a los datos de cada fila
+    //         dump($row->id);
+    //     }
+    // } else {
+    //     // Manejo del error
+    //     $error = DB::selectOne('SELECT @@ERROR AS error');
+    //     if ($error) {
+    //         dump('Error al ejecutar el stored procedure: ' . $error->error);
+    //     } else {
+    //         dump('Error al ejecutar el stored procedure.');
+    //     }
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,25 +55,7 @@ class VentasController extends Controller
      */
     public function index(Request $request)
     {
-        // Forma de llamar un procedimiento almacenado
-        // $results = DB::select("CALL obtener_ventas_totales()");
-
-        // if ($results) {
-        //     foreach ($results as $row) {
-        //         // Acceder a los datos de cada fila
-        //         dump($row->id);
-        //     }
-        // } else {
-        //     // Manejo del error
-        //     $error = DB::selectOne('SELECT @@ERROR AS error');
-        //     if ($error) {
-        //         dump('Error al ejecutar el stored procedure: ' . $error->error);
-        //     } else {
-        //         dump('Error al ejecutar el stored procedure.');
-        //     }
-        // }
-
-        $query = Venta::query();
+        $query = Venta::query()->with('user')->select('contactId', 'tVenta', 'UGestion', 'nPoliza', 'nueva_poliza', 'Aseguradora', 'PncTotal', 'FrePago', 'nSerie', 'Fpreventa', 'LoginIntranet', 'Supervisor', 'FinVigencia');
 
         // Búsqueda por fecha de inicio y fin
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
