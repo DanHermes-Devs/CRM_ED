@@ -30,7 +30,7 @@ class EducationController extends Controller
             'client_name' => 'client_name',
             'client_landline' => 'client_landline',
             'client_celphone' => 'client_celphone',
-            'codificacion' => 'codificacion',
+            'codification' => 'codification',
         ];
 
         foreach ($camposExactos as $campoDb => $campoReq) {
@@ -44,8 +44,8 @@ class EducationController extends Controller
         $usuario = User::find($request->user);
 
         // Búsqueda por tipo de venta
-        if ($request->filled('tipo_venta')) {
-            $query->where('codificacion', $request->codificacion);
+        if ($request->filled('codification')) {
+            $query->where('codification', $request->codification);
         }
 
 
@@ -55,8 +55,8 @@ class EducationController extends Controller
         $rol = $request->rol;
 
         if ($rol == 'Agente de Ventas') {
-            $resultados = $resultados->where('codificacion', 'VENTA')
-                ->where('codificacion', 'ALUMNO')
+            $resultados = $resultados->where('codification', 'COTIZACION')
+                ->where('codification', 'ALUMNO')
                 ->where('agent_OCM', 'Agente2');
         } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores

@@ -30,14 +30,6 @@
         <div class="col-xl-12">
             <div class="card crm-widget py-4 px-3">
                 <div class="card-body">
-                    @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
-                        <div class="d-flex justify-content-end">
-                            <a href="{{ route('ventas.formImportVentas') }}" class="btn btn-warning d-flex align-items-center justify-content-center gap-1 fs-5">
-                                <i class="ri-file-excel-2-line"></i>
-                                Importar CSV
-                            </a>
-                        </div>
-                    @endif
 
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
@@ -62,18 +54,6 @@
                             <input type="hidden" name="rol" value="{{ auth()->user()->roles->first()->name }}">
                             {{-- Capturamos el usuario autenticado --}}
                             <input type="hidden" name="user" id="user" value="{{ auth()->user()->id }}">
-
-
-
-                            @can('exportar-ventas')
-                                {{-- Validamos si el usuario autenticado tiene el rol supervisor o coordinador --}}
-                                <input type="hidden" name="exportar" value="1">
-                                <!-- Aquí debes agregar inputs ocultos para mantener los criterios de búsqueda al exportar -->
-                                <button type="submit" id="exportVentas" class="btn btn-success d-flex align-items-center justify-content-center gap-1 fs-5">
-                                    <i class="ri-file-excel-2-line"></i>
-                                    Exportar
-                                </button>
-                            @endcan
 
                             <a class="btn btn-info d-flex align-items-center justify-content-center gap-1 fs-5" data-bs-toggle="collapse" href="#filterCollapse" role="button" aria-expanded="false" aria-controls="filterCollapse">
                                 <i class="ri-filter-3-line"></i>
@@ -120,8 +100,8 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
-                                        <label for="codificacion">Estatus:</label>
-                                        <select name="codificacion" id="codificacion" class="form-select">
+                                        <label for="codification">Estatus:</label>
+                                        <select name="codification" id="codification" class="form-select">
                                             <option value="">-- Selecciona --</option>
                                             @if (auth()->user()->hasAnyRole(['Agente de Ventas','Administrador', 'Coordinador']))
                                                 <option value="COTIZACION">COTIZACIÓN</option>
@@ -152,7 +132,6 @@
                                 <th>Especialidad</th>
                                 <th>Fecha Preventa</th><!-- input fp_venta-->
                                 <th>Agente</th><!--agent_intra -->
-                                <th>Supervisor</th><!-- supervisor -->
                                 <th>Documentos</th> <!--input documents_portal-->
                                 <th>Acciones</th>
                             </tr>
@@ -176,8 +155,8 @@
         // Buscamos mediante los filtros
         $('body').on('click', '#buscarDatos', function(e){
             e.preventDefault();
-            $('#tabla_ventas').DataTable().destroy();
-            $('#tabla_ventas').show();
+            $('#tabla_education').DataTable().destroy();
+            $('#tabla_education').show();
 
             // Ponemos el valor de los inputs en variables
             var rol = $('input[name="rol"]').val();
@@ -186,9 +165,8 @@
             var contact_id = $('#contact_id').val();
             var client_landline = $('#client_landline').val();
             var client_celphone = $('#client_celphone').val();
-            var codificacion = $('#codificacion').val();
+            var codification = $('#codification').val();
             var user = $('#user').val();
-            console.log(rol+" "+fecha_inicio+" "+fecha_fin+" "+contact_id);
             $('#tabla_education').DataTable({
                 processing: true,
                 serverSide: true,
@@ -204,176 +182,25 @@
                         contact_id: contact_id,
                         client_landline: client_landline,
                         client_celphone: client_celphone,
-                        codificacion: codificacion,
+                        codification: codification,
                         user: user,
                     },
                 },
 
                 columns: [
                     {data: 'contact_id', name: 'contact_id'},
-                    {data: 'tipo_venta', name: 'tipo_venta'},
-                    {data: 'UGestion', name: 'UGestion'},
-                    {data: 'nPoliza', name: 'nPoliza'},
-                    {data: 'Aseguradora', name: 'Aseguradora'},
-                    {data: 'PncTotal', name: 'PncTotal'},
-                    {data: 'FrePago', name: 'FrePago'},
-                    {data: 'nSerie', name: 'nSerie'},
-                    {data: 'Fpreventa', name: 'Fpreventa'},
-                    {data: 'LoginIntranet', name: 'LoginIntranet'},
-                    {data: 'Supervisor', name: 'Supervisor'},
-                    {data: 'fvencimiento', name: 'fvencimiento'},
+                    {data: 'account_UIN', name: 'account_UIN'},
+                    {data: 'client_modality', name: 'client_modality'},
+                    {data: 'client_program', name: 'client_program'},
+                    {data: 'codification', name: 'codification'},
+                    {data: 'client_specialty', name: 'client_specialty'},
+                    {data: 'fp_venta', name: 'fp_venta'},
+                    {data: 'agent_OCM', name: 'agent_OCM'},
+                    {data: 'documents_portal', name: 'documents_portal'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
-                ],
-                columnDefs: [
-                    {
-                        target: 0,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 1,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 2,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 3,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 4,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 5,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `$${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 6,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 7,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 8,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 9,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 10,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 11,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-
                 ],
                 language: idiomaDataTable
             });
-
-            // Validamos que solamente los campos fecha_inicio y fecha_fin no estén vacíos
-            // if(fecha_inicio != '' && fecha_fin != '') {
-            //     // Mandamos los datos a la ruta ventas.index para posteriormente cargar el datatable con la informacion que devuelva este mismo
-
-            // }else{
-            //     // Mostramos el mensaje de error con un sweetalert
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: 'No puedes filtrar por fechas vacias',
-            //     });
-            // }
         });
 
         // Boton exportar ventas
@@ -388,13 +215,10 @@
             var numero_serie = $('#numero_serie').val();
             var numero_poliza = $('#numero_poliza').val();
             var telefono = $('#telefono').val();
-            var tipo_venta = $('#tipo_venta').val();
+            var codification = $('#codification').val();
             var nombre_cliente = $('#nombre_cliente').val();
             var mes_bdd = $('#mes_bdd').val();
             var anio_bdd = $('#anio_bdd').val();
-
-            // Validamos que solamente los campos fecha_inicio y fecha_fin no estén vacíos
-            window.location.href = "{{ route('ventas.exportVentas') }}?rol="+rol+"&fecha_inicio="+fecha_inicio+"&fecha_fin="+fecha_fin+"&lead="+lead+"&numero_serie="+numero_serie+"&numero_poliza="+numero_poliza+"&telefono="+telefono+"&tipo_venta="+tipo_venta+"&nombre_cliente="+nombre_cliente+"&mes_bdd="+mes_bdd+"&anio_bdd="+anio_bdd;
         });
     });
 </script>
