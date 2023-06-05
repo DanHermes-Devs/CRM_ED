@@ -218,37 +218,38 @@ class HomeController extends Controller
         COUNT( lc.resultdesc ) AS totalLlamadas, ca.primerContacto,
         SUM(CASE WHEN (lc.resultdesc = 'COTIZACION' ) THEN 1 ELSE 0 END) AS ventas,
         ((SUM(CASE WHEN (lc.resultdesc = 'COTIZACION') THEN 1 ELSE 0 END) / ca.primerContacto) * 100 ) AS Ratio
-        FROM ocmdb.ocm_log_calls lc
-        INNER JOIN ocmdb.ocm_agent a
-            ON lc.agent = a.user
-        INNER JOIN (
-            SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
-            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
-                    FROM ocmdb.ocm_log_calls lc
-                    INNER JOIN (
-                        SELECT d.number1
-                        FROM ocmdb.skill_fb_uimotor_data d
-                        INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
-                        INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                        WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
-                        -- AND de.id_lead <> ''
-                        UNION
-                        SELECT  d.number1
-                        FROM ocmdb.skill_uimotor_data d
-                        INNER JOIN ocmdb.skill_uimotor_dataexten de ON d.id = de.id
-                        INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                        WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
-                        -- AND de.id_lead <> ''
-                ) As d
-                    ON lc.numbercall = d.number1 AND skilldata  IN ('FB_UIMotor','UIMotor')
-        AND fecha BETWEEN CURDATE() AND CURDATE() + 1
-        ORDER BY fecha DESC) l
-        WHERE row_numb = 1
-        AND agent <> ''
-        GROUP BY l.agent
-        ) AS ca
-        ON lc.agent = ca.agent
-        WHERE lc.skilldata  IN ('FB_UIMotor','UIMotor') AND lc.fecha BETWEEN CURDATE() AND CURDATE() + 1 AND lc.agent <> '' GROUP BY lc.agent";
+            FROM ocmdb.ocm_log_calls lc
+            INNER JOIN ocmdb.ocm_agent a
+                ON lc.agent = a.user
+            INNER JOIN (
+                SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
+                FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
+                        FROM ocmdb.ocm_log_calls lc
+                        INNER JOIN (
+                            SELECT d.number1
+                            FROM ocmdb.skill_fb_uimotor_data d
+                            INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
+                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+                            WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
+                            AND de.id_lead <> ''
+                            UNION
+                            SELECT  d.number1
+                            FROM ocmdb.skill_uimotor_data d
+                            INNER JOIN ocmdb.skill_uimotor_dataexten de ON d.id = de.id
+                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+                            WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
+                            AND de.id_lead <> ''
+                    ) As d
+                        ON lc.numbercall = d.number1 AND skilldata  IN ('FB_UIMotor','UIMotor')
+                AND fecha BETWEEN CURDATE() AND CURDATE() + 1
+                -- AND resultcalldesc = 'Normal clearing'
+                ORDER BY fecha DESC) l
+                WHERE row_numb = 1
+            AND agent <> ''
+            GROUP BY l.agent
+            ) AS ca
+            ON lc.agent = ca.agent
+            WHERE lc.skilldata  IN ('FB_UIMotor','UIMotor') AND lc.fecha BETWEEN CURDATE() AND CURDATE() + 1 AND lc.resultcalldesc = 'Normal clearing' AND lc.agent <> '' GROUP BY lc.agent";
 
         return $resultAgents = $this->followQuery($ventasAgentes);
     }
@@ -256,9 +257,6 @@ class HomeController extends Controller
     // Function to bring results in calls
     private function ResultadosContacto()
     {
-
-
-
         $resultadosContacto = "SELECT resultadoUC,COUNT(*) As Total FROM
                     ((SELECT  d.dateinsert,lc.numbercall,lc.skill, lc.fecha fechaUC,lc.agent agenteUC,lc.resultdesc resultadoUC,d.number1 telefono
                     FROM ocmdb.ocm_log_calls lc
@@ -415,14 +413,17 @@ class HomeController extends Controller
                                             INNER JOIN ocmdb.".$tableFb."exten de ON d.id = de.id
                                             INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
                                             WHERE d.dateinsert BETWEEN ".$fechaStart." AND ".$fechaEnd."
+                                            AND de.id_lead <> ''
                                             UNION
                                             SELECT  d.number1 FROM ocmdb.".$tableGo." d
                                             INNER JOIN ocmdb.".$tableGo."exten de ON d.id = de.id
                                             INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
                                             WHERE d.dateinsert BETWEEN ".$fechaStart." AND ".$fechaEnd."
+                                            AND de.id_lead <> ''
                                     ) As d
                                         ON lc.numbercall = d.number1 AND skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
                             AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+                            AND resultcalldesc = 'Normal clearing'
                             ORDER BY fecha DESC) l
                             WHERE row_numb = 1
                             AND agent <> ''
@@ -432,6 +433,7 @@ class HomeController extends Controller
                                 WHERE lc.skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
                                 AND lc.fecha BETWEEN ".$fechaStart."
                                 AND ".$fechaEnd."
+                                AND lc.resultcalldesc = 'Normal clearing'
                                 AND lc.agent <> ''
                                 GROUP BY lc.agent";
         //  dd($resultadosAgents);

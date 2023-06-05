@@ -120,8 +120,8 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
-                                        <label for="status">Estatus:</label>
-                                        <select name="tipo_venta" id="tipo_venta" class="form-select">
+                                        <label for="codificacion">Estatus:</label>
+                                        <select name="codificacion" id="codificacion" class="form-select">
                                             <option value="">-- Selecciona --</option>
                                             @if (auth()->user()->hasAnyRole(['Agente de Ventas','Administrador', 'Coordinador']))
                                                 <option value="COTIZACION">COTIZACIÓN</option>
@@ -134,70 +134,12 @@
                                     </div>
                                 </div>
                             </div>
-
-
-                            @if (!auth()->user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones']))
-                                <div class="row">
-                                    <div class="col-12 col-md-4">
-                                        <div class="mb-3">
-                                            <label for="mes_bdd">Mes:</label>
-                                            <select name="mes_bdd" id="mes_bdd" class="form-select" disabled>
-                                                <option value="">-- Selecciona un Mes --</option>
-                                                <option value="ENERO">Enero</option>
-                                                <option value="FEBRERO">Febrero</option>
-                                                <option value="MARZO">Marzo</option>
-                                                <option value="ABRIL">Abril</option>
-                                                <option value="MAYO">Mayo</option>
-                                                <option value="JUNIO">Junio</option>
-                                                <option value="JULIO">Julio</option>
-                                                <option value="AGOSTO">Agosto</option>
-                                                <option value="SEPTIEMBRE">Septiembre</option>
-                                                <option value="OCTUBRE">Octubre</option>
-                                                <option value="NOVIEMBRE">Noviembre</option>
-                                                <option value="DICIEMBRE">Diciembre</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="mb-3">
-                                            <label for="anio_bdd">Año:</label>
-                                            <!-- <input type="number" name="anio_bdd" id="anio_bdd" min="1900" class="form-control" disabled> -->
-                                            <select name="anio_bdd" id="anio_bdd" class="form-select" disabled>
-                                                <option value="">-- Selecciona un Año --</option>
-                                                <option value="2023">2023</option>
-                                                <option value="2024">2024</option>
-                                                <option value="2025">2025</option>
-                                                <option value="2026">2026</option>
-                                                <option value="2027">2027</option>
-                                                <option value="2028">2028</option>
-                                                <option value="2029">2029</option>
-                                                <option value="2030">2030</option>
-                                                <option value="2031">2031</option>
-                                                <option value="2032">2032</option>
-                                                <option value="2033">2033</option>
-                                                <option value="2034">2034</option>
-                                                <option value="2035">2035</option>
-                                                <option value="2036">2036</option>
-                                                <option value="2037">2037</option>
-                                                <option value="2038">2038</option>
-                                                <option value="2039">2039</option>
-                                                <option value="2040">2040</option>
-                                                <option value="2041">2041</option>
-                                                <option value="2042">2042</option>
-                                                <option value="2043">2043</option>
-                                                <option value="2044">2044</option>
-                                                <option value="2045">2045</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
                     </form>
 
                     <hr>
 
-                    <table class="table table-middle table-nowrap mb-0" id="tabla_ventas">
+                    <table class="table table-middle table-nowrap mb-0" id="tabla_education">
                         <thead>
                             <tr>
                                 <th>ContactID</th><!-- contact_id -->
@@ -231,17 +173,6 @@
             // Bloqueamos el boton de guardar para evitar que se haga doble click
             $(this).attr('disabled', true);
         });
-        $('#tipo_venta').on('change', function() {
-            var selectedValue = $(this).val();
-
-            if (selectedValue === 'RENOVACION') {
-                $('#mes_bdd').prop('disabled', false);
-                $('#anio_bdd').prop('disabled', false);
-            } else {
-                $('#mes_bdd').prop('disabled', true);
-                $('#anio_bdd').prop('disabled', true);
-            }
-        });
         // Buscamos mediante los filtros
         $('body').on('click', '#buscarDatos', function(e){
             e.preventDefault();
@@ -252,45 +183,32 @@
             var rol = $('input[name="rol"]').val();
             var fecha_inicio = $('#fecha_inicio').val();
             var fecha_fin = $('#fecha_fin').val();
-            var lead = $('#lead').val();
-            var numero_serie = $('#numero_serie').val();
-            var numero_poliza = $('#numero_poliza').val();
-            var telefono = $('#telefono').val();
-            var celular = $('#celular').val();
-            var tipo_venta = $('#tipo_venta').val();
-            var nombre_cliente = $('#nombre_cliente').val();
-            var supervisor = $('#supervisor').val();
-            var agente = $('#agente').val();
-            var mes_bdd = $('#mes_bdd').val();
-            var anio_bdd = $('#anio_bdd').val();
+            var contact_id = $('#contact_id').val();
+            var client_landline = $('#client_landline').val();
+            var client_celphone = $('#client_celphone').val();
+            var codificacion = $('#codificacion').val();
             var user = $('#user').val();
-
-            $('#tabla_ventas').DataTable({
+            console.log(rol+" "+fecha_inicio+" "+fecha_fin+" "+contact_id);
+            $('#tabla_education').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
                 bAutoWidth: false,
                 ajax: {
-                    url: "{{ route('ventas.index') }}",
+                    url: "{{ route('educacion-uin.index') }}",
                     type: "GET",
                     data: {
                         rol: rol,
                         fecha_inicio: fecha_inicio,
                         fecha_fin: fecha_fin,
-                        lead: lead,
-                        numero_serie: numero_serie,
-                        numero_poliza: numero_poliza,
-                        telefono: telefono,
-                        celular: celular,
-                        tipo_venta: tipo_venta,
-                        nombre_cliente: nombre_cliente,
-                        supervisor: supervisor,
-                        agente: agente,
-                        mes_bdd: mes_bdd,
-                        anio_bdd: anio_bdd,
+                        contact_id: contact_id,
+                        client_landline: client_landline,
+                        client_celphone: client_celphone,
+                        codificacion: codificacion,
                         user: user,
                     },
                 },
+
                 columns: [
                     {data: 'contactId', name: 'contactId'},
                     {data: 'tVenta', name: 'tVenta'},

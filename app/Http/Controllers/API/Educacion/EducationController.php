@@ -5,7 +5,10 @@ namespace App\Http\Controllers\API\Educacion;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Education;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EducationController extends Controller
 {
@@ -17,14 +20,68 @@ class EducationController extends Controller
     public function index(Request $request)
     {
         $query = Education::query();
-
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('fp_venta', [$request->fecha_inicio, $request->fecha_fin]);
         }
 
+         // Búsquedas exactas
+         $camposExactos = [
+            'contact_id' => 'contact_id',
+            'client_name' => 'client_name',
+            'client_landline' => 'client_landline',
+            'client_celphone' => 'client_celphone',
+            'codificacion' => 'codificacion',
+        ];
+
+        foreach ($camposExactos as $campoDb => $campoReq) {
+
+            if ($request->filled($campoReq)) {
+                    $query->where($campoDb, $request->$campoReq);
+            }
+        }
+
+        // Filtramos por agente
+        $usuario = User::find($request->user);
+
+        // Búsqueda por tipo de venta
+        if ($request->filled('tipo_venta')) {
+            $query->where('codificacion', $request->codificacion);
+        }
 
 
-        return view('crm.modulos.educacion.uin.index');
+        $resultados = $query->get();
+
+        // Filtros por perfil de usuario
+        $rol = $request->rol;
+
+        if ($rol == 'Agente de Ventas') {
+            $resultados = $resultados->where('codificacion', 'VENTA')
+                ->where('codificacion', 'ALUMNO')
+                ->where('agent_OCM', 'Agente2');
+        } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
+            // No aplicar filtros adicionales para supervisores y coordinadores
+        } else {
+            // No aplicar filtros adicionales para administradores
+        }
+
+        // Recuperamos todos los usuarios con rol supervisor y lo mandamos a la vista
+        $supervisores = User::role('Supervisor')->get();
+
+        // Recuperamos todos los usuario con rol Agente de Ventas y lo mandmos a la vista
+        $agentes = User::role('Agente de Ventas')->get();
+
+        $resultados = $query->get();
+        //RESPUESTA PARA PINTAR LAS QUERYS
+        if (request()->ajax()) {
+            return DataTables()
+                ->of($resultados)
+                ->addColumn('action', 'crm.modulos.educacion.uin.actions')
+                ->rawColumns(['action'])
+                ->escapeColumns([])
+                ->make(true);
+        }
+
+        return view('crm.modulos.educacion.uin.index', compact('agentes','supervisores','resultados'));
     }
 
     /**
@@ -38,6 +95,9 @@ class EducationController extends Controller
     public function store(Request $request)
     {
         //PARA ALMACENAR LA INFORMACION
+
+        $usuario = User::where('usuario', $request->agent_OCM)->first();
+
         $education = new Education;
         $education->contact_id = $request->contact_id;
         $education->usuario_ocm = $request->agent_OCM;
@@ -46,8 +106,8 @@ class EducationController extends Controller
         $education->fp_venta = Carbon::now();
         $education->campana = $request->campana;
         $education->agent_OCM = $request->agent_OCM;
-        //$education->agent_intra = $request->agent_intra;
-        //$education->supervisor = $request->supervisor;
+        $education->agent_intra = $usuario->id;
+        $education->supervisor = $usuario->id_superior;
         $education->codification = $request->codification;
         $education->client_name = $request->client_name;
         $education->client_landline = $request->client_landline;

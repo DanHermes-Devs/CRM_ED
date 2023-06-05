@@ -365,7 +365,6 @@
                         <table class="table table-borderless table-hover table-nowrap align-middle mb-0">
                             <thead class="table-light">
                                 <tr class="text-muted">
-                                    <th scope="col" style="width: 20%;">Usuario</th>
                                     <th scope="col">Nombre del agente</th>
                                     <th scope="col">Llamadas Totales</th>
                                     <th scope="col" style="width: 16%;">Llamadas Primer Contacto</th>
@@ -376,7 +375,6 @@
                             <tbody>
                                 @foreach ($lYvAYc as $item)
                                     <tr>
-                                        <td>{{ $item['agent'] != '' ? $item['agent'] : 'No disponible' }}</td>
                                         <td>{{ $item['nombre'] != '' ? $item['nombre'] : 'No disponible' }}</td>
                                         <td>{{ $item['totalLlamadas'] != '' ? $item['totalLlamadas'] : 'No disponible' }}
                                         </td>
