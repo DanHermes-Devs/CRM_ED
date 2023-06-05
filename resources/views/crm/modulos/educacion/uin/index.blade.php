@@ -211,7 +211,7 @@
 
                 columns: [
                     {data: 'contact_id', name: 'contact_id'},
-                    {data: 'tVenta', name: 'tVenta'},
+                    {data: 'tipo_venta', name: 'tipo_venta'},
                     {data: 'UGestion', name: 'UGestion'},
                     {data: 'nPoliza', name: 'nPoliza'},
                     {data: 'Aseguradora', name: 'Aseguradora'},
