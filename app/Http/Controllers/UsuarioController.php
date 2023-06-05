@@ -58,7 +58,7 @@ class UsuarioController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
-        
+
         // Mostramos las campañas
         $campanas = Campaign::all();
 
@@ -244,13 +244,13 @@ class UsuarioController extends Controller
     {
         $rules = [
             'rol' => 'required',
-            'users_csv' => 'required|mimes:xlsx,xls,csv',
+            'users_csv' => 'required|file',
         ];
 
         $messages = [
             'rol.required' => 'El campo rol es obligatorio.',
             'required' => 'El campo archivo es obligatorio.',
-            'mimes' => 'El archivo debe ser de tipo: xlsx, xls o csv',
+            'file' => 'El campo archivo debe ser un archivo.',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);

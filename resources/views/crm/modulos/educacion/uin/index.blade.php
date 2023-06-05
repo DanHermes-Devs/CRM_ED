@@ -210,7 +210,7 @@
                 },
 
                 columns: [
-                    {data: 'contactId', name: 'contactId'},
+                    {data: 'contact_id', name: 'contact_id'},
                     {data: 'tVenta', name: 'tVenta'},
                     {data: 'UGestion', name: 'UGestion'},
                     {data: 'nPoliza', name: 'nPoliza'},
