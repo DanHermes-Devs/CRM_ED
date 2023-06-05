@@ -188,6 +188,7 @@ class VentasController extends Controller
                         $venta->contactId = $request->contactId;
                         $venta->UGestion = 'RENOVADA';
                         $venta->Fpreventa = Carbon::now();
+                        $venta->fill($request->all());
                         $venta->FinVigencia = $request->FinVigencia;
                         // Calculamos FfVigencia de FinVigencia, si FinVigencia es 02-06-2023 FfVigencia es 02-06-2024
                         $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();

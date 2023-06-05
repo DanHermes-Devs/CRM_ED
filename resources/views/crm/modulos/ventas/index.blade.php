@@ -147,10 +147,10 @@
                                         <label for="tipo_venta">Tipo de venta:</label>
                                         <select name="tipo_venta" id="tipo_venta" class="form-select">
                                             <option value="">-- Selecciona --</option>
-                                            @if (auth()->user()->hasAnyRole(['Agente de Ventas', 'Coordinador']))
+                                            @if (auth()->user()->hasAnyRole(['Administrador', 'Agente de Ventas', 'Coordinador']))
                                                 <option value="VENTA">VENTA NUEVA</option>
                                             @endif
-                                            @if (auth()->user()->hasAnyRole(['Agente Renovaciones', 'Coordinador']))
+                                            @if (auth()->user()->hasAnyRole(['Administrador', 'Agente Renovaciones', 'Coordinador']))
                                                 <option value="RENOVACION">RENOVACIONES</option>
                                             @endif
                                             <option value="POSIBLE DUPLICIDAD">POSIBLE DUPLICIDAD</option>
