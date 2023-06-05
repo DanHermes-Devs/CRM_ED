@@ -281,7 +281,7 @@ class VentasController extends Controller
         $venta->save();
 
         // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
-        if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION' || $venta->FrePago !== null){
+        if($venta->tVenta === 'VENTA' || $venta->tVenta === 'RENOVACION' || $venta->FrePago !== null){
             $frecuenciaPago = $request->input('FrePago');
             $this->crearRecibosPago($venta, $frecuenciaPago);
         }
