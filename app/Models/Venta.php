@@ -82,7 +82,8 @@ class Venta extends Model
 
     protected $dates = [
         'deleted_at',
-        'FinVigencia'
+        'FinVigencia', // Fecha inicio de vigencia
+        'FfVigencia' // Fecha fin vigencia
     ];
 
     // Relacion con Receipt

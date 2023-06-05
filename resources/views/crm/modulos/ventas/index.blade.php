@@ -56,7 +56,7 @@
                             </a>
                         </div>
                     @endif
-                    
+
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
@@ -252,9 +252,9 @@
                             @endif
                         </div>
                     </form>
-                
+
                     <hr>
-                
+
                     <table class="table table-middle table-nowrap mb-0" id="tabla_ventas">
                         <thead>
                             <tr>
@@ -510,7 +510,7 @@
                             }
                         }
                     },
-                    
+
                 ],
                 language: idiomaDataTable
             });
@@ -518,7 +518,7 @@
             // Validamos que solamente los campos fecha_inicio y fecha_fin no estén vacíos
             // if(fecha_inicio != '' && fecha_fin != '') {
             //     // Mandamos los datos a la ruta ventas.index para posteriormente cargar el datatable con la informacion que devuelva este mismo
-                
+
             // }else{
             //     // Mostramos el mensaje de error con un sweetalert
             //     Swal.fire({

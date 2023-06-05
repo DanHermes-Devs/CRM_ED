@@ -149,20 +149,20 @@ class VentasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         // Busca si ya existe una venta con el mismo contactId
         $venta = Venta::where('contactId', $request->contactId)->latest('created_at')->first();
 
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
-            // Si la última gestión es 'VENTA'y 'RENOVACION', no permite modificar el campo UGestion
-            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION') {
+            // Si la última gestión es 'VENTA' y 'RENOVACION', no permite modificar el campo UGestion
+            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION' && $request->UGestion === 'PROMESA DE PAGO') {
                 if ($venta->UGestion !== 'RENOVACION') {
                     $venta->UGestion = $request->UGestion;
                 }
 
                 $venta->Fpreventa = Carbon::now();
-    
+
                 // Guarda los valores actuales de MesBdd y AnioBdd antes de actualizar el registro
                 $currentMesBdd = $venta->MesBdd;
                 $currentAnioBdd = $venta->AnioBdd;
@@ -179,7 +179,7 @@ class VentasController extends Controller
                     $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                         ->where('tVenta', 'RENOVACION')
                         ->first();
-    
+
                     if ($ventaRenovacion) {
                         $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                         $venta->tVenta = 'RENOVACION';
@@ -188,7 +188,10 @@ class VentasController extends Controller
                         $venta->contactId = $request->contactId;
                         $venta->UGestion = 'RENOVADA';
                         $venta->Fpreventa = Carbon::now();
-                        $venta->tVenta = 'RENOVACION';    
+                        $venta->FinVigencia = $request->FinVigencia;
+                        // Calculamos FfVigencia de FinVigencia, si FinVigencia es 02-06-2023 FfVigencia es 02-06-2024
+                        $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $venta->tVenta = 'RENOVACION';
                     }
                 } else {
                     return response()->json([
@@ -205,6 +208,9 @@ class VentasController extends Controller
             $venta->Fpreventa = Carbon::now();
 
             $venta->fill($request->all());
+            $venta->FinVigencia = $request->FinVigencia;
+            // Calculamos FfVigencia de FinVigencia, si FinVigencia es 02-06-2023 FfVigencia es 02-06-2024
+            $venta->FfVigencia = Carbon::parse($venta->FinVigencia)->addYear();
 
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
@@ -306,7 +312,7 @@ class VentasController extends Controller
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
         }
-        
+
         // Búsquedas exactas
         $camposExactos = [
             'ContactID' => 'lead',
@@ -315,18 +321,18 @@ class VentasController extends Controller
             'TelCelular' => 'telefono',
             'NombreDeCliente' => 'nombre_cliente',
         ];
-        
+
         foreach ($camposExactos as $campoDb => $campoReq) {
             if ($request->filled($campoReq)) {
                 $query->where($campoDb, $request->$campoReq);
             }
         }
-        
+
         // Búsqueda por tipo de venta
         if ($request->filled('tipo_venta')) {
             $query->where('tVenta', $request->tipo_venta);
         }
-         
+
         // Búsqueda por mes y año de BDD de renovaciones
         if ($request->filled(['mes_bdd', 'anio_bdd'])) {
             // Implementa la lógica para buscar por mes y año de BDD
