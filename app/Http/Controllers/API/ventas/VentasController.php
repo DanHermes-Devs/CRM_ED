@@ -439,7 +439,7 @@ class VentasController extends Controller
                 'MENSUAL' => 12
             ];
 
-            // Convertimos frecuenciaPago en Mayusculas
+            // Convertimos frecuenciaPago en mayúsculas
             $frecuenciaPago = strtoupper($frecuenciaPago);
 
             if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
@@ -458,30 +458,12 @@ class VentasController extends Controller
                     ]);
                 }
 
-                for ($i = 1; $i <= $numRecibos; $i++) {
-                    $finVigencia = Carbon::parse($venta->FinVigencia);
+                $finVigencia = Carbon::parse($venta->FinVigencia);
 
-                    // Calcular la fecha del próximo pago en función de la frecuencia de pago
-                    switch ($frecuenciaPago) {
-                        case 'ANUAL':
-                            $fechaProximoPago = $finVigencia->addYear();
-                            break;
-                        case 'SEMESTRAL':
-                            $fechaProximoPago = $finVigencia->addMonths(6);
-                            break;
-                        case 'TRIMESTRAL':
-                            $fechaProximoPago = $finVigencia->addMonths(3);
-                            break;
-                        case 'CUATRIMESTRAL':
-                            $fechaProximoPago = $finVigencia->addMonths(4);
-                            break;
-                        case 'MENSUAL':
-                            $fechaProximoPago = $finVigencia->addMonth();
-                            break;
-                        default:
-                            // Si la frecuencia de pago no está definida correctamente, salir del bucle
-                            break 2;
-                    }
+                for ($i = 1; $i <= $numRecibos; $i++) {
+                    // Calcular la fecha del próximo pago sumando la cantidad adecuada de meses
+                    $mesesPorRecibo = ceil(12 / $numRecibos); // Cantidad de meses por recibo
+                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1))->endOfMonth();
 
                     $receipt = new Receipt([
                         'venta_id' => $venta->id,
@@ -501,6 +483,7 @@ class VentasController extends Controller
             }
         }
     }
+
 
 
     public function actualizarEstadoRecibosYPago($venta_id, $num_pago)
