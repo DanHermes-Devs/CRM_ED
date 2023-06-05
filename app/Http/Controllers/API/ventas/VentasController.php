@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Validators\ValidationException;
 
 class VentasController extends Controller
@@ -30,24 +31,6 @@ class VentasController extends Controller
         $this->middleware('auth')->except('store');
     }
 
-    // Forma de llamar un procedimiento almacenado
-    // $results = DB::select("CALL obtener_ventas_totales()");
-
-    // if ($results) {
-    //     foreach ($results as $row) {
-    //         // Acceder a los datos de cada fila
-    //         dump($row->id);
-    //     }
-    // } else {
-    //     // Manejo del error
-    //     $error = DB::selectOne('SELECT @@ERROR AS error');
-    //     if ($error) {
-    //         dump('Error al ejecutar el stored procedure: ' . $error->error);
-    //     } else {
-    //         dump('Error al ejecutar el stored procedure.');
-    //     }
-    // }
-
     /**
      * Display a listing of the resource.
      *
@@ -55,7 +38,25 @@ class VentasController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Venta::query()->with('user')->select('contactId', 'tVenta', 'UGestion', 'nPoliza', 'nueva_poliza', 'Aseguradora', 'PncTotal', 'FrePago', 'nSerie', 'Fpreventa', 'LoginIntranet', 'Supervisor', 'FinVigencia');
+        // Forma de llamar un procedimiento almacenado
+        // $results = DB::select("CALL obtener_ventas_totales()");
+
+        // if ($results) {
+        //     foreach ($results as $row) {
+        //         // Acceder a los datos de cada fila
+        //         dump($row->id);
+        //     }
+        // } else {
+        //     // Manejo del error
+        //     $error = DB::selectOne('SELECT @@ERROR AS error');
+        //     if ($error) {
+        //         dump('Error al ejecutar el stored procedure: ' . $error->error);
+        //     } else {
+        //         dump('Error al ejecutar el stored procedure.');
+        //     }
+        // }
+
+        $query = Venta::query();
 
         // Búsqueda por fecha de inicio y fin
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
@@ -104,28 +105,26 @@ class VentasController extends Controller
         $resultados = $query->get();
 
         // Filtros por perfil de usuario
+        // Filtros por perfil de usuario
         $rol = $request->rol;
 
-        if ($rol == 'Agente de Ventas') {
-            $resultados = $resultados->where('tVenta', 'VENTA')
-                ->where('UGestion', 'VENTA')
-                ->where('LoginOcm', 'Agente2');
-        } elseif ($rol == 'Agente Renovaciones') {
-            $resultados = $resultados->where('tVenta', 'RENOVACION')->where('LoginOcm', $usuario->usuario);
+        if ($rol == 'Agente Renovaciones') {
+            $query->where('tVenta', 'RENOVACION')->where('LoginOcm', $usuario->usuario);
         } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
         } else {
             // No aplicar filtros adicionales para administradores
         }
 
+
         if (request()->ajax()) {
-            return DataTables()
-                ->of($resultados)
+            return DataTables::of($query)
                 ->addColumn('action', 'crm.modulos.ventas.actions')
                 ->rawColumns(['action'])
                 ->escapeColumns([])
-                ->make(true);
+                ->toJson();
         }
+        
 
         // Recuperamos todos los usuarios con rol supervisor y lo mandamos a la vista
         $supervisores = User::role('Supervisor')->get();
@@ -149,20 +148,20 @@ class VentasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         // Busca si ya existe una venta con el mismo contactId
         $venta = Venta::where('contactId', $request->contactId)->latest('created_at')->first();
 
         // Si se encuentra una venta existente con el mismo contactId
         if ($venta) {
-            // Si la última gestión es 'VENTA' y 'RENOVACION', no permite modificar el campo UGestion
-            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION' && $request->UGestion === 'PROMESA DE PAGO') {
+            // Si la última gestión es 'VENTA'y 'RENOVACION', no permite modificar el campo UGestion
+            if ($venta->UGestion !== 'VENTA' && $venta->UGestion !== 'RENOVACION') {
                 if ($venta->UGestion !== 'RENOVACION') {
                     $venta->UGestion = $request->UGestion;
                 }
 
                 $venta->Fpreventa = Carbon::now();
-
+    
                 // Guarda los valores actuales de MesBdd y AnioBdd antes de actualizar el registro
                 $currentMesBdd = $venta->MesBdd;
                 $currentAnioBdd = $venta->AnioBdd;
@@ -179,7 +178,7 @@ class VentasController extends Controller
                     $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                         ->where('tVenta', 'RENOVACION')
                         ->first();
-
+    
                     if ($ventaRenovacion) {
                         $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                         $venta->tVenta = 'RENOVACION';
@@ -188,11 +187,7 @@ class VentasController extends Controller
                         $venta->contactId = $request->contactId;
                         $venta->UGestion = 'RENOVADA';
                         $venta->Fpreventa = Carbon::now();
-                        $venta->fill($request->all());
-                        $venta->FinVigencia = $request->FinVigencia;
-                        // Calculamos FfVigencia de FinVigencia, si FinVigencia es 02-06-2023 FfVigencia es 02-06-2024
-                        $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
-                        $venta->tVenta = 'RENOVACION';
+                        $venta->tVenta = 'RENOVACION';    
                     }
                 } else {
                     return response()->json([
@@ -209,9 +204,6 @@ class VentasController extends Controller
             $venta->Fpreventa = Carbon::now();
 
             $venta->fill($request->all());
-            $venta->FinVigencia = $request->FinVigencia;
-            // Calculamos FfVigencia de FinVigencia, si FinVigencia es 02-06-2023 FfVigencia es 02-06-2024
-            $venta->FfVigencia = Carbon::parse($venta->FinVigencia)->addYear();
 
             if($request->Codificacion == 'VENTA'){
                 // Busca si existe una venta con el mismo nSerie y tVenta 'VENTA NUEVA'
@@ -281,8 +273,8 @@ class VentasController extends Controller
         // Guarda la venta en la base de datos
         $venta->save();
 
-        // Si tVenta es VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
-        if($request->Codificacion === 'VENTA' || $request->Codificacion === 'RENOVACION' || $request->FrePago !== null){
+        // Si tVenta es NUEVA VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
+        if($venta->tVenta === 'VENTA NUEVA' || $venta->tVenta === 'RENOVACION' || $venta->FrePago !== null){
             $frecuenciaPago = $request->input('FrePago');
             $this->crearRecibosPago($venta, $frecuenciaPago);
         }
@@ -313,7 +305,7 @@ class VentasController extends Controller
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
         }
-
+        
         // Búsquedas exactas
         $camposExactos = [
             'ContactID' => 'lead',
@@ -322,18 +314,18 @@ class VentasController extends Controller
             'TelCelular' => 'telefono',
             'NombreDeCliente' => 'nombre_cliente',
         ];
-
+        
         foreach ($camposExactos as $campoDb => $campoReq) {
             if ($request->filled($campoReq)) {
                 $query->where($campoDb, $request->$campoReq);
             }
         }
-
+        
         // Búsqueda por tipo de venta
         if ($request->filled('tipo_venta')) {
             $query->where('tVenta', $request->tipo_venta);
         }
-
+         
         // Búsqueda por mes y año de BDD de renovaciones
         if ($request->filled(['mes_bdd', 'anio_bdd'])) {
             // Implementa la lógica para buscar por mes y año de BDD
