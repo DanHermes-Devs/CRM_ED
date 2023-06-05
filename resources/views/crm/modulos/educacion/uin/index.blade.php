@@ -171,7 +171,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                bAutoWidth: false,
+                bAutoWidth: true,
                 ajax: {
                     url: "{{ route('educacion-uin.index') }}",
                     type: "GET",
