@@ -2,8 +2,8 @@
 <style>
     .grid-search {grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) );gap: 1.5rem;align-items: end;}
     @media (max-width: 768px) { .grid-search { grid-template-columns: repeat( 1, minmax(250px, 1fr) );gap: 1.5rem;align-items: end;} }
-    #tabla_ventas { display: none;}
-    div#tabla_ventas_wrapper { width: 100%;}
+    #tabla_education { display: none;}
+    div#tabla_education_wrapper { width: 100%;}
 </style>
 @section('content')
 <div class="container-fluid">
