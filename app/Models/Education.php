@@ -43,10 +43,4 @@ class Education extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    // Relacion con Receipt
-    public function receipts()
-    {
-        return $this->hasMany(Receipt::class);
-    }
 }

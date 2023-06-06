@@ -105,6 +105,6 @@ class User extends Authenticatable
     // Relacion con education
     public function educations()
     {
-        return $this->hasMany(Education::class, 'user_id');
+        return $this->hasMany(Education::class, 'agent_intra');
     }
 }
