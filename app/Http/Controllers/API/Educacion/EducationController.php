@@ -95,37 +95,46 @@ class EducationController extends Controller
 
         $usuario = User::where('usuario', $request->agent_OCM)->first();
 
-        $education = new Education;
-        $education->contact_id = $request->contact_id;
-        $education->usuario_ocm = $request->agent_OCM;
-        $education->usuario_crm = $request->agent_OCM;
-        $education->nombre_universidad = 'UIN';
-        $education->fp_venta = Carbon::now();
-        $education->campana = $request->campana;
-        $education->agent_OCM = $request->agent_OCM;
-        $education->agent_intra = $usuario->id;
-        $education->supervisor = $usuario->id_superior;
-        $education->codification = $request->codification;
-        $education->client_name = $request->client_name;
-        $education->client_landline = $request->client_landline;
-        $education->client_celphone = $request->client_celphone;
-        $education->client_modality = $request->client_modality;
-        $education->client_program = $request->client_program;
-        $education->client_specialty = $request->client_specialty;
-        $education->client_street = $request->client_street;
-        $education->client_number = $request->client_number;
-        $education->client_delegation = $request->client_delegation;
-        $education->client_state = $request->client_state;
-        $education->client_sex = $request->client_sex;
-        $education->client_birth = $request->client_birth;
-        //$education->fill($request->all());
-        $education->save();
+        if($usuario){
+            $education = new Education;
+            $education->contact_id = $request->contact_id;
+            $education->usuario_ocm = $request->agent_OCM;
+            $education->usuario_crm = $request->agent_OCM;
+            $education->nombre_universidad = 'UIN';
+            $education->fp_venta = Carbon::now();
+            $education->campana = $request->campana;
+            $education->agent_OCM = $request->agent_OCM;
+            $education->agent_intra = $usuario->id;
+            $education->supervisor = $usuario->id_superior;
+            $education->codification = $request->codification;
+            $education->client_name = $request->client_name;
+            $education->client_landline = $request->client_landline;
+            $education->client_celphone = $request->client_celphone;
+            $education->client_modality = $request->client_modality;
+            $education->client_program = $request->client_program;
+            $education->client_specialty = $request->client_specialty;
+            $education->client_street = $request->client_street;
+            $education->client_number = $request->client_number;
+            $education->client_delegation = $request->client_delegation;
+            $education->client_state = $request->client_state;
+            $education->client_sex = $request->client_sex;
+            $education->client_birth = $request->client_birth;
+            //$education->fill($request->all());
+            $education->save();
 
-        return response()->json([
-            "code" => 200,
-            "message" => "Venta Guardada Correctamente",
-            "data" => $education
-        ]);
+            return response()->json([
+                "code" => 200,
+                "message" => "Venta Guardada Correctamente",
+                "data" => $education
+            ]);
+        }else{
+            return response()->json([
+                "code" => 200,
+                "message" => "En usuario no se encuentra en la INTRA",
+            ]);
+        }
+
+
 
     }
 
