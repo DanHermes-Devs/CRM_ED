@@ -23,6 +23,10 @@ class EducationController extends Controller
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('fp_venta', [$request->fecha_inicio, $request->fecha_fin]);
         }
+
+        if ($request->filled(['client_name'])) {
+            $query->where('client_name', [$request->client_name]);
+        }
          // Búsquedas exactas
          $camposExactos = [
             'contact_id' => 'contact_id',

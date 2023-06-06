@@ -125,6 +125,7 @@
                                 <th>Lead</th><!-- contact_id -->
                                 <th>Codificación</th>
                                 <th>Campaña</th>
+                                <th>Nombre Cliente</th>
                                 <th>Modalidad</th>
                                 <th>Programa</th>
                                 <th>Especialidad</th>
@@ -162,6 +163,7 @@
             var fecha_inicio = $('#fecha_inicio').val();
             var fecha_fin = $('#fecha_fin').val();
             var contact_id = $('#contact_id').val();
+            var client_name = $('#client_name').val();
             var client_landline = $('#client_landline').val();
             var client_celphone = $('#client_celphone').val();
             var codification = $('#codification').val();
@@ -179,6 +181,7 @@
                         fecha_inicio: fecha_inicio,
                         fecha_fin: fecha_fin,
                         contact_id: contact_id,
+                        client_name: client_name,
                         client_landline: client_landline,
                         client_celphone: client_celphone,
                         codification: codification,
@@ -190,6 +193,7 @@
                     {data: 'contact_id', name: 'contact_id'},
                     {data: 'codification', name: 'codification'},
                     {data: 'campana', name: 'campana'},
+                    {data: 'client_name', name: 'client_name'},
                     {data: 'client_modality', name: 'client_modality'},
                     {data: 'client_program', name: 'client_program'},
                     {data: 'client_specialty', name: 'client_specialty'},
@@ -301,6 +305,28 @@
                     },
                     {
                         target: 9,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 9,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 10,
                         render: function(data, type, row) {
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){
