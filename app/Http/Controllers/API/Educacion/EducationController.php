@@ -145,8 +145,8 @@ class EducationController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $cotizacion = Education::where("id", $id)->first();
-        return view('crm.modulos.educacion.uin.show', compact('cotizacion'));
+        $coti = Education::where("id", $id)->first();
+        return view('crm.modulos.educacion.uin.show', compact('coti'));
     }
 
     /**

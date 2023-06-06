@@ -68,7 +68,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">status:</label>
+                                    <label for="status" class="form-label">Estatus:</label>
                                     <select class="form-select @error($coti->status) is-invalid @enderror" id="status" name="status" style="">
                                         <option value="">Seleccione una opción</option>
                                         <option value="Cotización" {{ $coti->status == 'Cotización' ? 'selected' : '' }}>Cotizacíón</option>
