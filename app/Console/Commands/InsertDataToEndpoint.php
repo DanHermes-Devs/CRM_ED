@@ -184,7 +184,7 @@ class InsertDataToEndpoint extends Command
                 'Accept' => 'application/json',
                 'ApiToken' => 'Expon1753',
             ])->post($url_ocm, $data);
-        }   
+        }
     }
 
     // Esta función privada llamada checkForRecycling no toma argumentos. (Validar si es necesario consumir algun endpoint)
@@ -193,7 +193,7 @@ class InsertDataToEndpoint extends Command
         // Primero, se obtienen todos los registros de la tabla 'Venta' donde 'OCMSent' es verdadero
         // y 'FinVigencia' es menor que la fecha actual menos 60 días.
         $records = Venta::where('OCMSent', true)
-            ->where('FinVigencia', '<', Carbon::now()->subDays(60))
+            ->where('ocmdaytosend', '<', Carbon::now()->subDays(60))
             ->get();
 
         // Luego, para cada uno de estos registros...
@@ -202,7 +202,7 @@ class InsertDataToEndpoint extends Command
             if ($record->UltimaGestion !== 'PROMESA DE PAGO' && $record->UltimaGestion !== 'RENOVACION') {
                 // Se obtiene la fecha de la segunda vez que se envió el registro a OCM.
                 $secondOcmDate = Carbon::createFromFormat('Y-m-d', $record->ocmdaytosend);
-                
+
                 // Se cuentan 8 días desde la segunda vez que se envió el registro a OCM.
                 $daysToCheck = $secondOcmDate->copy()->addDays(8);
 
@@ -320,7 +320,7 @@ class InsertDataToEndpoint extends Command
                 if ($response->successful()) {
                     // Marcamos el registro de venta como enviado a OCM
                     $receipt->venta->OCMSent = true;
-                    
+
                     // Guardamos la fecha del ultimo envio
                     $receipt->ocmdaytosend = Carbon::now();
 
