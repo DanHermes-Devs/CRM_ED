@@ -43,7 +43,10 @@ Auth::routes();
 Route::get('/seeders-backup', function () {
     Artisan::call('iseed users --force');
     Artisan::call('iseed permissions --force');
-    Artisan::call('iseed paises --force');
+    Artisan::call('iseed roles --force');
+    Artisan::call('iseed model_has_permissions --force');
+    Artisan::call('iseed model_has_roles --force');
+    Artisan::call('iseed role_has_permissions --force');
     Artisan::call('iseed projects --force');
     Artisan::call('iseed groups --force');
     Artisan::call('iseed ventas --force');

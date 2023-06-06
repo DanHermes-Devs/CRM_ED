@@ -52823,6 +52823,24 @@ class ReceiptsTableSeeder extends Seeder
                 'updated_at' => '2023-06-06 11:35:55',
                 'contactId' => '4012100190478',
             ),
+            433 => 
+            array (
+                'id' => 2995,
+                'venta_id' => 10463,
+                'num_pago' => 1,
+                'fre_pago' => 'ANUAL',
+                'fecha_proximo_pago' => NULL,
+                'fecha_pago_real' => '2023-06-06',
+                'prima_neta_cobrada' => '676.45',
+                'agente_cob_id' => 33,
+                'tipo_pago' => 'LIQUIDADO',
+                'estado_pago' => 'PENDIENTE',
+                'deleted_at' => NULL,
+                'observations' => NULL,
+                'created_at' => '2023-06-06 12:28:23',
+                'updated_at' => '2023-06-06 12:28:23',
+                'contactId' => '10039',
+            ),
         ));
         
         
