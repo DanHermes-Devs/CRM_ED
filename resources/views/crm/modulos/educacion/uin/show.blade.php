@@ -36,10 +36,6 @@
                     </div>
                     {{-- Creamos una tabla con la informacion en vertical --}}
                     <table class="table table-striped table-bordered table-hover">
-                        {{-- <tr>
-                            <th>Agente</th>
-                            <td>{{ $venta->AgenteCob }}</td>
-                        </tr> --}}
                         <tr>
                             <th>Cliente</th>
                             <td>{{ $coti->client_name ? $coti->client_name : 'No se registro el nombre del cliente correctamente' }}</td>
@@ -94,11 +90,11 @@
                         </tr>
                         <tr>
                             <th>Se cargaron los documentos</th>
-                            {{ $coti->documents_portal ? $coti->documents_portal :'NO' }}
+                            <td>{{ $coti->documents_portal ? $coti->documents_portal : 'NO' }}</td>
                         </tr>
                         <tr>
                             <th>Cuenta Universidad Insurgentes</th>
-                            {{ $coti->documents_portal ? $coti->documents_portal :'No se encuentra registrada la cuenta UIN actuamente' }}
+                            <td>{{ $coti->account_UIN ? $coti->account_UIN :'No se encuentra registrada la cuenta UIN actuamente' }}</td>
                         </tr>
                     </table>
                 </div>
