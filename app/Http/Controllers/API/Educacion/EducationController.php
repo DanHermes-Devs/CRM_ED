@@ -162,7 +162,6 @@ class EducationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dd($id);
         $info = $request->except(['_token', '_method']);
         Education::where('id', $id)
             ->update($info);

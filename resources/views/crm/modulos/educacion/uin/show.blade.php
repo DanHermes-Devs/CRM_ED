@@ -89,8 +89,36 @@
                             <td>{{ $coti->client_state ? $coti->client_state : 'No se registro el estado correctamente' }}</td>
                         </tr>
                         <tr>
-                            <th>Se cargaron los documentos</th>
-                            <td>{{ $coti->documents_portal ? $coti->documents_portal : 'NO' }}</td>
+                            <th>Se cargo el acta de nacimiento</th>
+                            <td>{{ $coti->birth_certifcate ? $coti->birth_certifcate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se cargo El CURP</th>
+                            <td>{{ $coti->curp_certificate ? $coti->curp_certificate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se cargo el INE</th>
+                            <td>{{ $coti->ine_certifcate ? $coti->ine_certifcate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se cargo la solicitud de inscripción</th>
+                            <td>{{ $coti->inscripcion_certificate ? $coti->inscripcion_certificate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se cargo el comprobante de domicilio</th>
+                            <td>{{ $coti->domicilio_certifcate ? $coti->domicilio_certifcate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se el certificado de estudios nivel medio - titulo</th>
+                            <td>{{ $coti->estudio_certifcate ? $coti->estudio_certifcate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se cargo la cotización</th>
+                            <td>{{ $coti->cotizacion_certifcate ? $coti->cotizacion_certifcate : 'NO' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Se cargo comprobante de pago</th>
+                            <td>{{ $coti->pago_certifcate ? $coti->pago_certifcate : 'NO' }}</td>
                         </tr>
                         <tr>
                             <th>Cuenta Universidad Insurgentes</th>
