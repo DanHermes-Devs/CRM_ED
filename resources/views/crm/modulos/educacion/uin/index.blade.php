@@ -199,6 +199,119 @@
                     {data: 'account_UIN', name: 'account_UIN'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
+                columnDefs: [
+                    {
+                        target: 0,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 1,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 2,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 3,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 4,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 5,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 6,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 7,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 8,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 9,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    }
+
+                ],
                 language: idiomaDataTable
             });
         });
