@@ -42,9 +42,17 @@ Auth::routes();
 // Ruta para ejecutar un iSeed
 Route::get('/seeders-backup', function () {
     Artisan::call('iseed users --force');
+    Artisan::call('iseed permissions --force');
+    Artisan::call('iseed paises --force');
+    Artisan::call('iseed projects --force');
+    Artisan::call('iseed groups --force');
     Artisan::call('iseed ventas --force');
-    Artisan::call('iseed attendances --force');
     Artisan::call('iseed receipts --force');
+    Artisan::call('iseed insurances --force');
+    Artisan::call('iseed campaigns --force');
+    Artisan::call('iseed attendances --force');
+    Artisan::call('iseed incidents --force');
+    Artisan::call('iseed education --force');
 });
 
 Route::middleware(['auth', 'role:Marketing Dashboard'])->group(function () {
