@@ -74,7 +74,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
-                                        <label for="contact_id">ID contacto:</label>
+                                        <label for="contact_id">Lead:</label>
                                         <input type="text" name="contact_id" id="contact_id" class="form-control">
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                     <table class="table table-middle table-nowrap mb-0" id="tabla_education">
                         <thead>
                             <tr>
-                                <th>ContactID</th><!-- contact_id -->
+                                <th>Lead</th><!-- contact_id -->
                                 <th>Codificación</th>
                                 <th>Campaña</th>
                                 <th>Modalidad</th>
