@@ -92,7 +92,6 @@ class EducationController extends Controller
     public function store(Request $request)
     {
         //PARA ALMACENAR LA INFORMACION
-
         $usuario = User::where('usuario', $request->agent_OCM)->first();
 
         if($usuario){
@@ -146,8 +145,8 @@ class EducationController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $coti = Education::findOrFail($id)->first();
-        return view('crm.modulos.educacion.uin.show', compact('coti'));
+        $cotizacion = Education::where("id", $id)->first();
+        return view('crm.modulos.educacion.uin.show', compact('cotizacion'));
     }
 
     /**

@@ -244,13 +244,13 @@ class UsuarioController extends Controller
     {
         $rules = [
             'rol' => 'required',
-            'users_csv' => 'required|file',
+            'users_csv' => 'required|mimes:xlsx,xls,csv',
         ];
 
         $messages = [
             'rol.required' => 'El campo rol es obligatorio.',
             'required' => 'El campo archivo es obligatorio.',
-            'file' => 'El campo archivo debe ser un archivo.',
+            'mimes' => 'El archivo debe ser de tipo: xlsx, xls o csv',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
