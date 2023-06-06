@@ -23,7 +23,6 @@ class EducationController extends Controller
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('fp_venta', [$request->fecha_inicio, $request->fecha_fin]);
         }
-
          // Búsquedas exactas
          $camposExactos = [
             'contact_id' => 'contact_id',
@@ -48,9 +47,7 @@ class EducationController extends Controller
             $query->where('codification', $request->codification);
         }
 
-
         $resultados = $query->get();
-
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
@@ -138,9 +135,10 @@ class EducationController extends Controller
      * @param  \App\Models\Education  $education
      * @return \Illuminate\Http\Response
      */
-    public function show(Education $education)
+    public function show(Request $request, $id)
     {
-        //
+        $coti = Education::findOrFail($id)->first();
+        return view('crm.modulos.educacion.uin.show', compact('coti'));
     }
 
     /**
@@ -150,9 +148,22 @@ class EducationController extends Controller
      * @param  \App\Models\Education  $education
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Education $education)
+    public function update(Request $request, $id)
     {
-        //
+        //dd($id);
+        $info = $request->except(['_token', '_method']);
+        Education::where('id', $id)
+            ->update($info);
+        $coti = Education::findOrFail($id)->first();
+        return view('crm.modulos.educacion.uin.edit', compact('coti'));
+    }
+
+
+    public function edit(Request $request, $id)
+    {
+
+        $coti = Education::findOrFail($id)->first();
+        return view('crm.modulos.educacion.uin.edit', compact('coti'));
     }
 
     /**
