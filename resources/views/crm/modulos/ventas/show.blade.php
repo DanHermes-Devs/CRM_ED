@@ -71,7 +71,7 @@
                         <tr>
                             <th>Teléfono fijo</th>
                             {{-- Si existe un telefono, lo mostramos, de lo contrario mostrar mensaje de no se tiene regsitro de un numero fijo --}}
-                            <td>{{ $venta->TelefonoFijo ? $venta->TelefonoFijo : 'No se tiene registro de un número fijo' }}</td>
+                            <td>{{ $venta->TelFijo ? $venta->TelFijo : 'No se tiene registro de un número fijo' }}</td>
                         </tr>
                         <tr>
                             <th>Teléfono celular</th>

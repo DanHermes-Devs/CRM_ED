@@ -469,11 +469,17 @@
                     {
                         target: 9,
                         render: function(data, type, row) {
+                            var fecha = `${data}`;
+                            var fechaFormateada = new Date(fecha);
+                            var anio = fechaFormateada.getFullYear();
+                            var mes = ("0" + (fechaFormateada.getMonth() + 1)).slice(-2);
+                            var dia = ("0" + fechaFormateada.getDate()).slice(-2);
+                            var FPreventaFormat = anio + "-" + mes + "-" + dia;
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){
                                 return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
                             }else {
-                                return `${data}`;
+                                return `${FPreventaFormat}`;
                             }
                         }
                     },
@@ -500,17 +506,22 @@
                         }
                     },
                     {
-                        target: 10,
+                        target: 12,
                         render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                            var fecha = `${data}`;
+                            if (!fecha || fecha === 'null' || fecha === 'NULL' || fecha === '') {
                                 return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
+                            } else {
+                                var fechaObj = new Date(fecha);
+                                if (isNaN(fechaObj.getTime())) {
+                                    return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Fecha inválida</span>`;
+                                } else {
+                                    var fechaFormateada = fechaObj.toISOString().split("T")[0];
+                                    return `${fechaFormateada}`;
+                                }
                             }
                         }
-                    },
-
+                    }
                 ],
                 language: idiomaDataTable
             });
