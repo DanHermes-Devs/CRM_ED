@@ -175,7 +175,7 @@ class VentasController extends Controller
                     // Busca si existe una venta de renovación con el mismo nPoliza y tVenta 'RENOVACION'
                     $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                         ->where('tVenta', 'RENOVACION')
-                        ->first();
+                        ->first(); // TODO: Que sea el ultimo registro que coincida con la busqueda
 
                     if ($ventaRenovacion) {
                         $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
@@ -279,7 +279,7 @@ class VentasController extends Controller
         $venta->save();
 
         // Si tVenta es VENTA y tVenta es Renovacion, me crea los recibos de pago, de lo contrario, no hace nada y si $request->FrePago es diferente de null, me crea los recibos de pago
-        if($request->Codificacion === 'VENTA' || $request->Codificacion === 'RENOVACION' || $request->FrePago !== null){
+        if(($request->Codificacion === 'VENTA' || $request->Codificacion === 'RENOVACION') && $request->FrePago !== null){
             $frecuenciaPago = $request->input('FrePago');
             $this->crearRecibosPago($venta, $frecuenciaPago);
         }
