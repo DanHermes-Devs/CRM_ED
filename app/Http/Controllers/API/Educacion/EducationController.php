@@ -119,6 +119,14 @@ class EducationController extends Controller
                 $pago_certifcate  ='SI';
                 // se ocupa el usuario_ocm para saber quien fue el que cerro la venta
                 $usuarioCierreVenta = $request->agent_OCM;
+            }else{
+                $birth_certifcate  ='NO';
+                $curp_certificate  ='NO';
+                $ine_certifcate  ='NO';
+                $domicilio_certifcate  ='NO';
+                $estudio_certifcate  ='NO';
+                $cotizacion_certifcate  ='NO';
+                $pago_certifcate  ='NO';
             }
 
             $info = [
