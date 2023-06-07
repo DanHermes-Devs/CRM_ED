@@ -131,7 +131,6 @@
                                 <th>Especialidad</th>
                                 <th>Fecha Preventa</th>
                                 <th>Agente</th>
-                                <th>Documentos</th>
                                 <th>Cuenta UIN</th>
                                 <th>Acciones</th>
                             </tr>
@@ -199,7 +198,6 @@
                     {data: 'client_specialty', name: 'client_specialty'},
                     {data: 'fp_venta', name: 'fp_venta'},
                     {data: 'agent_OCM', name: 'agent_OCM'},
-                    {data: 'documents_portal', name: 'documents_portal'},
                     {data: 'account_UIN', name: 'account_UIN'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],

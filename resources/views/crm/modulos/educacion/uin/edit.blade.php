@@ -51,8 +51,59 @@
                         <form action="{{ route('educacion-uin.update', $coti->id) }}" method="POST" novalidate>
                             @csrf
                             @method('PUT')
+                            <div class="row mb-5">
+                                <h5><label for="documents_portal" class="form-label">Documentos cargados:</label></h5>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="birth_certifcate"  id="birth_certifcate" {{ $coti->birth_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="birth_certifcate">Acta de nacimiento</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="curp_certificate" id="curp_certificate" {{ $coti->curp_certificate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="curp_certificate">Curp</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="ine_certifcate" id="ine_certifcate" {{ $coti->ine_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="ine_certifcate">INE</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="inscripcion_certificate" id="inscripcion_certificate" {{ $coti->inscripcion_certificate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="inscripcion_certificate">Solicitud de inscripción</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="domicilio_certifcate" id="domicilio_certifcate" {{ $coti->domicilio_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="domicilio_certifcate">Comprobante de domicilio</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="estudio_certifcate" id="estudio_certifcate" {{ $coti->estudio_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="estudio_certifcate">Certificado de estudios nivel medio- titulo</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="cotizacion_certifcate" id="cotizacion_certifcate" {{ $coti->cotizacion_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="cotizacion_certifcate">Cotización</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-3 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="SI" name="pago_certifcate" id="pago_certifcate" {{ $coti->pago_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="pago_certifcate">Comprobante de pago</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
-                                <div class="mb-3">
+                                {{-- <div class="mb-3">
                                     <label for="documents_portal" class="form-label">Documentos cargados:</label>
                                     <select class="form-select @error('status') is-invalid @enderror" id="documents_portal" name="documents_portal">
                                         <option value="">Seleccione una opción</option>
@@ -65,7 +116,7 @@
                                             <strong>{{ $message }} </strong>
                                         </span>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Estatus:</label>
@@ -73,7 +124,7 @@
                                         <option value="">Seleccione una opción</option>
                                         <option value="Cotización" {{ $coti->status == 'Cotización' ? 'selected' : '' }}>Cotizacíón</option>
                                         <option value="Cobrada" {{ $coti->status == 'Cobrada' ? 'selected' : '' }}>Cobrada</option>
-                                        <option value="Cobrada sin documentos" {{ $coti->status == 'Cobrada sin documentos' ? 'selected' : '' }}>Cobrada sin documentos</option>
+                                        <option value="Cobrada con documentos incompletos" {{ $coti->status == 'Cobrada con documentos incompletos' ? 'selected' : '' }}>Cobrada con documentos incompletos</option>
                                         <option value="Alumno" {{ $coti->status == 'Alumno' ? 'selected' : '' }}>Alumno</option>
                                     </select>
 
@@ -106,17 +157,27 @@
     <script>
         $(document).ready(function() {
             $('#documents_portal').on('change', function() {
-            var selectedValue = $(this).val();
-
-            if (selectedValue === "NO") {
-            $("#status option[value='Alumno']").prop("disabled", true); // Bloquear opción
-            $("#account_UIN").prop("readonly", true);
-            $("#account_UIN").val('');
-            } else {
-            $("#status option[value='Alumno']").prop("disabled", false); // Desbloquear opción
-            $("#account_UIN").prop("readonly", false);
-            }
-        });
+                var selectedValue = $(this).val();
+                if (selectedValue === "NO") {
+                    $("#status option[value='Alumno']").prop("disabled", true);
+                    $("#account_UIN").prop("readonly", true);
+                    $("#account_UIN").val('');
+                } else {
+                    $("#status option[value='Alumno']").prop("disabled", false); // Desbloquear opción
+                    $("#account_UIN").prop("readonly", false);
+                }
+            });
+            $('.form-check-input').change(function() {
+                var checked = $('.checkbox:checked').length;
+                if (checked === 8) {
+                    $("#status option[value='Alumno']").prop("disabled", false);
+                    $("#account_UIN").prop("readonly", false);
+                } else {
+                    $("#status option[value='Alumno']").prop("disabled", true);
+                    $("#account_UIN").prop("readonly", true);
+                    $("#account_UIN").val('');
+                }
+  });
         });
     </script>
 @endsection
