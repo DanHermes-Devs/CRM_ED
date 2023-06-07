@@ -95,47 +95,112 @@ class EducationController extends Controller
 
     public function store(Request $request)
     {
-        //PARA ALMACENAR LA INFORMACION
+        //identificar si el usuario se encuentra en ZEUS
         $usuario = User::where('usuario', $request->agent_OCM)->first();
+        // busco la cuenta por contact_id
+        $cuentaRegistrada = Education::where('contact_id', $request->contact_id);
 
-        if($usuario){
-            $education = new Education;
-            $education->contact_id = $request->contact_id;
-            $education->usuario_ocm = $request->agent_OCM;
-            $education->usuario_crm = $request->agent_OCM;
-            $education->nombre_universidad = 'UIN';
-            $education->fp_venta = Carbon::now();
-            $education->campana = $request->campana;
-            $education->agent_OCM = $request->agent_OCM;
-            $education->agent_intra = $usuario->id;
-            $education->supervisor = $usuario->id_superior;
-            $education->codification = $request->codification;
-            $education->client_name = $request->client_name;
-            $education->client_landline = $request->client_landline;
-            $education->client_celphone = $request->client_celphone;
-            $education->client_modality = $request->client_modality;
-            $education->client_program = $request->client_program;
-            $education->client_specialty = $request->client_specialty;
-            $education->client_street = $request->client_street;
-            $education->client_number = $request->client_number;
-            $education->client_delegation = $request->client_delegation;
-            $education->client_state = $request->client_state;
-            $education->client_sex = $request->client_sex;
-            $education->client_birth = $request->client_birth;
-            //$education->fill($request->all());
-            $education->save();
-
+        // Se verifica que la cuenta este registrada y que la codificación sea igual, si es manda un error al log
+        if($cuentaRegistrada && ($cuentaRegistrada->codification == $request->codification )){
             return response()->json([
                 "code" => 200,
-                "message" => "Venta Guardada Correctamente",
-                "data" => $education
+                "message" => "La cuenta ya esta registrada con la misma codificación",
             ]);
+        // Si la cuenta esta registrada pero la codificacion es diferente se manda a actualizar la información
+        }else if($cuentaRegistrada && ($cuentaRegistrada->codification != $request->codification )){
+            // se verifica si la codificación es COBRADA
+            if($request->codification == 'COBRADA'){
+                $birth_certifcate  ='SI';
+                $curp_certificate  ='SI';
+                $ine_certifcate  ='SI';
+                $domicilio_certifcate  ='SI';
+                $estudio_certifcate  ='SI';
+                $cotizacion_certifcate  ='SI';
+                $pago_certifcate  ='SI';
+                // se ocupa el usuario_ocm para saber quien fue el que cerro la venta
+                $usuarioCierreVenta = $request->agent_OCM;
+            }
+
+            $info = [
+                'birth_certifcate' => $birth_certifcate,
+                'curp_certificate' => $curp_certificate,
+                'usuario_ocm' => $usuarioCierreVenta,
+                'ine_certifcate' => $ine_certifcate,
+                'domicilio_certifcate' => $domicilio_certifcate,
+                'estudio_certifcate' => $estudio_certifcate,
+                'cotizacion_certifcate' => $cotizacion_certifcate,
+                'pago_certifcate' => $pago_certifcate,
+                'campana' => $request->campana,
+                'codification' => $request->codification,
+                'client_name' => $request->client_name,
+                'client_landline' => $request->client_landline,
+                'client_celphone' => $request->client_celphone,
+                'client_modality' => $request->client_modality,
+                'client_program' => $request->client_program,
+                'client_specialty' => $request->client_specialty,
+                'client_street' => $request->client_street,
+                'client_number' => $request->client_number,
+                'client_delegation' => $request->client_delegation,
+                'client_state' => $request->client_state,
+                'client_sex' => $request->client_sex,
+                'client_birth' => $request->client_birth
+            ];
+            // no se puede modificarf la fecha de cotización pero si los otros campos
+
+            Education::where('contact_id', $request->contact_id)
+            ->update($info);
+            // $coti = Education::findOrFail($id)->first();
+
         }else{
-            return response()->json([
-                "code" => 200,
-                "message" => "En usuario no se encuentra en la INTRA",
-            ]);
+
+            // Se verifica qsi existe el usuario en ZEUS
+            if($usuario){
+                $education = new Education;
+                $education->contact_id = $request->contact_id;
+                $education->usuario_ocm = $request->agent_OCM;
+                $education->usuario_crm = $request->agent_OCM;
+                $education->nombre_universidad = 'UIN';
+                $education->fp_venta = Carbon::now();
+                $education->campana = $request->campana;
+                $education->agent_OCM = $request->agent_OCM;
+                $education->agent_intra = $usuario->id;
+                $education->supervisor = $usuario->id_superior;
+                $education->codification = $request->codification;
+                $education->client_name = $request->client_name;
+                $education->client_landline = $request->client_landline;
+                $education->client_celphone = $request->client_celphone;
+                $education->client_modality = $request->client_modality;
+                $education->client_program = $request->client_program;
+                $education->client_specialty = $request->client_specialty;
+                $education->client_street = $request->client_street;
+                $education->client_number = $request->client_number;
+                $education->client_delegation = $request->client_delegation;
+                $education->client_state = $request->client_state;
+                $education->client_sex = $request->client_sex;
+                $education->client_birth = $request->client_birth;
+                //$education->fill($request->all());
+                $education->save();
+
+                return response()->json([
+                    "code" => 200,
+                    "message" => "Registro guardado correctamente",
+                    "data" => $education
+                ]);
+            }else{
+                return response()->json([
+                    "code" => 200,
+                    "message" => "No se encontró tu usuario en ZEUS, Por favor, solicita el alta de tu usuario a tu supervisor.",
+                ]);
+            }
+
+
         }
+
+
+
+
+
+
 
 
 
@@ -162,9 +227,11 @@ class EducationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $info = $request->except(['_token', '_method']);
+        // $info = $request->except(['_token', '_method']);
+
+        // POR SEGURIDAD SE GENERA DE CAMPO POR CAMPO
         Education::where('id', $id)
-            ->update($info);
+            ->save($request->all());
         $coti = Education::findOrFail($id)->first();
         return view('crm.modulos.educacion.uin.edit', compact('coti'));
     }
