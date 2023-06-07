@@ -98,7 +98,7 @@ class EducationController extends Controller
         //identificar si el usuario se encuentra en ZEUS
         $usuario = User::where('usuario', $request->agent_OCM)->first();
         // busco la cuenta por contact_id
-        $cuentaRegistrada = Education::where('contact_id', $request->contact_id);
+        $cuentaRegistrada = Education::where('contact_id', $request->contact_id)->first();
 
         // Se verifica que la cuenta este registrada y que la codificación sea igual, si es manda un error al log
         if($cuentaRegistrada && ($cuentaRegistrada->codification == $request->codification )){
