@@ -239,8 +239,9 @@ class EducationController extends Controller
         // $info = $request->except(['_token', '_method']);
 
         // POR SEGURIDAD SE GENERA DE CAMPO POR CAMPO
-        Education::where('id', $id)
-            ->save($request->all());
+        $edu = Education::where('id', $id)->first();
+        $edu->fill($request->all());
+        $edu->save();
         $coti = Education::findOrFail($id)->first();
         return view('crm.modulos.educacion.uin.edit', compact('coti'));
     }
