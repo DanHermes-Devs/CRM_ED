@@ -36,7 +36,8 @@ class Education extends Model
         'status', // ESTATUS DE LA COTIZACIÓN
         'documents_portal', // SI / NO ESTAN CARGADOS LOS DOCUMENTOS EN UIN
         'account_UIN', // NÚMERO DE CUENTA DE UIN ASIGNADO
-        'schedule_date' //FECHA DE COTIZACION O DE AGENDA
+        'schedule_date', //FECHA DE COTIZACION O DE AGENDA
+        'confirmed_account' // SI ESTA CONFIRMADA LA CUENTA
     ];
 
     // Relacion con el usuario

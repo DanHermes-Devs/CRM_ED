@@ -36,7 +36,13 @@
             <div class="col-xl-12">
                 <div class="card crm-widget py-4 px-3">
                     <div class="card-body">
-
+                        {{-- PARA MANDAR MENSAJE DE GUARDADO --}}
+                        @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>¡Éxito!</strong> {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        @endif
                         <div class="d-flex justify-content-between">
                             <h4 class="text-left mb-3">EDITAR {{ $coti->client_name }}</h4>
                             <a href="{{ route('educacion-uin.index') }}" class="btn btn-info mb-3">
@@ -55,7 +61,7 @@
                             <h5><label for="documents_portal" class="form-label">Documentos cargados:</label></h5>
 
                             @if ($coti->client_modality == 'PRESENCIAL')
-                                <h5 class="alert alert-success text-center"><label for="documents_portal" class="form-label">LOS DOCUMENTOS NO SON NECESARIOS DEBIDO A QUE YA FUE COBRADA O ES ALUMNO</label></h5>
+                                <h5 class="alert alert-info text-center">LOS DOCUMENTOS NO SON NECESARIOS DEBIDO A QUE YA ESTA CATALOGADA COMO PRESENCIA</h5>
                             @else
                             <div class="row mb-5">
                                 <div class="col-xl-3 mt-3 mb-3">
@@ -109,7 +115,7 @@
                             </div>
                             @endif
 
-
+                            {{-- dd($coti) --}}
                             <div class="row">
                                 <div class="mb-3">
                                     <label for="confirmed_account" class="form-label">Cuenta Confirmada:</label>

@@ -236,21 +236,23 @@ class EducationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $info = $request->except(['_token', '_method']);
-
         // POR SEGURIDAD SE GENERA DE CAMPO POR CAMPO
         $edu = Education::where('id', $id)->first();
         $edu->fill($request->all());
         $edu->save();
-        $coti = Education::findOrFail($id)->first();
-        return view('crm.modulos.educacion.uin.edit', compact('coti'));
+        $coti = Education::findOrFail($id);
+
+        // PARA MANDAR MENSAJE DE QUE SE GUARDO CORRECTAMENTE
+        return redirect()->route('educacion-uin.edit', $id)
+         ->with('success', 'Registro editado con éxito')
+         ->with('coti', $coti);
     }
 
 
     public function edit(Request $request, $id)
     {
 
-        $coti = Education::findOrFail($id)->first();
+        $coti = Education::findOrFail($id);
         return view('crm.modulos.educacion.uin.edit', compact('coti'));
     }
 
