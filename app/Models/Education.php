@@ -37,6 +37,14 @@ class Education extends Model
         'documents_portal', // SI / NO ESTAN CARGADOS LOS DOCUMENTOS EN UIN
         'account_UIN', // NÚMERO DE CUENTA DE UIN ASIGNADO
         'schedule_date', //FECHA DE COTIZACION O DE AGENDA
+        'birth_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'curp_certificate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'ine_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'inscripcion_certificate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'domicilio_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'estudio_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'cotizacion_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
+        'pago_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
         'confirmed_account' // SI ESTA CONFIRMADA LA CUENTA
     ];
 
