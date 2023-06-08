@@ -37,12 +37,20 @@
                     {{-- Creamos una tabla con la informacion en vertical --}}
                     <table class="table table-striped table-bordered table-hover">
                         <tr>
+                            <th>Fecha de ingreso a ZEUS</th>
+                            <td>{{ $coti->fp_venta ? $coti->fp_venta : 'No se registro la fecha de cotización correctamente' }}</td>
+                        </tr>
+                        <tr>
                             <th>Cliente</th>
                             <td>{{ $coti->client_name ? $coti->client_name : 'No se registro el nombre del cliente correctamente' }}</td>
                         </tr>
                         <tr>
-                            <th>Fecha de cotización</th>
-                            <td>{{ $coti->fp_venta ? $coti->fp_venta : 'No se registro la fecha de cotización correctamente' }}</td>
+                            <th>Codificación</th>
+                            <td>{{ $coti->codification ? $coti->codification : 'No se registro la codificación correctamente' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha ingresada en OCM</th>
+                            <td>{{ $coti->schedule_date ? $coti->schedule_date : 'No se registro la fecha de OCM correctamente' }}</td>
                         </tr>
                         <tr>
                             <th>Teléfono Fijo</th>

@@ -107,7 +107,7 @@
                                                 <option value="COTIZACION">COTIZACIÓN</option>
                                             @endif
                                             @if (auth()->user()->hasAnyRole(['Agente Renovaciones','Administrador', 'Coordinador']))
-                                                <option value="COBRADO">COBRADO</option>
+                                                <option value="COBRADA">COBRADA</option>
                                             @endif
                                             <option value="ALUMNO">ALUMNO</option>
                                         </select>
@@ -124,6 +124,7 @@
                             <tr>
                                 <th>Lead</th><!-- contact_id -->
                                 <th>Codificación</th>
+                                <th>Fecha de agenda o cotización</th>
                                 <th>Campaña</th>
                                 <th>Nombre Cliente</th>
                                 <th>Modalidad</th>
@@ -191,6 +192,7 @@
                 columns: [
                     {data: 'contact_id', name: 'contact_id'},
                     {data: 'codification', name: 'codification'},
+                    {data: 'schedule_date', name: 'schedule_date'},
                     {data: 'campana', name: 'campana'},
                     {data: 'client_name', name: 'client_name'},
                     {data: 'client_modality', name: 'client_modality'},
@@ -325,6 +327,17 @@
                     },
                     {
                         target: 10,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 11,
                         render: function(data, type, row) {
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){

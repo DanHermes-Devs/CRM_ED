@@ -51,8 +51,13 @@
                         <form action="{{ route('educacion-uin.update', $coti->id) }}" method="POST" novalidate>
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="client_modality" id="client_modality" value="{{ $coti->client_modality }}">
+                            <h5><label for="documents_portal" class="form-label">Documentos cargados:</label></h5>
+
+                            @if ($coti->client_modality == 'PRESENCIAL')
+                                <h5 class="alert alert-success text-center"><label for="documents_portal" class="form-label">LOS DOCUMENTOS NO SON NECESARIOS DEBIDO A QUE YA FUE COBRADA O ES ALUMNO</label></h5>
+                            @else
                             <div class="row mb-5">
-                                <h5><label for="documents_portal" class="form-label">Documentos cargados:</label></h5>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="SI" name="birth_certifcate"  id="birth_certifcate" {{ $coti->birth_certifcate == 'SI' ? 'checked' : '' }}>
@@ -102,13 +107,16 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
+
+
                             <div class="row">
-                                {{-- <div class="mb-3">
-                                    <label for="documents_portal" class="form-label">Documentos cargados:</label>
-                                    <select class="form-select @error('status') is-invalid @enderror" id="documents_portal" name="documents_portal">
+                                <div class="mb-3">
+                                    <label for="confirmed_account" class="form-label">Cuenta Confirmada:</label>
+                                    <select class="form-select @error('status') is-invalid @enderror" id="confirmed_account" name="confirmed_account">
                                         <option value="">Seleccione una opción</option>
-                                        <option value="SI" {{ $coti->documents_portal == 'SI' ? 'selected' : '' }}>SI</option>
-                                        <option value="NO" {{ $coti->documents_portal == 'NO' ? 'selected' : '' }}>NO</option>
+                                        <option value="SI" {{ $coti->confirmed_account == 'SI' ? 'selected' : '' }}>SI</option>
+                                        <option value="NO" {{ $coti->confirmed_account == 'NO' ? 'selected' : '' }}>NO</option>
                                     </select>
 
                                     @error('documents_portal')
@@ -116,9 +124,9 @@
                                             <strong>{{ $message }} </strong>
                                         </span>
                                     @enderror
-                                </div> --}}
+                                </div>
 
-                                <div class="mb-3">
+                                {{-- <div class="mb-3">
                                     <label for="status" class="form-label">Estatus:</label>
                                     <select class="form-select @error($coti->status) is-invalid @enderror" id="status" name="status" style="">
                                         <option value="">Seleccione una opción</option>
@@ -133,7 +141,7 @@
                                             <strong>{{ $message }} </strong>
                                         </span>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-3">
                                     <label for="account_UIN" class="form-label">Cuenta UIN:</label>
@@ -156,14 +164,14 @@
     <!-- container-fluid -->
     <script>
         $(document).ready(function() {
-            $('#documents_portal').on('change', function() {
+            $('#confirmed_account').on('change', function() {
                 var selectedValue = $(this).val();
                 if (selectedValue === "NO") {
-                    $("#status option[value='Alumno']").prop("disabled", true);
+                    // $("#status option[value='Alumno']").prop("disabled", true);
                     $("#account_UIN").prop("readonly", true);
                     $("#account_UIN").val('');
                 } else {
-                    $("#status option[value='Alumno']").prop("disabled", false); // Desbloquear opción
+                    // $("#status option[value='Alumno']").prop("disabled", false); // Desbloquear opción
                     $("#account_UIN").prop("readonly", false);
                 }
             });
