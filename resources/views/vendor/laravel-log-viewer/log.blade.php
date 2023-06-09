@@ -154,12 +154,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">ROLES</h4>
+                <h4 class="mb-sm-0">LOGS</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">DASHBOARD</a></li>
-                        <li class="breadcrumb-item active">ROLES</li>
+                        <li class="breadcrumb-item active">LOGS</li>
                     </ol>
                 </div>
 
@@ -174,10 +174,7 @@
                   <div class="row">
                     <div class="col-12 col-md-2">
                       <div class="col sidebar mb-3">
-                        <h1><i class="fa fa-calendar" aria-hidden="true"></i> Logs</h1>
-                        <p class="text-muted"><i>by Dan Hermes</i></p>
-                  
-                  
+                        <h1><i class="fa fa-calendar" aria-hidden="true"></i> Logs</h1>  
                       </div>
                       <div class="custom-control custom-switch d-none" style="padding-bottom:20px;">
                         <input type="checkbox" class="custom-control-input" id="darkSwitch">
