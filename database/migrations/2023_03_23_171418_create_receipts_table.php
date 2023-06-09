@@ -20,7 +20,7 @@ class CreateReceiptsTable extends Migration
             $table->string('fre_pago');
             $table->date('fecha_proximo_pago')->nullable();
             $table->date('fecha_pago_real')->nullable();
-            $table->decimal('prima_neta_cobrada', 10, 2)->nullable();
+            $table->text('prima_neta_cobrada')->nullable();
             $table->unsignedBigInteger('agente_cob_id')->nullable();
             $table->string('tipo_pago');
             $table->string('estado_pago');

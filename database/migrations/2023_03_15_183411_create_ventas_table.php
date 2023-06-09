@@ -64,7 +64,7 @@ class CreateVentasTable extends Migration
             $table->string('tTarjeta')->nullable();
             $table->text('nTarjeta')->nullable();
             $table->string('fvencimiento')->nullable();
-            $table->integer('PncTotal')->nullable();
+            $table->text('PncTotal')->nullable();
             $table->string('NombreDeCliente')->nullable();
             $table->string('tVenta')->nullable();
             $table->string('MesBdd')->nullable();
@@ -72,7 +72,7 @@ class CreateVentasTable extends Migration
             $table->integer('noPago')->nullable();
             $table->date('FechaProximoPago')->nullable();
             $table->date('FechaPagoReal')->nullable();
-            $table->integer('PrimaNetaCobrada')->nullable();
+            $table->text('PrimaNetaCobrada')->nullable();
             $table->string('AgenteCob')->nullable();
             $table->string('TipoPago')->nullable();
             $table->string('EstadoDePago')->nullable();

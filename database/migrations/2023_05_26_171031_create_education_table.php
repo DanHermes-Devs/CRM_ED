@@ -22,8 +22,8 @@ class CreateEducationTable extends Migration
             $table->string('fp_venta')->nullable();
             $table->string('campana')->nullable();
             $table->string('agent_OCM')->nullable();
-            $table->unsignedBigInteger('agent_intra');
-            $table->unsignedBigInteger('supervisor');
+            $table->unsignedBigInteger('agent_intra')->nullable();
+            $table->unsignedBigInteger('supervisor')->nullable();
             $table->string('codification')->nullable();
             $table->string('client_name')->nullable();
             $table->string('client_landline')->nullable();
