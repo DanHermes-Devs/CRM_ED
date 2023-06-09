@@ -355,7 +355,6 @@ class VentasController extends Controller
     // Metodo para Crear Recibos de Pago (Módulo Cobranza)
     public function crearRecibosPago($venta, $frecuenciaPago)
     {
-        Log::info('Creando recibos de pago para la venta ' . $venta->id);
         // Verificamos si ya existen recibos de pago para la venta
         $recibos = Receipt::where('venta_id', $venta->id)->count();
 
