@@ -41,8 +41,8 @@ class InsertDataToEndpoint extends Command
      */
     public function handle()
     {
-        // $url = 'http://apiproject.test/api/AddReg';
-        $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
+        $url_ocm = 'http://apiproject.test/api/AddReg';
+        // $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
@@ -51,7 +51,6 @@ class InsertDataToEndpoint extends Command
         $motor_b = $this->argument('motor_b');
         $motor_c = $this->argument('motor_c');
 
-        $this->info("Hola");
         // Obtenemos todas las ventas que correspondan a la aseguradora
         $records = Venta::where('Aseguradora', $aseguradora)->get();
 
@@ -194,31 +193,23 @@ class InsertDataToEndpoint extends Command
         $records = Venta::where('ocmdaytosend', '<', Carbon::now()->subDays(8)->startOfDay())
             ->where('tVenta', 'RENOVACION')
             ->whereNotIn('UGestion', ['RENOVACION', 'PROMESA DE PAGO'])
-            ->where('MesBdd', 'JUNIO')
-            ->where('AnioBdd', '2023')
-            ->orderBy('Aseguradora', 'desc')
             ->get();
 
         foreach ($records as $record) {
             $skilldata = '';
             $idload = '';
             // Mostramos un mensaje para ver que se está ejecutando el comando
-            $this->info($record->campana);
             if ($record->Aseguradora === 'MAPFRE') {
                 if ($record->campana === 'RENOVACIONES_B_MOTOR') {
                     $skilldata = 'RENOVACIONES_C_MOTOR';
-                    $idload = 135;
                 } else {
                     $skilldata = 'RENOVACIONES_B_MOTOR';
-                    $idload = 134;
                 }
             } elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
                 if ($record->campana === 'RENOVACIONES_QUALITAS_B_MOTOR') {
                     $skilldata = 'RENOVACIONES_QUALITAS_C_MOTOR';
-                    $idload = 139;
                 } else {
                     $skilldata = 'RENOVACIONES_QUALITAS_B_MOTOR';
-                    $idload = 138;
                 }
             }
 
