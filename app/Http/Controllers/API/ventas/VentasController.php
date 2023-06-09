@@ -166,7 +166,7 @@ class VentasController extends Controller
                     $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
                     $diasDiferencia = $fpreventa->diffInDays($hoy, false);
 
-                    if(!$ventaExistente->UGestion === 'PROMESA DE PAGO')
+                    if($ventaExistente->UGestion != 'PROMESA DE PAGO')
                     {
                         // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
                         if ($diasDiferencia <= 30) {
@@ -397,7 +397,7 @@ class VentasController extends Controller
                     $mesesPorRecibo = 12 / $numRecibos; // Cantidad de meses por recibo
                     $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * $i);
 
-                    $fechaProximoPago = $i == 0 ? $finVigencia : $fechaProximoPago;
+                    $fechaProximoPago = $i == 1 ? $finVigencia : $fechaProximoPago;
 
                     // Hago que el primer recibo se le asigne el agente que hizo la venta
 
