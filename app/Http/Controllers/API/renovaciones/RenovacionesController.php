@@ -32,7 +32,25 @@ class RenovacionesController extends Controller
                 if($ventaRenovacion)
                 {
                     // SI EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION'
-                    if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO') {
+                    if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO' && $ventaRenovacion->UGestion != 'RENOVACION') {
+                        $ventaRenovacion->contactId = $request->contactId;
+                        $ventaRenovacion->Fpreventa = Carbon::now();
+                        $ventaRenovacion->fill($request->all());
+                        $ventaRenovacion->UGestion = $request->UGestion;
+                        $ventaRenovacion->FinVigencia = $request->FinVigencia;
+                        $ventaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $ventaRenovacion->fecha_ultima_gestion = Carbon::now();
+                        $ventaRenovacion->aseguradora_vendida = $request->Aseguradora;
+                        $ventaRenovacion->tVenta = 'RENOVACION';
+
+                        $ventaRenovacion->save();
+
+                        return response()->json([
+                            'code' => 200,
+                            'message' => 'Renovacion guardada correctamente venta_2',
+                            'data' => $venta
+                        ]);
+                    } elseif ($ventaRenovacion->UGestion == 'RENOVACION') {
                         $venta = new Venta;
                         $venta->contactId = $request->contactId;
                         $venta->Fpreventa = Carbon::now();
@@ -49,28 +67,6 @@ class RenovacionesController extends Controller
                         return response()->json([
                             'code' => 200,
                             'message' => 'Renovacion guardada correctamente venta_1',
-                            'data' => $venta
-                        ]);
-                    } else {
-                        // SI NO EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION' INSERTAMOS UNA RENOVACION NUEVA
-                        $ventaRenovacion->contactId = $request->contactId;
-                        $ventaRenovacion->Fpreventa = Carbon::now();
-                        $ventaRenovacion->fill($request->all());
-                        $ventaRenovacion->UGestion = $request->UGestion;
-                        $ventaRenovacion->FinVigencia = $request->FinVigencia;
-                        $ventaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
-                        $ventaRenovacion->fecha_ultima_gestion = Carbon::now();
-                        $ventaRenovacion->aseguradora_vendida = $request->Aseguradora;
-                        $ventaRenovacion->tVenta = 'RENOVACION';
-
-                        $ventaRenovacion->save();
-
-                        $frecuenciaPago = $request->input('FrePago');
-                        $this->crearRecibosPago($ventaRenovacion, $frecuenciaPago);
-
-                        return response()->json([
-                            'code' => 200,
-                            'message' => 'Renovacion guardada correctamente venta_2',
                             'data' => $venta
                         ]);
                     }
