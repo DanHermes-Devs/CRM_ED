@@ -51,6 +51,7 @@ class InsertDataToEndpoint extends Command
         $motor_b = $this->argument('motor_b');
         $motor_c = $this->argument('motor_c');
 
+        $this->info("Hola");
         // Obtenemos todas las ventas que correspondan a la aseguradora
         $records = Venta::where('Aseguradora', $aseguradora)->get();
 
@@ -102,8 +103,7 @@ class InsertDataToEndpoint extends Command
             }
         }
 
-        // // Revisa las ventas para reciclaje
-        $this->checkForRecycling($aseguradora, $motor_b, $motor_c);
+        $this->checkForRecycling($url_ocm);
     }
 
     // Esta función privada llamada prepareData toma dos argumentos: un registro y un valor de skilldata
@@ -164,7 +164,8 @@ class InsertDataToEndpoint extends Command
                 'fechaVencimiento' => $record->fVencimiento,
                 'primaCobrada' => $record->PrimaNetaCobrada,
                 'primaTotal' => $record->PncTotal,
-                'id_lead' => $record->contactId
+                'id_lead' => $record->contactId,
+                'aseguradoraVigente' => $record->Aseguradora
             ],
         ];
     }
@@ -188,36 +189,54 @@ class InsertDataToEndpoint extends Command
     }
 
     // Esta función privada llamada checkForRecycling no toma argumentos. (Validar si es necesario consumir algun endpoint)
-    private function checkForRecycling($aseguradora, $motor_b, $motor_c)
+    private function checkForRecycling($url_ocm)
     {
-        // Primero, se obtienen todos los registros de la tabla 'Venta' donde 'OCMSent' es verdadero
-        // y 'FinVigencia' es menor que la fecha actual menos 60 días.
-        $records = Venta::where('OCMSent', true)
-            ->where('ocmdaytosend', '<', Carbon::now()->subDays(60))
+        $records = Venta::where('ocmdaytosend', '<', Carbon::now()->subDays(8)->startOfDay())
+            ->where('tVenta', 'RENOVACION')
+            ->whereNotIn('UGestion', ['RENOVACION', 'PROMESA DE PAGO'])
+            ->where('MesBdd', 'JUNIO')
+            ->where('AnioBdd', '2023')
+            ->orderBy('Aseguradora', 'desc')
             ->get();
 
-        // Luego, para cada uno de estos registros...
         foreach ($records as $record) {
-            // Si 'UltimaGestion' no es igual a 'PROMESA DE PAGO' y 'UltimaGestion' no es igual a 'RENOVACIÓN'...
-            if ($record->UltimaGestion !== 'PROMESA DE PAGO' && $record->UltimaGestion !== 'RENOVACION') {
-                // Se obtiene la fecha de la segunda vez que se envió el registro a OCM.
-                $secondOcmDate = Carbon::createFromFormat('Y-m-d', $record->ocmdaytosend);
-
-                // Se cuentan 8 días desde la segunda vez que se envió el registro a OCM.
-                $daysToCheck = $secondOcmDate->copy()->addDays(8);
-
-                // Si la fecha actual es mayor que los 8 días desde la segunda vez que se envió el registro a OCM
-                // y 'UltimaGestion' sigue siendo diferente a 'RENOVACIÓN' y 'PROMESA DE PAGO'...
-                if (Carbon::now()->greaterThanOrEqualTo($daysToCheck) && $record->UltimaGestion !== 'RENOVACION' && $record->UltimaGestion !== 'PROMESA DE PAGO') {
-                    // Si 'Motor' es igual a 'B', se cambia a 'C'. De lo contrario, se cambia a 'B'.
-                    if ($record->campana === $motor_b) {
-                        $record->campana = $motor_c;
-                    } else {
-                        $record->campana = $motor_b;
-                    }
-                    // Finalmente, se guarda el registro con los cambios realizados.
-                    $record->save();
+            $skilldata = '';
+            $idload = '';
+            // Mostramos un mensaje para ver que se está ejecutando el comando
+            $this->info($record->campana);
+            if ($record->Aseguradora === 'MAPFRE') {
+                if ($record->campana === 'RENOVACIONES_B_MOTOR') {
+                    $skilldata = 'RENOVACIONES_C_MOTOR';
+                    $idload = 135;
+                } else {
+                    $skilldata = 'RENOVACIONES_B_MOTOR';
+                    $idload = 134;
                 }
+            } elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
+                if ($record->campana === 'RENOVACIONES_QUALITAS_B_MOTOR') {
+                    $skilldata = 'RENOVACIONES_QUALITAS_C_MOTOR';
+                    $idload = 139;
+                } else {
+                    $skilldata = 'RENOVACIONES_QUALITAS_B_MOTOR';
+                    $idload = 138;
+                }
+            }
+
+            // Actualizar la venta
+            $record->campana = $skilldata;
+            $record->save();
+
+            // Preparar los datos para enviar a la API
+            $data = $this->prepareData($record, $skilldata, $idload);
+
+            // Enviar los datos a la API
+            $response = $this->sendData($url_ocm, $data);
+
+            // Verificar si la respuesta de la API es exitosa
+            if ($response->successful()) {
+                $record->OCMSent = true;
+                $record->ocmdaytosend = Carbon::now();
+                $record->save();
             }
         }
     }
@@ -239,7 +258,7 @@ class InsertDataToEndpoint extends Command
             $fecha_formateada = Carbon::parse($receipt->fecha_proximo_pago)->format('d-m-Y');
 
             $smsText = "{$receipt->venta->Aseguradora}: Te recordamos que el pago de tu poliza #{$receipt->venta->nPoliza} se debe realizar el día {$fecha_formateada} si quieres pagarlo hoy llama al 5593445265. Conduce con precaución";
-
+            // <tem:Telefonos>'.$receipt->venta->TelCelular.'</tem:Telefonos>
             $xml_post_string = '
                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
                 <soapenv:Header/>
@@ -247,9 +266,10 @@ class InsertDataToEndpoint extends Command
                     <tem:EnviaSMS>
                         <tem:Usuario>'.$this->user.'</tem:Usuario>
                         <tem:Password>'.$this->password.'</tem:Password>
-                        <tem:Telefonos>'.$receipt->venta->TelCelular.'</tem:Telefonos>
+                        
                         <tem:Mensaje>'.$smsText.'</tem:Mensaje>
                         <tem:codigoPais>52</tem:codigoPais>
+                        <tem:Telefonos>5518840878</tem:Telefonos>
                         <tem:SMSDosVias>0</tem:SMSDosVias>
                         <tem:Unicode>0</tem:Unicode>
                         <tem:MensajeLargo>1</tem:MensajeLargo>
@@ -300,10 +320,10 @@ class InsertDataToEndpoint extends Command
     public function sendPaymentPendingRecordsToOCM($url_ocm, $skilldata, $idload)
     {
         // Obtenemos todos los recibos pendientes de pago que cumplen las condiciones
-        $fechaLimite = Carbon::now()->subDays(3)->toDateString();
+        $fechaLimite = Carbon::today();
 
         $receipts = Receipt::where('estado_pago', 'PENDIENTE')
-            ->whereDate('fecha_pago_real', $fechaLimite)
+            ->whereDate('fecha_proximo_pago', $fechaLimite->addDays(3)->toDateString())
             ->get();
 
         // Recorremos cada uno de los recibos obtenidos
