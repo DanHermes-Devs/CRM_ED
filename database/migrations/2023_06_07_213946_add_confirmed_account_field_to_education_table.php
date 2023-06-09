@@ -14,7 +14,6 @@ class AddConfirmedAccountFieldToEducationTable extends Migration
     public function up()
     {
         Schema::table('education', function (Blueprint $table) {
-            //
             $table->string('confirmed_account')->nullable();
         });
     }
@@ -27,8 +26,7 @@ class AddConfirmedAccountFieldToEducationTable extends Migration
     public function down()
     {
         Schema::table('education', function (Blueprint $table) {
-            //
-
+            $table->dropColumn('confirmed_account');
         });
     }
 }

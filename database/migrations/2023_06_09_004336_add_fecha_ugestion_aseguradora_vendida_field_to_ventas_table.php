@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNuevaPolizaFieldToVentasTable extends Migration
+class AddFechaUgestionAseguradoraVendidaFieldToVentasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddNuevaPolizaFieldToVentasTable extends Migration
     public function up()
     {
         Schema::table('ventas', function (Blueprint $table) {
-            $table->text('nueva_poliza')->after('nPoliza')->nullable();
+            $table->text('fecha_ultima_gestion')->nullable()->comment('Fecha de la ultima gestion');
+            $table->text('aseguradora_vendida')->nullable()->comment('Aseguradora vendida');
         });
     }
 
@@ -26,7 +27,8 @@ class AddNuevaPolizaFieldToVentasTable extends Migration
     public function down()
     {
         Schema::table('ventas', function (Blueprint $table) {
-            $table->dropColumn('nueva_poliza');
+            $table->dropColumn('fecha_ultima_gestion');
+            $table->dropColumn('aseguradora_vendida');
         });
     }
 }

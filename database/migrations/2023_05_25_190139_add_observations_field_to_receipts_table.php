@@ -30,7 +30,9 @@ class AddObservationsFieldToReceiptsTable extends Migration
     public function down()
     {
         Schema::table('receipts', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('receipts', 'observations')) {
+                $table->dropColumn('observations');
+            }
         });
     }
 }

@@ -55,8 +55,38 @@ class AddRrhhFieldToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {   
+            $table->dropForeign('users_id_superior_foreign');
+            $table->dropForeign('users_id_campana_foreign');
+
+            $table->dropColumn('id_superior');
+            $table->dropColumn('id_campana');
+            $table->dropColumn('sexo');
+            $table->dropColumn('fecha_nacimiento');
+            $table->dropColumn('rfc');
+            $table->dropColumn('curp');
+            $table->dropColumn('estado_civil');
+            $table->dropColumn('no_imss');
+            $table->dropColumn('cr_infonavit');
+            $table->dropColumn('cr_fonacot');
+            $table->dropColumn('tipo_sangre');
+            $table->dropColumn('ba_nomina');
+            $table->dropColumn('cta_clabe');
+            $table->dropColumn('alergias');
+            $table->dropColumn('padecimientos');
+            $table->dropColumn('tel_casa');
+            $table->dropColumn('tel_celular');
+            $table->dropColumn('persona_emergencia');
+            $table->dropColumn('tel_emergencia');
+            $table->dropColumn('esquema_laboral');
+            $table->dropColumn('proyecto_asignado');
+            $table->dropColumn('turno');
+            $table->dropColumn('hora_entrada');
+            $table->dropColumn('hora_salida');
+            $table->dropColumn('fecha_ingreso');
+            $table->dropColumn('fecha_baja');
+            $table->dropColumn('motivo_baja');
+            $table->dropColumn('observaciones');
         });
     }
 }

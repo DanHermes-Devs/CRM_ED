@@ -14,7 +14,6 @@ class AddScheduleDateFieldToEducationTable extends Migration
     public function up()
     {
         Schema::table('education', function (Blueprint $table) {
-            //Este campo servira para añadir la fecha de cotización o agenda
             $table->string('schedule_date')->nullable();
         });
     }
@@ -27,7 +26,7 @@ class AddScheduleDateFieldToEducationTable extends Migration
     public function down()
     {
         Schema::table('education', function (Blueprint $table) {
-            //
+            $table->dropColumn('schedule_date');
         });
     }
 }
