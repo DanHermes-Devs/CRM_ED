@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\API\Educacion\EducationController;
-use App\Http\Controllers\API\ventas\VentasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\ventas\VentasController;
+use App\Http\Controllers\API\Educacion\EducationController;
+use App\Http\Controllers\API\renovaciones\RenovacionesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,5 @@ Route::get('users', function () {
 });
 
 Route::post('/ventas-nuevas', [VentasController::class, 'store']);
+Route::post('/renovaciones', [RenovacionesController::class, 'store']);
 Route::post('/ventas-educacion', [EducationController::class, 'store']);

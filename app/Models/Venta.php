@@ -91,4 +91,10 @@ class Venta extends Model
     {
         return $this->hasMany(Receipt::class);
     }
+
+    // Relacionamos la venta con el agente
+    public function agent()
+    {
+        return $this->belongsTo(User::class, 'LoginIntranet', 'usuario');
+    }
 }

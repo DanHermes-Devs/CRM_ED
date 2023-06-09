@@ -78,6 +78,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // Relacion con ventas
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'LoginIntranet');
+    }
+
     // Relacion con grupos
     public function groups()
     {
