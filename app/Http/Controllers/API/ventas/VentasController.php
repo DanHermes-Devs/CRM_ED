@@ -222,7 +222,7 @@ class VentasController extends Controller
 
                             // CREAMOS LOS RECIBOS DE PAGO
                             $frecuenciaPago = $request->input('FrePago');
-                            $this->crearRecibosPago($ventaExistente, $frecuenciaPago);
+                            $this->crearRecibosPago($ventaNuevaRenovacion, $frecuenciaPago);
 
                             return response()->json([
                                 'code' => 200,
@@ -287,15 +287,15 @@ class VentasController extends Controller
                         $preventaNueva->tVenta = 'VENTA';
                         $preventaNueva->save();
 
+                        // CREAMOS LOS RECIBOS DE PAGO
+                        $frecuenciaPago = $request->input('FrePago');
+                        $this->crearRecibosPago($preventaNueva, $frecuenciaPago);
+
                         return response()->json([
                             'code' => 200,
                             'message' => 'Venta guardada correctamente preventaNueva',
                             'data' => $preventaNueva
                         ]);
-
-                        // CREAMOS LOS RECIBOS DE PAGO
-                        $frecuenciaPago = $request->input('FrePago');
-                        $this->crearRecibosPago($ventaExistente, $frecuenciaPago);
                     }
                 }
             }
@@ -395,7 +395,7 @@ class VentasController extends Controller
 
                 for ($i = 1; $i <= $numRecibos; $i++) {
                     $mesesPorRecibo = 12 / $numRecibos; // Cantidad de meses por recibo
-                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * $i);
+                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1));
 
                     $fechaProximoPago = $i == 1 ? $finVigencia : $fechaProximoPago;
 

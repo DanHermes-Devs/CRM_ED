@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\renovaciones;
 
 use Carbon\Carbon;
 use App\Models\Venta;
+use App\Models\User;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,8 +15,8 @@ class RenovacionesController extends Controller
     {
         if ($request->Codificacion == 'RENOVACION') {
             $renovacion = Venta::where('contactId', $request->contactId)
-                ->where('UGestion', 'RENOVACION')
-                ->latest('created_at')->first();
+                                ->where('UGestion', 'RENOVACION')
+                                ->latest('created_at')->first();
 
             if ($renovacion) {
                 return response()->json([
@@ -27,44 +28,72 @@ class RenovacionesController extends Controller
                 $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                     ->where('tVenta', 'RENOVACION')
                     ->first();
+                
+                if($ventaRenovacion)
+                {
+                    // SI EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION'
+                    if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO') {
+                        $venta = new Venta;
+                        $venta->contactId = $request->contactId;
+                        $venta->Fpreventa = Carbon::now();
+                        $venta->fill($request->all());
+                        $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
+                        $venta->FinVigencia = $request->FinVigencia;
+                        $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $venta->fecha_ultima_gestion = Carbon::now();
+                        $venta->aseguradora_vendida = $request->Aseguradora;
+                        $venta->tVenta = 'RENOVACION';
 
-                // SI EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION'
-                if ($ventaRenovacion) {
+                        $venta->save();
+
+                        return response()->json([
+                            'code' => 200,
+                            'message' => 'Renovacion guardada correctamente venta_1',
+                            'data' => $venta
+                        ]);
+                    } else {
+                        // SI NO EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION' INSERTAMOS UNA RENOVACION NUEVA
+                        $ventaRenovacion->contactId = $request->contactId;
+                        $ventaRenovacion->Fpreventa = Carbon::now();
+                        $ventaRenovacion->fill($request->all());
+                        $ventaRenovacion->UGestion = $request->UGestion;
+                        $ventaRenovacion->FinVigencia = $request->FinVigencia;
+                        $ventaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $ventaRenovacion->fecha_ultima_gestion = Carbon::now();
+                        $ventaRenovacion->aseguradora_vendida = $request->Aseguradora;
+                        $ventaRenovacion->tVenta = 'RENOVACION';
+
+                        $ventaRenovacion->save();
+
+                        $frecuenciaPago = $request->input('FrePago');
+                        $this->crearRecibosPago($ventaRenovacion, $frecuenciaPago);
+
+                        return response()->json([
+                            'code' => 200,
+                            'message' => 'Renovacion guardada correctamente venta_2',
+                            'data' => $venta
+                        ]);
+                    }
+                }else{
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
-                    $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                     $venta->Fpreventa = Carbon::now();
                     $venta->fill($request->all());
-                    $venta->FinVigencia = $request->FinVigencia;
-                    $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
-                    $venta->tVenta = 'RENOVACION';
-
-                    $venta->save();
-
-                    return response()->json([
-                        'code' => 200,
-                        'message' => 'Renovacion guardada correctamente',
-                        'data' => $venta
-                    ]);
-                } else {
-                    // SI NO EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION' INSERTAMOS UNA RENOVACION NUEVA
-                    $venta = new Venta;
-                    $venta->contactId = $request->contactId;
                     $venta->UGestion = $request->UGestion;
-                    $venta->Fpreventa = Carbon::now();
-                    $venta->fill($request->all());
                     $venta->FinVigencia = $request->FinVigencia;
                     $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                    $venta->fecha_ultima_gestion = Carbon::now();
+                    $venta->aseguradora_vendida = $request->Aseguradora;
                     $venta->tVenta = 'RENOVACION';
 
                     $venta->save();
 
                     $frecuenciaPago = $request->input('FrePago');
-                    $this->crearRecibosPago($venta, $frecuenciaPago);
+                        $this->crearRecibosPago($venta, $frecuenciaPago);
 
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Renovacion guardada correctamente',
+                        'message' => 'Renovacion guardada correctamente venta_3',
                         'data' => $venta
                     ]);
                 }
@@ -75,16 +104,16 @@ class RenovacionesController extends Controller
 
             // SI EXISTE UN CONTACTID
             if ($contactid) {
-                if ($request->UGestion == 'RENOVACION' || $request->UGestion == 'PROMESA DE PAGO') {
+                if ($contactid->UGestion == 'RENOVACION' || $contactid->UGestion == 'PROMESA DE PAGO') {
                     return response()->json([
                         'code' => 400,
-                        'message' => 'Ya existe una registro con el mismo Lead',
+                        'message' => 'Éste registro ya es una promesa de pago o renovacion, no se actualizó el registro',
                     ]);
                 } else if ($request->UGestion == 'PROMESA DE PAGO') {
                     // ACTUALIZAMOS LOS DATOS
                     $contactid->contactId = $request->contactId;
-                    $contactid->UGestion = $request->UGestion;
                     $contactid->Fpreventa = Carbon::now();
+                    $contactid->UGestion = $request->UGestion;
                     $contactid->fill($request->all());
                     if ($request->Aseguradora) {
                         if (!$contactid->Aseguradora) {
@@ -113,33 +142,18 @@ class RenovacionesController extends Controller
 
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Promesa de pago guardada correctamente',
+                        'message' => 'Promesa de pago guardada correctamente contactid',
                         'data' => $contactid
                     ]);
                 } else {
-                    $contactid->contactId = $request->contactId;
                     $contactid->UGestion = $request->UGestion;
-                    $contactid->Fpreventa = Carbon::now();
-                    $contactid->fill($request->all());
-                    if ($request->Aseguradora) {
-                        if (!$contactid->Aseguradora) {
-                            // si la aseguradora no existe en contactid, la asigna
-                            $contactid->Aseguradora = $request->Aseguradora;
-                        }
-
-                        // si la aseguradora ya existe en request, asigna el valor a aseguradora_vendida
-                        $contactid->aseguradora_vendida = $request->Aseguradora;
-                    }
-                    $contactid->FinVigencia = $request->FinVigencia;
-                    $contactid->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                     $contactid->fecha_ultima_gestion = Carbon::now();
-                    $contactid->aseguradora_vendida = $request->Aseguradora;
 
                     $contactid->save();
 
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Registro guardado correctamente',
+                        'message' => 'Registro guardado correctamente contactid_1',
                         'data' => $contactid
                     ]);
                 }
@@ -166,24 +180,35 @@ class RenovacionesController extends Controller
 
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Promesa de pago guardada correctamente',
+                        'message' => 'Promesa de pago guardada correctamente venta_3',
                         'data' => $venta
                     ]);
                 } else {
-                    // SI LA CODIFICACION NO ES PROMESA DE PAGO MANDAMOS MENSAJE DE ERROR
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
                     $venta->UGestion = $request->UGestion;
                     $venta->fill($request->all());
-                    $venta->FinVigencia = $request->FinVigencia;
-                    $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                    if ($request->Aseguradora) {
+                        if (!$venta->Aseguradora) {
+                            // si la aseguradora no existe en contactid, la asigna
+                            $venta->Aseguradora = $request->Aseguradora;
+                        }
+
+                        // si la aseguradora ya existe en request, asigna el valor a aseguradora_vendida
+                        $venta->aseguradora_vendida = $request->Aseguradora;
+                    }
+                    $venta->fecha_ultima_gestion = Carbon::now();
+                    $venta->aseguradora_vendida = $request->Aseguradora;
                     $venta->tVenta = 'RENOVACION';
 
                     $venta->save();
 
+                    $frecuenciaPago = $request->input('FrePago');
+                    $this->crearRecibosPago($venta, $frecuenciaPago);
+
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Registro guardado correctamente',
+                        'message' => 'Registro guardado correctamente contactid_2',
                         'data' => $venta
                     ]);
                 }
@@ -227,25 +252,36 @@ class RenovacionesController extends Controller
                     ]);
                 }
 
+                $numRecibos = $frecuenciaPagos[$frecuenciaPago];
                 $finVigencia = Carbon::parse($venta->FinVigencia);
 
+                $primerReciboAnualAsignado = false;
+
                 for ($i = 1; $i <= $numRecibos; $i++) {
-                    // Calcular la fecha del próximo pago sumando la cantidad adecuada de meses
-                    $mesesPorRecibo = ceil(12 / $numRecibos); // Cantidad de meses por recibo
-                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1))->endOfMonth();
+                    $mesesPorRecibo = 12 / $numRecibos; // Cantidad de meses por recibo
+                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1));
+
+                    $fechaProximoPago = $i == 1 ? $finVigencia : $fechaProximoPago;
+
+                    // Hago que el primer recibo se le asigne el agente que hizo la venta
 
                     $receipt = new Receipt([
                         'venta_id' => $venta->id,
                         'num_pago' => $i,
                         'fre_pago' => $venta->FrePago,
-                        'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
+                        'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : $finVigencia,
                         'fecha_pago_real' => $venta->Fpreventa,
-                        'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
-                        'agente_cob_id' => $i == 1 ? $usuario->id : null,
+                        'prima_neta_cobrada' => $venta->PncTotal,
+                        'agente_cob_id' => $i == 1 ? $venta->agent->id ?? null : null,
                         'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                        'estado_pago' => 'PENDIENTE',
+                        'estado_pago' => $i == 1 && $frecuenciaPago != 'ANUAL' && !$primerReciboAnualAsignado ? 'PAGADO' : 'PENDIENTE',
                         'contactId' => $venta->contactId,
                     ]);
+
+                    // Después de asignar el estado de pago, para marcar el primer recibo anual como asignado
+                    if ($i == 1 && $frecuenciaPago == 'ANUAL') {
+                        $primerReciboAnualAsignado = true;
+                    }
 
                     $receipt->save();
                 }
