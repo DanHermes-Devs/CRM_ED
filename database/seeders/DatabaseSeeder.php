@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UsersTableSeeder::class);
         $this->call(PermissionsTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
+        $this->call(ModelHasPermissionsTableSeeder::class);
+        $this->call(ModelHasRolesTableSeeder::class);
+        $this->call(RoleHasPermissionsTableSeeder::class);
         $this->call(PaisesTableSeeder::class);
         $this->call(ProjectsTableSeeder::class);
         $this->call(GroupsTableSeeder::class);
@@ -30,9 +34,5 @@ class DatabaseSeeder extends Seeder
         $this->call(AttendancesTableSeeder::class);
         $this->call(IncidentsTableSeeder::class);
         $this->call(EducationTableSeeder::class);
-        $this->call(RolesTableSeeder::class);
-        $this->call(ModelHasPermissionsTableSeeder::class);
-        $this->call(ModelHasRolesTableSeeder::class);
-        $this->call(RoleHasPermissionsTableSeeder::class);
     }
 }
