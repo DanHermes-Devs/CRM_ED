@@ -166,57 +166,80 @@ class VentasController extends Controller
                     $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
                     $diasDiferencia = $fpreventa->diffInDays($hoy, false);
 
-                    // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
-                    if ($diasDiferencia <= 30) {
-                        // SI LA DIFERENCIA DE DIAS ES MENOR O IGUAL A 30, SE CREA UNA VENTA DUPLICADA
-                        $ventaDuplicada = new Venta;
-                        $ventaDuplicada->contactId = $request->contactId;
-                        $ventaDuplicada->fill($request->all());
-                        $ventaDuplicada->UGestion = $request->UGestion;
-                        $ventaDuplicada->Fpreventa = Carbon::now();
-                        $ventaDuplicada->FinVigencia = $request->FinVigencia;
-                        $ventaDuplicada->FfVigencia = Carbon::parse($ventaDuplicada->FinVigencia)->addYear();
-                        $ventaDuplicada->tVenta = 'VENTA DUPLICADA';
-                        $ventaDuplicada->fecha_ultima_gestion = Carbon::now();
-                        $ventaDuplicada->aseguradora_vendida = $request->Aseguradora;
-                        $ventaDuplicada->save();
+                    if(!$ventaExistente->UGestion === 'PROMESA DE PAGO')
+                    {
+                        // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
+                        if ($diasDiferencia <= 30) {
+                            // SI LA DIFERENCIA DE DIAS ES MENOR O IGUAL A 30, SE CREA UNA VENTA DUPLICADA
+                            $ventaDuplicada = new Venta;
+                            $ventaDuplicada->contactId = $request->contactId;
+                            $ventaDuplicada->fill($request->all());
+                            $ventaDuplicada->UGestion = $request->UGestion;
+                            $ventaDuplicada->Fpreventa = Carbon::now();
+                            $ventaDuplicada->FinVigencia = $request->FinVigencia;
+                            $ventaDuplicada->FfVigencia = Carbon::parse($ventaDuplicada->FinVigencia)->addYear();
+                            $ventaDuplicada->tVenta = 'VENTA DUPLICADA';
+                            $ventaDuplicada->fecha_ultima_gestion = Carbon::now();
+                            $ventaDuplicada->aseguradora_vendida = $request->Aseguradora;
+                            $ventaDuplicada->save();
 
-                        return response()->json([
-                            'code' => 200,
-                            'message' => 'Venta guardada correctamente',
-                            'data' => $ventaDuplicada
-                        ]);
-                    } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
-                        // SI LA DIFERENCIA DE DIAS ES MAYOR A 30 Y MENOR A 330, SE CREA UNA VENTA
-                        $ventaDiferencia = new Venta;
-                        $ventaDiferencia->contactId = $request->contactId;
-                        $ventaDiferencia->fill($request->all());
-                        $ventaDiferencia->UGestion = $request->UGestion;
-                        $ventaDiferencia->Fpreventa = Carbon::now();
-                        $ventaDiferencia->FinVigencia = $request->FinVigencia;
-                        $ventaDiferencia->FfVigencia = Carbon::parse($ventaDiferencia->FinVigencia)->addYear();
-                        $ventaDiferencia->tVenta = 'VENTA';
-                        $ventaDiferencia->save();
+                            return response()->json([
+                                'code' => 200,
+                                'message' => 'Venta guardada correctamente',
+                                'data' => $ventaDuplicada
+                            ]);
+                        } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
+                            // SI LA DIFERENCIA DE DIAS ES MAYOR A 30 Y MENOR A 330, SE CREA UNA VENTA
+                            $ventaDiferencia = new Venta;
+                            $ventaDiferencia->contactId = $request->contactId;
+                            $ventaDiferencia->fill($request->all());
+                            $ventaDiferencia->UGestion = $request->UGestion;
+                            $ventaDiferencia->Fpreventa = Carbon::now();
+                            $ventaDiferencia->FinVigencia = $request->FinVigencia;
+                            $ventaDiferencia->FfVigencia = Carbon::parse($ventaDiferencia->FinVigencia)->addYear();
+                            $ventaDiferencia->tVenta = 'VENTA';
+                            $ventaDiferencia->save();
 
-                        // CREAMOS LOS RECIBOS DE PAGO
-                        $frecuenciaPago = $request->input('FrePago');
-                        $this->crearRecibosPago($ventaDiferencia, $frecuenciaPago);
+                            // CREAMOS LOS RECIBOS DE PAGO
+                            $frecuenciaPago = $request->input('FrePago');
+                            $this->crearRecibosPago($ventaDiferencia, $frecuenciaPago);
 
-                        return response()->json([
-                            'code' => 200,
-                            'message' => 'Venta guardada correctamente',
-                            'data' => $ventaDiferencia
-                        ]);
-                    } elseif ($diasDiferencia > 330) {
-                        $ventaNuevaRenovacion = new Venta;
-                        $ventaNuevaRenovacion->contactId = $request->contactId;
-                        $ventaNuevaRenovacion->fill($request->all());
-                        $ventaNuevaRenovacion->UGestion = $request->UGestion;
-                        $ventaNuevaRenovacion->Fpreventa = Carbon::now();
-                        $ventaNuevaRenovacion->FinVigencia = $request->FinVigencia;
-                        $ventaNuevaRenovacion->FfVigencia = Carbon::parse($ventaNuevaRenovacion->FinVigencia)->addYear();
-                        $ventaNuevaRenovacion->tVenta = 'RENOVACION';
-                        $ventaNuevaRenovacion->save();
+                            return response()->json([
+                                'code' => 200,
+                                'message' => 'Venta guardada correctamente',
+                                'data' => $ventaDiferencia
+                            ]);
+                        } elseif ($diasDiferencia > 330) {
+                            $ventaNuevaRenovacion = new Venta;
+                            $ventaNuevaRenovacion->contactId = $request->contactId;
+                            $ventaNuevaRenovacion->fill($request->all());
+                            $ventaNuevaRenovacion->UGestion = $request->UGestion;
+                            $ventaNuevaRenovacion->Fpreventa = Carbon::now();
+                            $ventaNuevaRenovacion->FinVigencia = $request->FinVigencia;
+                            $ventaNuevaRenovacion->FfVigencia = Carbon::parse($ventaNuevaRenovacion->FinVigencia)->addYear();
+                            $ventaNuevaRenovacion->tVenta = 'RENOVACION';
+                            $ventaNuevaRenovacion->save();
+
+                            // CREAMOS LOS RECIBOS DE PAGO
+                            $frecuenciaPago = $request->input('FrePago');
+                            $this->crearRecibosPago($ventaExistente, $frecuenciaPago);
+
+                            return response()->json([
+                                'code' => 200,
+                                'message' => 'Venta guardada correctamente',
+                                'data' => $ventaNuevaRenovacion
+                            ]);
+                        }
+                    }else{
+                        // ACTUALIZAMOS LA PROMESA DE PAGO CON LA NUEVA INFORMACION
+                        $ventaExistente->contactId = $request->contactId;
+                        $ventaExistente->fill($request->all());
+                        $ventaExistente->UGestion = $request->UGestion;
+                        $ventaExistente->Fpreventa = Carbon::now();
+                        $ventaExistente->FinVigencia = $request->FinVigencia;
+                        $ventaExistente->FfVigencia = Carbon::parse($ventaExistente->FinVigencia)->addYear();
+                        $ventaExistente->tVenta = 'VENTA';
+                        $ventaExistente->save();
 
                         // CREAMOS LOS RECIBOS DE PAGO
                         $frecuenciaPago = $request->input('FrePago');
@@ -224,8 +247,8 @@ class VentasController extends Controller
 
                         return response()->json([
                             'code' => 200,
-                            'message' => 'Venta guardada correctamente',
-                            'data' => $ventaNuevaRenovacion
+                            'message' => 'Venta creada correctamente',
+                            'data' => $ventaExistente
                         ]);
                     }
                 } else {
