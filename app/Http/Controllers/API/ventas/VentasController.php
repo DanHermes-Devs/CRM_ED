@@ -239,6 +239,7 @@ class VentasController extends Controller
                         $ventaExistente->FinVigencia = $request->FinVigencia;
                         $ventaExistente->FfVigencia = Carbon::parse($ventaExistente->FinVigencia)->addYear();
                         $ventaExistente->tVenta = 'VENTA';
+                        $ventaExistente->fecha_ultima_gestion = Carbon::now();
                         $ventaExistente->save();
 
                         // CREAMOS LOS RECIBOS DE PAGO
