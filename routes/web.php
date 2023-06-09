@@ -64,7 +64,7 @@ Route::middleware(['auth', 'role:Marketing Dashboard'])->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    // Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+    Route::get('/reg-logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs-regs');
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
     Route::get('/filterODM', [HomeController::class, 'filter'])->name('filter-dashboard');
 
@@ -103,7 +103,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'showCancelarRecibo'])->name('cobranza.cancelar.show');
     Route::post('/cobranza/cancelar/{recibo_id}', [CobranzaController::class, 'cancelarRecibo'])->name('cobranza.cancelar');
 
-    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    // Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/cronjobs', [CronJobController::class, 'index'])->name('cronjobs.index');
     Route::get('/crear-cronjob', [CronJobController::class, 'create'])->name('crear-cronjob');
     Route::post('/crear-cronjob', [CronJobController::class, 'store'])->name('store-cronjob');
