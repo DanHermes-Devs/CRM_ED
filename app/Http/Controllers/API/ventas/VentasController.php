@@ -306,7 +306,7 @@ class VentasController extends Controller
             // VALIDAMOS SI EXISTE UNA VENTA CON EL MISMO CONTACTID Y APARTE UGESTION ES PROMESA DE PAGO
             if($venta)
             {
-                if($venta->UGestion === 'PROMESA DE PAGO')
+                if($venta->UGestion === 'PROMESA DE PAGO' && $venta->UGestion === 'VENTA')
                 {
                     return response()->json([
                         'code' => 400,
