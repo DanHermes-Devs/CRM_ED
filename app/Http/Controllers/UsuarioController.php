@@ -333,6 +333,8 @@ class UsuarioController extends Controller
             'ruta_edo_bancario' => ['jpg', 'jpeg', 'png', 'pdf'],
             'ruta_aviso_ret_infonavit' => ['jpg', 'jpeg', 'png', 'pdf'],
             'ruta_aviso_ret_fonacot' => ['jpg', 'jpeg', 'png', 'pdf'],
+            'ruta_contrato' => ['jpg', 'jpeg', 'png', 'pdf'],
+            'ruta_responsiva' => ['jpg', 'jpeg', 'png', 'pdf'],
         ];
 
         foreach ($campos as $campo => $extensiones) {

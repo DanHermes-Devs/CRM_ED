@@ -61,7 +61,9 @@ class PersonalFile extends Model
         'ruta_comp_domicilio',
         'ruta_edo_bancario',
         'ruta_aviso_ret_infonavit',
-        'ruta_aviso_ret_fonacot'
+        'ruta_aviso_ret_fonacot',
+        'ruta_contrato',
+        'ruta_responsiva',
     ];
 
 

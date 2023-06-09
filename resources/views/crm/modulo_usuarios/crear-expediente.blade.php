@@ -333,6 +333,40 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                <div class="col-12 col-md-6 mb-3">
+                                    <fieldset>
+                                        <legend>Cargar Contrato</legend>
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="contrato @if ($expediente && $expediente->ruta_contrato) w-75 @else w-100 @endif input_responsive">
+                                                <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
+                                                    id="ruta_contrato" name="ruta_contrato"
+                                                    data-show-preview="true">
+                                            </div>
+
+                                            @if ($expediente && $expediente->ruta_contrato)
+                                                <a href="{{ asset('storage/uploads/contrato/' . $usuario->usuario . '/' . $expediente->ruta_contrato) }}"
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
+                                            @endif
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-12 col-md-6 mb-3">
+                                    <fieldset>
+                                        <legend>Cargar Responsiva</legend>
+                                        <div class="mb-3 mb-3 d-flex align-items-end gap-3 w-100 mb-3 d-flex align-items-end gap-3 w-100 flex-column flex-md-row">
+                                            <div class="responsiva @if ($expediente && $expediente->ruta_responsiva) w-75 @else w-100 @endif input_responsive">
+                                                <input type="file" accept=".jpeg, .jpg, .png, .pdf" class="form-control"
+                                                    id="ruta_responsiva" name="ruta_responsiva"
+                                                    data-show-preview="true">
+                                            </div>
+
+                                            @if ($expediente && $expediente->ruta_responsiva)
+                                                <a href="{{ asset('storage/uploads/responsiva/' . $usuario->usuario . '/' . $expediente->ruta_responsiva) }}"
+                                                    target="_blank" class="btn btn-success w-25 btn_responsive">Ver Archivo</a>
+                                            @endif
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary waves-effect waves-light mb-3">Actualizar
                                 expediente</button>
@@ -356,6 +390,8 @@
             configureFileInput("#ruta_edo_bancario");
             configureFileInput("#ruta_aviso_ret_infonavit");
             configureFileInput("#ruta_aviso_ret_fonacot");
+            configureFileInput("#ruta_contrato");
+            configureFileInput("#ruta_responsiva");
         });
 
         function configureFileInput(selector) {
