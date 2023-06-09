@@ -185,7 +185,7 @@ class VentasController extends Controller
 
                             return response()->json([
                                 'code' => 200,
-                                'message' => 'Venta guardada correctamente',
+                                'message' => 'Venta guardada correctamente ventaDuplicada',
                                 'data' => $ventaDuplicada
                             ]);
                         } elseif ($diasDiferencia > 30 && $diasDiferencia < 330) {
@@ -206,7 +206,7 @@ class VentasController extends Controller
 
                             return response()->json([
                                 'code' => 200,
-                                'message' => 'Venta guardada correctamente',
+                                'message' => 'Venta guardada correctamente ventaDiferencia',
                                 'data' => $ventaDiferencia
                             ]);
                         } elseif ($diasDiferencia > 330) {
@@ -226,7 +226,7 @@ class VentasController extends Controller
 
                             return response()->json([
                                 'code' => 200,
-                                'message' => 'Venta guardada correctamente',
+                                'message' => 'Venta guardada correctamente ventaNuevaRenovacion',
                                 'data' => $ventaNuevaRenovacion
                             ]);
                         }
@@ -247,7 +247,7 @@ class VentasController extends Controller
 
                         return response()->json([
                             'code' => 200,
-                            'message' => 'Venta creada correctamente',
+                            'message' => 'Venta creada correctamente ventaExistente',
                             'data' => $ventaExistente
                         ]);
                     }
@@ -272,7 +272,7 @@ class VentasController extends Controller
 
                         return response()->json([
                             'code' => 200,
-                            'message' => 'Venta guardada correctamente',
+                            'message' => 'Venta guardada correctamente ventaDuplicadaPosible',
                             'data' => $ventaDuplicadaPosible
                         ]);
                     } else {
@@ -288,7 +288,7 @@ class VentasController extends Controller
 
                         return response()->json([
                             'code' => 200,
-                            'message' => 'Venta guardada correctamente',
+                            'message' => 'Venta guardada correctamente preventaNueva',
                             'data' => $preventaNueva
                         ]);
 
@@ -323,7 +323,7 @@ class VentasController extends Controller
 
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Venta actualizada correctamente',
+                        'message' => 'Venta actualizada correctamente venta',
                         'data' => $venta
                     ]);
                 }
@@ -340,7 +340,7 @@ class VentasController extends Controller
 
                 return response()->json([
                     'code' => 200,
-                    'message' => 'Venta guardada correctamente',
+                    'message' => 'Venta guardada correctamente promesaPago',
                     'data' => $promesaPago
                 ]);
             }
