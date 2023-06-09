@@ -306,7 +306,7 @@ class VentasController extends Controller
             // VALIDAMOS SI EXISTE UNA VENTA CON EL MISMO CONTACTID Y APARTE UGESTION ES PROMESA DE PAGO
             if($venta)
             {
-                if($venta->UGestion === 'PROMESA DE PAGO' && $venta->UGestion === 'VENTA')
+                if($venta->UGestion === 'PROMESA DE PAGO' || $venta->UGestion === 'VENTA')
                 {
                     return response()->json([
                         'code' => 400,
@@ -344,6 +344,69 @@ class VentasController extends Controller
                     'message' => 'Venta guardada correctamente promesaPago',
                     'data' => $promesaPago
                 ]);
+            }
+        }
+    }
+
+    // Metodo para Crear Recibos de Pago (Módulo Cobranza)
+    public function crearRecibosPago($venta, $frecuenciaPago)
+    {
+        // Verificamos si ya existen recibos de pago para la venta
+        $recibos = Receipt::where('venta_id', $venta->id)->count();
+
+        // Si no hay recibos existentes, crea nuevos recibos
+        if ($recibos === 0) {
+            // Creamos un arreglo con las frecuencias de pago
+            $frecuenciaPagos = [
+                'ANUAL' => 1,
+                'SEMESTRAL' => 2,
+                'TRIMESTRAL' => 4,
+                'CUATRIMESTRAL' => 3,
+                'MENSUAL' => 12
+            ];
+
+            // Convertimos frecuenciaPago en mayúsculas
+            $frecuenciaPago = strtoupper($frecuenciaPago);
+
+            if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
+                $frecuenciaPago = null;
+            }
+
+            if ($frecuenciaPago !== null) {
+                $numRecibos = $frecuenciaPagos[$frecuenciaPago];
+                $usuario = User::where('usuario', $venta->LoginOcm)->first();
+
+                if (!$usuario) {
+                    // Mandamos un mensaje de error en el que digamos que el usuario no existe
+                    return response()->json([
+                        'code' => 500,
+                        'message' => 'El usuario no existe'
+                    ]);
+                }
+
+                $numRecibos = $frecuenciaPagos[$frecuenciaPago];
+                $finVigencia = Carbon::parse($venta->FinVigencia);
+
+                for ($i = 1; $i <= $numRecibos; $i++) {
+                    // Calcular la fecha del próximo pago sumando la cantidad adecuada de meses
+                    $mesesPorRecibo = ceil(12 / $numRecibos); // Cantidad de meses por recibo
+                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1))->endOfMonth();
+
+                    $receipt = new Receipt([
+                        'venta_id' => $venta->id,
+                        'num_pago' => $i,
+                        'fre_pago' => $venta->FrePago,
+                        'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
+                        'fecha_pago_real' => $venta->Fpreventa,
+                        'prima_neta_cobrada' => $venta->PncTotal,
+                        'agente_cob_id' => $i == 1 ? 43 : null,
+                        'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
+                        'estado_pago' => 'PENDIENTE',
+                        'contactId' => $venta->contactId,
+                    ]);
+
+                    $receipt->save();
+                }
             }
         }
     }
@@ -474,68 +537,6 @@ class VentasController extends Controller
 
         // Mandamos a la vista el mensaje de que se importaron correctamente las ventas hacia la vista crm.modulos.ventas.form_import
         return redirect()->route('ventas.formImportVentas')->with('success', 'Ventas/Renovaciones importadas correctamente');
-    }
-
-    // Metodo para Crear Recibos de Pago (Módulo Cobranza)
-    public function crearRecibosPago($venta, $frecuenciaPago)
-    {
-        // Verificamos si ya existen recibos de pago para la venta
-        $recibos = Receipt::where('venta_id', $venta->id)->count();
-
-        // Si no hay recibos existentes, crea nuevos recibos
-        if ($recibos === 0) {
-            // Creamos un arreglo con las frecuencias de pago
-            $frecuenciaPagos = [
-                'ANUAL' => 1,
-                'SEMESTRAL' => 2,
-                'TRIMESTRAL' => 4,
-                'CUATRIMESTRAL' => 3,
-                'MENSUAL' => 12
-            ];
-
-            // Convertimos frecuenciaPago en mayúsculas
-            $frecuenciaPago = strtoupper($frecuenciaPago);
-
-            if (!array_key_exists($frecuenciaPago, $frecuenciaPagos)) {
-                $frecuenciaPago = null;
-            }
-
-            if ($frecuenciaPago !== null) {
-                $numRecibos = $frecuenciaPagos[$frecuenciaPago];
-                $usuario = User::where('usuario', $venta->LoginOcm)->first();
-
-                if (!$usuario) {
-                    // Mandamos un mensaje de error en el que digamos que el usuario no existe
-                    return response()->json([
-                        'code' => 500,
-                        'message' => 'El usuario no existe'
-                    ]);
-                }
-
-                $finVigencia = Carbon::parse($venta->FinVigencia);
-
-                for ($i = 1; $i <= $numRecibos; $i++) {
-                    // Calcular la fecha del próximo pago sumando la cantidad adecuada de meses
-                    $mesesPorRecibo = ceil(12 / $numRecibos); // Cantidad de meses por recibo
-                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1))->endOfMonth();
-
-                    $receipt = new Receipt([
-                        'venta_id' => $venta->id,
-                        'num_pago' => $i,
-                        'fre_pago' => $venta->FrePago,
-                        'fecha_proximo_pago' => $i > 1 ? $fechaProximoPago : null,
-                        'fecha_pago_real' => $venta->Fpreventa,
-                        'prima_neta_cobrada' => $venta->PrimaNetaCobrada,
-                        'agente_cob_id' => $i == 1 ? $usuario->id : null,
-                        'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                        'estado_pago' => 'PENDIENTE',
-                        'contactId' => $venta->contactId,
-                    ]);
-
-                    $receipt->save();
-                }
-            }
-        }
     }
 
     // public function actualizarEstadoRecibosYPago($venta_id, $num_pago)
