@@ -1239,9 +1239,9 @@ class CreateReceiptsForSpecificSales extends Command
 
                 for ($i = 1; $i <= $numRecibos; $i++) {
                     $mesesPorRecibo = 12 / $numRecibos; // Cantidad de meses por recibo
-                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * $i);
+                    $fechaProximoPago = $finVigencia->copy()->addMonthsNoOverflow($mesesPorRecibo * ($i - 1));
 
-                    $fechaProximoPago = $i == 0 ? $finVigencia : $fechaProximoPago;
+                    $fechaProximoPago = $i == 1 ? $finVigencia : $fechaProximoPago;
 
                     // Hago que el primer recibo se le asigne el agente que hizo la venta
 
