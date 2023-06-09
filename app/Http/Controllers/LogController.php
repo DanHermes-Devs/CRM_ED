@@ -9,15 +9,10 @@ class LogController extends Controller
 {
     public function index()
     {
-        $logs = ReceiptLog::with('user')->get();
-        
-        if(request()->ajax()){
-            return DataTables()
-                ->of($logs)
-                ->escapeColumns([])
-                ->make(true);
-        }
+        $folders = Storage::directories('/logs');
 
-        return view('crm.logs.index', compact('logs'));
+        dd($folders);
+
+        return view('vendor.laravel-log-viewer.log');
     }
 }

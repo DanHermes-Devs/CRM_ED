@@ -64,6 +64,7 @@ Route::middleware(['auth', 'role:Marketing Dashboard'])->group(function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+    // Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dasboard');
     Route::get('/filterODM', [HomeController::class, 'filter'])->name('filter-dashboard');
 
