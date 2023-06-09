@@ -12,27 +12,24 @@ class RenovacionesController extends Controller
 {
     public function store(Request $request)
     {
-        if($request->Codificacion == 'RENOVACION')
-        {
+        if ($request->Codificacion == 'RENOVACION') {
             $renovacion = Venta::where('contactId', $request->contactId)
-                                ->where('UGestion', 'RENOVACION')
-                                ->latest('created_at')->first();
+                ->where('UGestion', 'RENOVACION')
+                ->latest('created_at')->first();
 
-            if($renovacion)
-            {
+            if ($renovacion) {
                 return response()->json([
                     'code' => 400,
                     'message' => 'Ya existe una renovación con el mismo Lead',
                 ]);
-            }else{
+            } else {
                 // BUSCAMOS SI EXISTE UNA RENOVACION POR NSERIE Y TVENTA 'RENOVACION'
                 $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                     ->where('tVenta', 'RENOVACION')
                     ->first();
 
                 // SI EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION'
-                if($ventaRenovacion)
-                {
+                if ($ventaRenovacion) {
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
                     $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
@@ -49,7 +46,7 @@ class RenovacionesController extends Controller
                         'message' => 'Renovacion guardada correctamente',
                         'data' => $venta
                     ]);
-                }else{
+                } else {
                     // SI NO EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION' INSERTAMOS UNA RENOVACION NUEVA
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
@@ -72,26 +69,37 @@ class RenovacionesController extends Controller
                     ]);
                 }
             }
-        }else{
+        } else {
             // BUSCAMOS SI EXISTE UN CONTACTID
             $contactid = Venta::where('contactId', $request->contactId)->latest('created_at')->first();
 
             // SI EXISTE UN CONTACTID
-            if($contactid)
-            {
-                if($request->UGestion == 'RENOVACION' || $request->UGestion == 'PROMESA DE PAGO'){
+            if ($contactid) {
+                if ($request->UGestion == 'RENOVACION' || $request->UGestion == 'PROMESA DE PAGO') {
                     return response()->json([
                         'code' => 400,
                         'message' => 'Ya existe una registro con el mismo Lead',
                     ]);
-                }else if($request->UGestion == 'PROMESA DE PAGO'){
+                } else if ($request->UGestion == 'PROMESA DE PAGO') {
                     // ACTUALIZAMOS LOS DATOS
                     $contactid->contactId = $request->contactId;
                     $contactid->UGestion = $request->UGestion;
                     $contactid->Fpreventa = Carbon::now();
                     $contactid->fill($request->all());
+                    if ($request->Aseguradora) {
+                        if (!$contactid->Aseguradora) {
+                            // si la aseguradora no existe en contactid, la asigna
+                            $contactid->Aseguradora = $request->Aseguradora;
+                        }
+
+                        // si la aseguradora ya existe en request, asigna el valor a aseguradora_vendida
+                        $contactid->aseguradora_vendida = $request->Aseguradora;
+                    }
+
                     $contactid->FinVigencia = $request->FinVigencia;
                     $contactid->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                    $contactid->fecha_ultima_gestion = Carbon::now();
+                    $contactid->aseguradora_vendida = $request->Aseguradora;
 
                     // SI EL LOGIN INTRANET ES DIFERENTE AL LOGIN OCM ACTUALIZAMOS EL LOGIN INTRANET
                     if ($request->LoginOcm !== $contactid->LoginIntranet) {
@@ -108,13 +116,24 @@ class RenovacionesController extends Controller
                         'message' => 'Promesa de pago guardada correctamente',
                         'data' => $contactid
                     ]);
-                }else{
+                } else {
                     $contactid->contactId = $request->contactId;
                     $contactid->UGestion = $request->UGestion;
                     $contactid->Fpreventa = Carbon::now();
                     $contactid->fill($request->all());
+                    if ($request->Aseguradora) {
+                        if (!$contactid->Aseguradora) {
+                            // si la aseguradora no existe en contactid, la asigna
+                            $contactid->Aseguradora = $request->Aseguradora;
+                        }
+
+                        // si la aseguradora ya existe en request, asigna el valor a aseguradora_vendida
+                        $contactid->aseguradora_vendida = $request->Aseguradora;
+                    }
                     $contactid->FinVigencia = $request->FinVigencia;
                     $contactid->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                    $contactid->fecha_ultima_gestion = Carbon::now();
+                    $contactid->aseguradora_vendida = $request->Aseguradora;
 
                     $contactid->save();
 
@@ -124,9 +143,9 @@ class RenovacionesController extends Controller
                         'data' => $contactid
                     ]);
                 }
-            }else{
+            } else {
                 // VALIDAMOS SI LA UGESTION ES PROMESA DE PAGO
-                if($request->UGestion == 'PROMESA DE PAGO'){
+                if ($request->UGestion == 'PROMESA DE PAGO') {
                     // INSERTAMOS LOS DATOS
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
@@ -150,7 +169,7 @@ class RenovacionesController extends Controller
                         'message' => 'Promesa de pago guardada correctamente',
                         'data' => $venta
                     ]);
-                }else{
+                } else {
                     // SI LA CODIFICACION NO ES PROMESA DE PAGO MANDAMOS MENSAJE DE ERROR
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;

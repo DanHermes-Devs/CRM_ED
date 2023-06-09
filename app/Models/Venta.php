@@ -77,7 +77,9 @@ class Venta extends Model
         'TipoPago',
         'EstadoDePago',
         'OCMSent',
-        'ocmdaytosend'
+        'ocmdaytosend',
+        'fecha_ultima_gestion',
+        'aseguradora_vendida'
     ];
 
     protected $dates = [

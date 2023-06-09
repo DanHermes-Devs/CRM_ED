@@ -138,23 +138,23 @@ class VentasController extends Controller
     // Metodo para mostrar el formulario de ventas
     public function store(Request $request)
     {
-        if($request->Codificacion === 'PREVENTA')
+        if($request->Codificacion === 'VENTA')
         {
             // BUSCAMOS SI EXISTE UNA VENTA CON EL MISMO NUMERO DE CONTACTID
             $venta = Venta::where('contactId', $request->contactId)
-                    ->where('UGestion', 'PREVENTA')
+                    ->where('UGestion', 'VENTA')
                     ->latest('created_at')->first();
 
             if($venta)
             {
                 return response()->json([
                     'code' => 400,
-                    'message' => 'Éste registro ya fue guardado como preventa',
+                    'message' => 'Éste registro ya fue guardado como venta',
                 ]);
             }else{
                 // BUSCAMOS SI EXISTE UNA VENTA CON EL MISMO NUMERO DE SERIE Y TIPO DE VENTA 'VENTA'
                 $ventaExistente = Venta::where('nSerie', $request->nSerie)
-                    ->where('tVenta', 'PREVENTA')
+                    ->where('tVenta', 'VENTA')
                     ->first();
 
                 // VERIFICAMOS SI EXISTE UNA VENTA CON EL NUMERO DE SERIE Y TIPO DE VENTA 'VENTA'
@@ -176,7 +176,9 @@ class VentasController extends Controller
                         $ventaDuplicada->Fpreventa = Carbon::now();
                         $ventaDuplicada->FinVigencia = $request->FinVigencia;
                         $ventaDuplicada->FfVigencia = Carbon::parse($ventaDuplicada->FinVigencia)->addYear();
-                        $ventaDuplicada->tVenta = 'PREVENTA DUPLICADA';
+                        $ventaDuplicada->tVenta = 'VENTA DUPLICADA';
+                        $ventaDuplicada->fecha_ultima_gestion = Carbon::now();
+                        $ventaDuplicada->aseguradora_vendida = $request->Aseguradora;
                         $ventaDuplicada->save();
 
                         return response()->json([
@@ -193,7 +195,7 @@ class VentasController extends Controller
                         $ventaDiferencia->Fpreventa = Carbon::now();
                         $ventaDiferencia->FinVigencia = $request->FinVigencia;
                         $ventaDiferencia->FfVigencia = Carbon::parse($ventaDiferencia->FinVigencia)->addYear();
-                        $ventaDiferencia->tVenta = 'PREVENTA';
+                        $ventaDiferencia->tVenta = 'VENTA';
                         $ventaDiferencia->save();
 
                         // CREAMOS LOS RECIBOS DE PAGO
@@ -258,7 +260,7 @@ class VentasController extends Controller
                         $preventaNueva->Fpreventa = Carbon::now();
                         $preventaNueva->FinVigencia = $request->FinVigencia;
                         $preventaNueva->FfVigencia = Carbon::parse($preventaNueva->FinVigencia)->addYear();
-                        $preventaNueva->tVenta = 'PREVENTA';
+                        $preventaNueva->tVenta = 'VENTA';
                         $preventaNueva->save();
 
                         return response()->json([
@@ -293,12 +295,12 @@ class VentasController extends Controller
                     $venta->Fpreventa = Carbon::now();
                     $venta->FinVigencia = $request->FinVigencia;
                     $venta->FfVigencia = Carbon::parse($venta->FinVigencia)->addYear();
-                    $venta->tVenta = 'PREVENTA';
+                    $venta->tVenta = 'VENTA';
                     $venta->save();
 
                     return response()->json([
                         'code' => 200,
-                        'message' => 'Preventa actualizada correctamente',
+                        'message' => 'Venta actualizada correctamente',
                         'data' => $venta
                     ]);
                 }
@@ -310,12 +312,12 @@ class VentasController extends Controller
                 $promesaPago->Fpreventa = Carbon::now();
                 $promesaPago->FinVigencia = $request->FinVigencia;
                 $promesaPago->FfVigencia = Carbon::parse($promesaPago->FinVigencia)->addYear();
-                $promesaPago->tVenta = 'PREVENTA';
+                $promesaPago->tVenta = 'VENTA';
                 $promesaPago->save();
 
                 return response()->json([
                     'code' => 200,
-                    'message' => 'Preventa guardada correctamente',
+                    'message' => 'Venta guardada correctamente',
                     'data' => $promesaPago
                 ]);
             }
