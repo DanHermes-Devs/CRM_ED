@@ -116,7 +116,6 @@ class HomeController extends Controller
                 $tableFb = 'skill_fb_practicummotor_data';
                 $tableGo = 'skill_uimotor_data';
                 $skillDefFb = 'FB_PRACTICUMMotor';
-                $skillDefGo = 'uimotor';
             break;
             default:
                 $tableFb = 'skill_fb_uimotor_data';
@@ -155,17 +154,17 @@ class HomeController extends Controller
                             SUM(CASE skilldef WHEN 'fb_uimotor' THEN 1 ELSE 0 END) as leadsFb,
                             SUM(CASE skilldef WHEN 'uimotor' THEN 1 ELSE 0 END) as leadsGoogle
                         FROM (SELECT d.id,d.dateinsert,de.id_lead,l.skilldef
-                        FROM ocmdb.skill_fb_uimotor_data d
-                        INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
-                        INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                        WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
-                        AND de.id_lead <> '' UNION
-                            SELECT d.id,d.dateinsert,de.id_lead,l.skilldef
+                                    FROM ocmdb.skill_fb_uimotor_data d
+                                    INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
+                                    INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+                                    WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
+                                    AND de.id_lead <> ''
+                                UNION
+                                SELECT d.id,d.dateinsert,de.id_lead,l.skilldef
                             FROM ocmdb.skill_uimotor_data d
                             INNER JOIN ocmdb.skill_uimotor_dataexten de ON d.id = de.id
                             INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
                         WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1 AND de.id_lead <> '') AS Leads";
-                    // dd($conteoLeads);
         return $resultConte =  $this->followQuery($conteoLeads);
     }
 
@@ -203,9 +202,19 @@ class HomeController extends Controller
     //CHECK WITH THE NEW QUERY
     private function VentasPorCampana()
     {
-        $ventasPorCampana = "SELECT CASE WHEN skilldata = 'FB_UIMotor'  THEN 'VentasFb'  ELSE 'VentasGoogle'  END AS tipoLlamadas,
-                         COUNT(DISTINCT(numbercall)) As Total FROM ocmdb.ocm_log_calls WHERE skilldata  IN ('fb_uimotor','UIMotor')
-                         AND fecha BETWEEN CURDATE() AND CURDATE() + 1 AND resultdesc = 'COTIZACION'  GROUP BY skilldata";
+        $ventasPorCampana = "SELECT  tipos.tipoLlamadas, COALESCE(log.Total, 0) AS Total
+                            FROM ( SELECT 'VentasFb' AS tipoLlamadas UNION ALL SELECT 'VentasGoogle' ) AS tipos
+                            LEFT JOIN (
+                                SELECT
+                                    CASE WHEN skilldata = 'FB_UIMotor' THEN 'VentasFb' ELSE 'VentasGoogle' END AS tipoLlamadas,
+                                    COUNT(DISTINCT(numbercall)) AS Total
+                                FROM ocmdb.ocm_log_calls
+                                WHERE skilldata IN ('fb_uimotor', 'UIMotor')
+                                AND fecha BETWEEN CURDATE() AND CURDATE() +1
+                                AND resultdesc = 'COTIZACION'
+                                GROUP BY skilldata
+                            ) AS log
+                            ON tipos.tipoLlamadas = log.tipoLlamadas;";
         return $resultSell = $this->followQuery($ventasPorCampana);
     }
 
@@ -215,41 +224,38 @@ class HomeController extends Controller
     {
 
         $ventasAgentes ="SELECT lc.agent, a.nombre,
-        COUNT( lc.resultdesc ) AS totalLlamadas, ca.primerContacto,
-        SUM(CASE WHEN (lc.resultdesc = 'COTIZACION' ) THEN 1 ELSE 0 END) AS ventas,
-        ((SUM(CASE WHEN (lc.resultdesc = 'COTIZACION') THEN 1 ELSE 0 END) / ca.primerContacto) * 100 ) AS Ratio
-            FROM ocmdb.ocm_log_calls lc
-            INNER JOIN ocmdb.ocm_agent a
-                ON lc.agent = a.user
-            INNER JOIN (
-                SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
-                FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
-                        FROM ocmdb.ocm_log_calls lc
-                        INNER JOIN (
-                            SELECT d.number1
-                            FROM ocmdb.skill_fb_uimotor_data d
-                            INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
-                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                            WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
-                            AND de.id_lead <> ''
-                            UNION
-                            SELECT  d.number1
-                            FROM ocmdb.skill_uimotor_data d
-                            INNER JOIN ocmdb.skill_uimotor_dataexten de ON d.id = de.id
-                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                            WHERE d.dateinsert BETWEEN CURDATE() AND CURDATE() + 1
-                            AND de.id_lead <> ''
-                    ) As d
-                        ON lc.numbercall = d.number1 AND skilldata  IN ('FB_UIMotor','UIMotor')
-                AND fecha BETWEEN CURDATE() AND CURDATE() + 1
-                -- AND resultcalldesc = 'Normal clearing'
-                ORDER BY fecha DESC) l
-                WHERE row_numb = 1
-            AND agent <> ''
+        COUNT( lc.resultdesc ) AS totalLlamadas, cpg.primerContacto,(CASE WHEN va.total > 0 THEN va.total ELSE 0 END) As ventas,
+        ROUND(( ((CASE WHEN va.total > 0 THEN va.total ELSE 0 END)/cpg.primerContacto) * 100  ), 1) AS Ratio
+        FROM ocmdb.ocm_log_calls lc
+        INNER JOIN ocmdb.ocm_agent a
+            ON lc.agent = a.user
+        INNER JOIN (
+            SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
+            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
+                                FROM ocmdb.ocm_log_calls
+                                WHERE skilldata  IN ('FB_UIMotor','UIMotor')
+                        AND fecha BETWEEN CURDATE() AND CURDATE() + 1
+                        AND attempt = 1
+                        AND timecall > 5
+                    ORDER BY fecha DESC) l
+            WHERE row_numb = 1
+                AND agent <> ''
             GROUP BY l.agent
-            ) AS ca
-            ON lc.agent = ca.agent
-            WHERE lc.skilldata  IN ('FB_UIMotor','UIMotor') AND lc.fecha BETWEEN CURDATE() AND CURDATE() + 1 AND lc.resultcalldesc = 'Normal clearing' AND lc.agent <> '' GROUP BY lc.agent";
+        ) AS cpg
+        ON lc.agent = cpg.agent
+        LEFT JOIN (
+            SELECT agent,count(distinct(numbercall)) total
+            FROM ocmdb.ocm_log_calls
+            WHERE skilldata  IN ('FB_UIMotor','UIMotor')
+            AND resultdesc = 'COTIZACION'
+            AND fecha BETWEEN CURDATE() AND CURDATE() + 1
+            GROUP BY agent) As va
+        ON lc.agent = va.agent
+        WHERE lc.skilldata  IN ('FB_UIMotor','UIMotor')
+            AND lc.fecha BETWEEN  CURDATE() AND CURDATE() + 1
+            AND lc.agent <> ''
+            AND lc.timecall > 5
+            GROUP BY lc.agent";
 
         return $resultAgents = $this->followQuery($ventasAgentes);
     }
@@ -317,7 +323,7 @@ class HomeController extends Controller
 
     }
 
-    // function to get the call count with params
+    // FUNCTION TO OBTAIN THE CALL'S COUNT WITH PARAMS
     //CHECK WITH DANY
     private function llamadasPorCampanaXcamp($tableFb, $tableGo, $skillDefFb, $skillDefGo, $fechaStart, $fechaEnd)
     {
@@ -348,7 +354,7 @@ class HomeController extends Controller
         return $resultCalls =  $this->followQuery($llamadasporCampana);
     }
 
-    //Function to bring  quotes with params
+    // FUNCTION TO BING QUOTES WITH PARAMS
     //CHECK WITH DANY
     private function VentasPorCampanaXcamp($tableFb, $tableGo, $skillDefFb, $skillDefGo, $fechaStart, $fechaEnd)
     {
@@ -369,14 +375,23 @@ class HomeController extends Controller
                 $tipodeventa = 'COTIZACION';
             break;
         }
-        $ventasPorCampana = "SELECT CASE WHEN skilldata = '".$skillDefFb."'  THEN 'VentasFb'  ELSE 'VentasGoogle'  END AS tipoLlamadas,
-        COUNT(DISTINCT(numbercall)) As Total FROM ocmdb.ocm_log_calls WHERE skilldata  IN ('".$skillDefFb."','".$skillDefGo."')
-        AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd." AND resultdesc = '".$tipodeventa."'  GROUP BY skilldata";
-        // dd($ventasPorCampana);
+        $ventasPorCampana = "SELECT  tipos.tipoLlamadas, COALESCE(log.Total, 0) AS Total
+                            FROM ( SELECT 'VentasFb' AS tipoLlamadas UNION ALL SELECT 'VentasGoogle' ) AS tipos
+                            LEFT JOIN (
+                                SELECT
+                                    CASE WHEN skilldata = '".$skillDefFb."' THEN 'VentasFb' ELSE 'VentasGoogle' END AS tipoLlamadas,
+                                    COUNT(DISTINCT(numbercall)) AS Total
+                                FROM ocmdb.ocm_log_calls
+                                WHERE skilldata IN ('".$skillDefFb."','".$skillDefGo."')
+                                AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+                                AND resultdesc = '".$tipodeventa."'
+                                GROUP BY skilldata
+                            ) AS log
+                            ON tipos.tipoLlamadas = log.tipoLlamadas;";
         return $resultCalls =  $this->followQuery($ventasPorCampana);
     }
 
-    // Function to bring results from agents
+    // FUNCTION TO BRING RESULT FOR AGENTS
     //CHECK WITH DANY
     private function llamadasYventasAgenteYcampanaXcamp($tableFb, $tableGo, $skillDefFb, $skillDefGo, $fechaStart, $fechaEnd)
     {
@@ -396,51 +411,46 @@ class HomeController extends Controller
                 $tipodeventa = 'COTIZACION';
             break;
         }
+
         $resultadosAgents ="SELECT lc.agent, a.nombre,
-                            COUNT( lc.resultdesc ) AS totalLlamadas, ca.primerContacto,
-                            SUM(CASE WHEN (lc.resultdesc = '".$tipodeventa."' ) THEN 1 ELSE 0 END) AS ventas,
-                            ((SUM(CASE WHEN (lc.resultdesc = '".$tipodeventa."') THEN 1 ELSE 0 END) / ca.primerContacto) * 100 ) AS Ratio
-                            FROM ocmdb.ocm_log_calls lc
-                            INNER JOIN ocmdb.ocm_agent a
-                                ON lc.agent = a.user
-                            INNER JOIN (
-                                SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
-                                FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
-                                        FROM ocmdb.ocm_log_calls lc
-                                        INNER JOIN (
-                                            SELECT d.number1
-                                            FROM ocmdb.".$tableFb." d
-                                            INNER JOIN ocmdb.".$tableFb."exten de ON d.id = de.id
-                                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                                            WHERE d.dateinsert BETWEEN ".$fechaStart." AND ".$fechaEnd."
-                                            AND de.id_lead <> ''
-                                            UNION
-                                            SELECT  d.number1 FROM ocmdb.".$tableGo." d
-                                            INNER JOIN ocmdb.".$tableGo."exten de ON d.id = de.id
-                                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                                            WHERE d.dateinsert BETWEEN ".$fechaStart." AND ".$fechaEnd."
-                                            AND de.id_lead <> ''
-                                    ) As d
-                                        ON lc.numbercall = d.number1 AND skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
-                            AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
-                            AND resultcalldesc = 'Normal clearing'
-                            ORDER BY fecha DESC) l
-                            WHERE row_numb = 1
-                            AND agent <> ''
-                                GROUP BY l.agent
-                                ) AS ca
-                                ON lc.agent = ca.agent
-                                WHERE lc.skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
-                                AND lc.fecha BETWEEN ".$fechaStart."
-                                AND ".$fechaEnd."
-                                AND lc.resultcalldesc = 'Normal clearing'
-                                AND lc.agent <> ''
-                                GROUP BY lc.agent";
-        //  dd($resultadosAgents);
+        COUNT( lc.resultdesc ) AS totalLlamadas, cpg.primerContacto,(CASE WHEN va.total > 0 THEN va.total ELSE 0 END) As ventas,
+        ROUND(( ((CASE WHEN va.total > 0 THEN va.total ELSE 0 END)/cpg.primerContacto) * 100  ), 1) AS Ratio
+        FROM ocmdb.ocm_log_calls lc
+        INNER JOIN ocmdb.ocm_agent a
+            ON lc.agent = a.user
+        INNER JOIN (
+            SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
+            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
+                                FROM ocmdb.ocm_log_calls
+                                WHERE skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
+                        AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+                        AND attempt = 1
+                        AND timecall > 5
+                    ORDER BY fecha DESC) l
+            WHERE row_numb = 1
+                AND agent <> ''
+            GROUP BY l.agent
+        ) AS cpg
+        ON lc.agent = cpg.agent
+        LEFT JOIN (
+            SELECT agent,count(distinct(numbercall)) total
+            FROM ocmdb.ocm_log_calls
+            WHERE skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
+            AND resultdesc = '".$tipodeventa."'
+            AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+            GROUP BY agent) As va
+        ON lc.agent = va.agent
+        WHERE lc.skilldata  IN ('".$skillDefFb."', '".$skillDefGo."')
+            AND lc.fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+            AND lc.agent <> ''
+            AND lc.timecall > 5
+            GROUP BY lc.agent";
+
+
         return $resultAgent =  $this->followQuery($resultadosAgents);
     }
 
-    // Function to bring results in calls
+    // FUNCTION TO BRING RESULTS IN CALLS
     //CHECK WITH DANY
     private function ResultadosContactoXcamp($tableFb, $tableGo, $skillDefFb, $skillDefGo, $fechaStart, $fechaEnd)
     {
@@ -523,8 +533,7 @@ class HomeController extends Controller
         $fechaEnd = $this->formatDateEnd($fechaEnd);
         $ventasPorCampana = "SELECT CASE WHEN skilldata = '".$skillDefFb."'  THEN 'VentasFb'  END AS tipoLlamadas,
         COUNT(DISTINCT(numbercall)) As Total FROM ocmdb.ocm_log_calls WHERE skilldata  IN ('".$skillDefFb."')
-        AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd." AND (resultdesc = 'VENTA' OR resultdesc = 'VENTA' OR resultdesc = 'PREVENTA') GROUP BY skilldata";
-        //  dd($ventasPorCampana);
+        AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd." AND resultdesc = 'PREVENTA' GROUP BY skilldata";
         return $resultCalls =  $this->followQuery($ventasPorCampana);
     }
 
@@ -534,36 +543,39 @@ class HomeController extends Controller
         $fechaStart = $this->formatDateStart($fechaStart);
         $fechaEnd = $this->formatDateEnd($fechaEnd);
         $resultadosAgents ="SELECT lc.agent, a.nombre,
-        COUNT( lc.resultdesc ) AS totalLlamadas, ca.primerContacto,
-        -- SUM(CASE WHEN lc.resultdesc <> 'COTIZACION' AND lc.skilldata = 'FB_UIMotor' THEN 1 ELSE 0 END) AS llamadasFb,
-        -- SUM(CASE WHEN lc.resultdesc <> 'COTIZACION' AND lc.skilldata <> 'FB_UIMotor' THEN 1 ELSE 0 END) AS llamadasGo,
-        SUM(CASE WHEN (lc.resultdesc = 'PREVENTA' OR lc.resultdesc = 'VENTA' OR lc.resultdesc = 'PREVENTA') THEN 1 ELSE 0 END) AS ventas,
-        -- SUM(CASE WHEN lc.resultdesc = 'COTIZACION' AND lc.skilldata <> 'FB_UIMotor' THEN 1 ELSE 0 END) AS llamadasVentasGo,
-        ((SUM(CASE WHEN (lc.resultdesc = 'PREVENTA' OR lc.resultdesc = 'VENTA' OR lc.resultdesc = 'PREVENTA')  THEN 1 ELSE 0 END) / ca.primerContacto) * 100 ) AS Ratio
-        FROM ocmdb.ocm_log_calls lc INNER JOIN ocmdb.ocm_agent a ON lc.agent = a.user
+        COUNT( lc.resultdesc ) AS totalLlamadas, cpg.primerContacto,(CASE WHEN va.total > 0 THEN va.total ELSE 0 END) As ventas,
+        ROUND(( ((CASE WHEN va.total > 0 THEN va.total ELSE 0 END)/cpg.primerContacto) * 100  ), 1) AS Ratio
+        FROM ocmdb.ocm_log_calls lc
+        INNER JOIN ocmdb.ocm_agent a
+            ON lc.agent = a.user
         INNER JOIN (
-        SELECT agent,count(*) AS primerContacto
-        FROM (
-            SELECT *,
-                ROW_NUMBER() OVER (PARTITION BY idreg ORDER BY fecha DESC) AS row_numb
-            FROM ocmdb.ocm_log_calls lc
-            INNER JOIN (
-                SELECT DISTINCT d.id, l.skilldef,d.number1
-                    FROM ocmdb.".$tableFb." d
-                    INNER JOIN ocmdb.".$tableFb."exten de ON d.id = de.id
-                    INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
-                    WHERE d.dateinsert BETWEEN ".$fechaStart." AND ".$fechaEnd."
-                    AND de.id_lead <> '' AND endresultdesc <> 'Time Rule Deny' AND endresultdesc <> 'Abandono' AND endresultdesc <> 'Dial Error' AND endresultdesc <> 'Fin'
-                ) AS d ON lc.numbercall = d.number1
-                AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
-                ORDER BY fecha DESC ) AS l
-                WHERE row_numb = 1
-                AND resultcalldesc <> 'Abandoned'
-                AND skilldata  IN ('".$skillDefFb."')
-                GROUP BY agent ) AS ca
-        ON lc.agent = ca.agent
-        WHERE lc.skilldata  IN ('".$skillDefFb."') AND lc.fecha BETWEEN ".$fechaStart." AND ".$fechaEnd." AND lc.agent <> '' GROUP BY lc.agent";
-        // dd($resultadosAgents);
+            SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
+            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
+                                FROM ocmdb.ocm_log_calls
+                                WHERE skilldata  IN ('".$skillDefFb."')
+                        AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+                        AND attempt = 1
+                        AND timecall > 5
+                    ORDER BY fecha DESC) l
+            WHERE row_numb = 1
+                AND agent <> ''
+            GROUP BY l.agent
+        ) AS cpg
+        ON lc.agent = cpg.agent
+        LEFT JOIN (
+            SELECT agent,count(distinct(numbercall)) total
+            FROM ocmdb.ocm_log_calls
+            WHERE skilldata  IN ('".$skillDefFb."')
+            AND resultdesc = 'PREVENTA'
+            AND fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+            GROUP BY agent) As va
+        ON lc.agent = va.agent
+        WHERE lc.skilldata  IN ('".$skillDefFb."')
+            AND lc.fecha BETWEEN ".$fechaStart." AND ".$fechaEnd."
+            AND lc.agent <> ''
+            AND lc.timecall > 5
+            GROUP BY lc.agent";
+
         return $resultAgent =  $this->followQuery($resultadosAgents);
     }
 
