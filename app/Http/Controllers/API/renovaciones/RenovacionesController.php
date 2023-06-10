@@ -31,7 +31,10 @@ class RenovacionesController extends Controller
                 
                 if($ventaRenovacion)
                 {
-                    // SI EXISTE UNA RENOVACION CON EL MISMO NSERIE Y TVENTA 'RENOVACION'
+                    /** 
+                     * FIXME: Si la codificacion enviada de OCM es Renovacion de todos modos entra y no se crean los recibos, el tema es que si la ultima gestion era Agenda por ejemplo
+                     * se puede actualizar a Atencion a cliente, y de atencion a cliente a Promesa de pago o Renovacion, pero para esos casos se deben generar recibos
+                    **/
                     if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO' && $ventaRenovacion->UGestion != 'RENOVACION') {
                         $ventaRenovacion->contactId = $request->contactId;
                         $ventaRenovacion->Fpreventa = Carbon::now();
@@ -48,7 +51,7 @@ class RenovacionesController extends Controller
                         return response()->json([
                             'code' => 200,
                             'message' => 'Renovacion guardada correctamente venta_2',
-                            'data' => $venta
+                            'data' => $ventaRenovacion
                         ]);
                     } elseif ($ventaRenovacion->UGestion == 'RENOVACION') {
                         $venta = new Venta;
