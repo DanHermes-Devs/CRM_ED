@@ -32,13 +32,17 @@ class RenovacionesController extends Controller
                 if($ventaRenovacion)
                 {
                     /** 
-                     * FIXME: Si la codificacion enviada de OCM es Renovacion de todos modos entra y no se crean los recibos, el tema es que si la ultima gestion era Agenda por ejemplo
-                     * se puede actualizar a Atencion a cliente, y de atencion a cliente a Promesa de pago o Renovacion, pero para esos casos se deben generar recibos
+                     * FIXME: Si la codificacion enviada de OCM es Renovacion de todos modos entra y no se crean los recibos, el tema es que si la ultima gestion era
+                     * Agenda por ejemplo se puede actualizar a Atencion a cliente, y de atencion a cliente a Promesa de pago o Renovacion, pero para esos casos se 
+                     * deben generar recibos
+                     * 
                     **/
                     if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO' && $ventaRenovacion->UGestion != 'RENOVACION') {
                         $ventaRenovacion->contactId = $request->contactId;
                         $ventaRenovacion->Fpreventa = Carbon::now();
                         $ventaRenovacion->fill($request->all());
+                        $ventaRenovacion->nPoliza = ltrim($request->nPoliza, '0');
+                        $ventaRenovacion->nueva_poliza = ltrim($request->nueva_poliza, '0');
                         $ventaRenovacion->UGestion = $request->UGestion;
                         $ventaRenovacion->FinVigencia = $request->FinVigencia;
                         $ventaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -48,9 +52,14 @@ class RenovacionesController extends Controller
 
                         $ventaRenovacion->save();
 
+                        if ($ventaRenovacion->UGestion == 'PROMESA DE PAGO' || $ventaRenovacion->UGestion == 'RENOVACION') {
+                            $frecuenciaPago = $request->input('FrePago');
+                            $this->crearRecibosPago($ventaRenovacion, $frecuenciaPago);
+                        }
+
                         return response()->json([
                             'code' => 200,
-                            'message' => 'Renovacion guardada correctamente venta_2',
+                            'message' => '  ',
                             'data' => $ventaRenovacion
                         ]);
                     } elseif ($ventaRenovacion->UGestion == 'RENOVACION') {
@@ -58,6 +67,8 @@ class RenovacionesController extends Controller
                         $venta->contactId = $request->contactId;
                         $venta->Fpreventa = Carbon::now();
                         $venta->fill($request->all());
+                        $venta->nPoliza = ltrim($request->nPoliza, '0');
+                        $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
                         $venta->UGestion = 'RENOVADA' . $ventaRenovacion->MesBdd . $ventaRenovacion->AnioBdd;
                         $venta->FinVigencia = $request->FinVigencia;
                         $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -80,6 +91,8 @@ class RenovacionesController extends Controller
                     $venta->fill($request->all());
                     $venta->UGestion = $request->UGestion;
                     $venta->FinVigencia = $request->FinVigencia;
+                    $venta->nPoliza = ltrim($request->nPoliza, '0');
+                    $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
                     $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                     $venta->fecha_ultima_gestion = Carbon::now();
                     $venta->aseguradora_vendida = $request->Aseguradora;
@@ -125,6 +138,8 @@ class RenovacionesController extends Controller
                     }
 
                     $contactid->FinVigencia = $request->FinVigencia;
+                    $contactid->nPoliza = ltrim($request->nPoliza, '0');
+                    $contactid->nueva_poliza = ltrim($request->nueva_poliza, '0');
                     $contactid->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                     $contactid->fecha_ultima_gestion = Carbon::now();
                     $contactid->aseguradora_vendida = $request->Aseguradora;
@@ -165,6 +180,8 @@ class RenovacionesController extends Controller
                     $venta->UGestion = $request->UGestion;
                     $venta->fill($request->all());
                     $venta->FinVigencia = $request->FinVigencia;
+                    $venta->nPoliza = ltrim($request->nPoliza, '0');
+                    $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
                     $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                     $venta->tVenta = 'RENOVACION';
 
@@ -187,6 +204,8 @@ class RenovacionesController extends Controller
                     $venta->contactId = $request->contactId;
                     $venta->UGestion = $request->UGestion;
                     $venta->fill($request->all());
+                    $venta->nPoliza = ltrim($request->nPoliza, '0');
+                    $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
                     if ($request->Aseguradora) {
                         if (!$venta->Aseguradora) {
                             // si la aseguradora no existe en contactid, la asigna

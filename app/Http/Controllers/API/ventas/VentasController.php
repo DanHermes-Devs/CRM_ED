@@ -176,6 +176,8 @@ class VentasController extends Controller
                             $ventaDuplicada->fill($request->all());
                             $ventaDuplicada->UGestion = $request->UGestion;
                             $ventaDuplicada->Fpreventa = Carbon::now();
+                            $ventaDuplicada->nPoliza = ltrim($request->nPoliza, '0');
+                            $ventaDuplicada->nueva_poliza = ltrim($request->nPoliza, '0');
                             $ventaDuplicada->FinVigencia = $request->FinVigencia;
                             $ventaDuplicada->FfVigencia = Carbon::parse($ventaDuplicada->FinVigencia)->addYear();
                             $ventaDuplicada->tVenta = 'VENTA DUPLICADA';
@@ -195,6 +197,8 @@ class VentasController extends Controller
                             $ventaDiferencia->fill($request->all());
                             $ventaDiferencia->UGestion = $request->UGestion;
                             $ventaDiferencia->Fpreventa = Carbon::now();
+                            $ventaDiferencia->nPoliza = ltrim($request->nPoliza, '0');
+                            $ventaDiferencia->nueva_poliza = ltrim($request->nPoliza, '0');
                             $ventaDiferencia->FinVigencia = $request->FinVigencia;
                             $ventaDiferencia->FfVigencia = Carbon::parse($ventaDiferencia->FinVigencia)->addYear();
                             $ventaDiferencia->tVenta = 'VENTA';
@@ -215,6 +219,8 @@ class VentasController extends Controller
                             $ventaNuevaRenovacion->fill($request->all());
                             $ventaNuevaRenovacion->UGestion = $request->UGestion;
                             $ventaNuevaRenovacion->Fpreventa = Carbon::now();
+                            $ventaNuevaRenovacion->nPoliza = ltrim($request->nPoliza, '0');
+                            $ventaNuevaRenovacion->nueva_poliza = ltrim($request->nPoliza, '0');
                             $ventaNuevaRenovacion->FinVigencia = $request->FinVigencia;
                             $ventaNuevaRenovacion->FfVigencia = Carbon::parse($ventaNuevaRenovacion->FinVigencia)->addYear();
                             $ventaNuevaRenovacion->tVenta = 'RENOVACION';
@@ -236,6 +242,8 @@ class VentasController extends Controller
                         $ventaExistente->fill($request->all());
                         $ventaExistente->UGestion = $request->UGestion;
                         $ventaExistente->Fpreventa = Carbon::now();
+                        $ventaExistente->nPoliza = ltrim($request->nPoliza, '0');
+                        $ventaExistente->nueva_poliza = ltrim($request->nPoliza, '0');
                         $ventaExistente->FinVigencia = $request->FinVigencia;
                         $ventaExistente->FfVigencia = Carbon::parse($ventaExistente->FinVigencia)->addYear();
                         $ventaExistente->tVenta = 'VENTA';
@@ -266,6 +274,8 @@ class VentasController extends Controller
                         $ventaDuplicadaPosible->fill($request->all());
                         $ventaDuplicadaPosible->UGestion = $request->UGestion;
                         $ventaDuplicadaPosible->Fpreventa = Carbon::now();
+                        $ventaDuplicadaPosible->nPoliza = ltrim($request->nPoliza, '0');
+                        $ventaDuplicadaPosible->nueva_poliza = ltrim($request->nPoliza, '0');
                         $ventaDuplicadaPosible->FinVigencia = $request->FinVigencia;
                         $ventaDuplicadaPosible->FfVigencia = Carbon::parse($ventaDuplicadaPosible->FinVigencia)->addYear();
                         $ventaDuplicadaPosible->tVenta = 'POSIBLE DUPLICIDAD';
@@ -282,6 +292,8 @@ class VentasController extends Controller
                         $preventaNueva->fill($request->all());
                         $preventaNueva->UGestion = $request->UGestion;
                         $preventaNueva->Fpreventa = Carbon::now();
+                        $preventaNueva->nPoliza = ltrim($request->nPoliza, '0');
+                        $preventaNueva->nueva_poliza = ltrim($request->nPoliza, '0');
                         $preventaNueva->FinVigencia = $request->FinVigencia;
                         $preventaNueva->FfVigencia = Carbon::parse($preventaNueva->FinVigencia)->addYear();
                         $preventaNueva->tVenta = 'VENTA';
@@ -317,6 +329,8 @@ class VentasController extends Controller
                     $venta->fill($request->all());
                     $venta->UGestion = $request->UGestion;
                     $venta->Fpreventa = Carbon::now();
+                    $venta->nPoliza = ltrim($request->nPoliza, '0');
+                    $venta->nueva_poliza = ltrim($request->nPoliza, '0');
                     $venta->FinVigencia = $request->FinVigencia;
                     $venta->FfVigencia = Carbon::parse($venta->FinVigencia)->addYear();
                     $venta->tVenta = 'VENTA';
@@ -334,6 +348,8 @@ class VentasController extends Controller
                 $promesaPago->fill($request->all());
                 $promesaPago->UGestion = $request->UGestion;
                 $promesaPago->Fpreventa = Carbon::now();
+                $promesaPago->nPoliza = ltrim($request->nPoliza, '0');
+                $promesaPago->nueva_poliza = ltrim($request->nPoliza, '0');
                 $promesaPago->FinVigencia = $request->FinVigencia;
                 $promesaPago->FfVigencia = Carbon::parse($promesaPago->FinVigencia)->addYear();
                 $promesaPago->tVenta = 'VENTA';
