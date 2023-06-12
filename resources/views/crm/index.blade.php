@@ -83,16 +83,6 @@
                                         value="<?= $values->fecha_fin ? ($values->fecha_fin != '' ? $values->fecha_fin : '') : '' ?>"
                                         class="form-control">
                                 </div>
-                                <!-- <div class="form-group">
-                                        <label for="agente">Tipo:</label>
-                                        {{-- Mostramos un select con los usuarios que tienen rol agente --}}
-                                        <select name="agente" id="agente" class="form-select">
-                                            <option value="">-- Selecciona --</option>
-                                            <option value="llamadasFb">Facebook</option>
-                                            <option value="llamadasGoogle">Google</option>
-                                        </select>
-                                    </div> -->
-
                                 <button type="submit" id="buscarDatos"
                                     class="btn btn-primary d-flex align-items-center justify-content-center gap-1 fs-5">
                                     <i class="ri-search-line"></i>
@@ -122,8 +112,7 @@
                                                     <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($conteo[0]['leadsFb']) ? $conteo[0]['leadsFb'] : '' ?>">0</span>
+                                                    <h2 class="mb-0"><span class="counter-value" data-target="{{ !empty($conteo[0]['leadsFb']) ? $conteo[0]['leadsFb'] : '' }}">0</span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -133,7 +122,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($conteo[0]['leadsGoogle']) ? $conteo[0]['leadsGoogle'] : '' ?>">0</span>
+                                                            data-target="{{ !empty($conteo[0]['leadsGoogle']) ? $conteo[0]['leadsGoogle'] : '' }}">0</span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -151,7 +140,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($llamadas[0]['TOTAL']) ? $llamadas[0]['TOTAL'] : '' ?>">0</span>
+                                                            data-target="{{ !empty($llamadas[0]['TOTAL']) ? $llamadas[0]['TOTAL'] : '' }}">0</span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -161,7 +150,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($llamadas[1]['TOTAL']) ? $llamadas[1]['TOTAL'] : '' ?>">0</span>
+                                                            data-target="{{ !empty($llamadas[1]['TOTAL']) ? $llamadas[1]['TOTAL'] : '' }}">0</span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -170,9 +159,7 @@
                                 </div><!-- end col -->
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-4 px-3">
-                                        <h5 class="text-muted text-uppercase fs-13">Preventas
-                                            <!--<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>-->
-                                        </h5>
+                                        <h5 class="text-muted text-uppercase fs-13">Preventas</h5>
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="d-flex align-items-center gap-1">
                                                 <div class="flex-shrink-0">
@@ -181,7 +168,7 @@
                                                 <div class="flex-grow-1">
                                                     <h2 class="mb-0">
                                                         <span class="counter-value"
-                                                            data-target="<?= !empty($ventas[0]['Total']) ? $ventas[0]['Total'] : '' ?>">0</span>
+                                                            data-target="{{ !empty($ventas[0]['Total']) ? $ventas[0]['Total'] : '' }}">0</span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -191,7 +178,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($ventas[1]['Total']) ? $ventas[1]['Total'] : '' ?>">0</span>
+                                                            data-target="{{ !empty($ventas[1]['Total']) ? $ventas[1]['Total'] : '' }}">0</span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -209,14 +196,15 @@
                                                     <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <?php
-                                                    $lf = $conteo[0]['leadsFb'];
-                                                    $vf = empty($ventas[0]['Total']) ? 0 : $ventas[0]['Total'];
-                                                    $ratioFb = $vf > 0 ? round($vf / $lf, 2) * 100 : 0;
-                                                    ?>
-                                                    <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($ratioFb) ? $ratioFb : '' ?>">0</span>%
-                                                    </h2>
+                                                    @php
+                                                        $leadsFb = $conteo[0]['leadsFb'];
+                                                        $ventasFb = empty($ventas[0]['Total']) ? 0 : $ventas[0]['Total'];
+                                                        $ratioFb = 0;
+                                                        if ($leadsFb > 0) {
+                                                            $ratioFb =round($ventasFb / $leadsFb, 2) * 100;
+                                                        }
+                                                    @endphp
+                                                    <h2 class="mb-0"><span class="counter-value" data-target="{{ !empty($ratioFb) ? $ratioFb : '' }}">0</span>%</h2>
                                                 </div>
                                             </div>
                                             <div class="d-flex align-items-center gap-1">
@@ -224,13 +212,15 @@
                                                     <i class="ri-google-line display-6 text-muted"></i>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <?php
-                                                    $lg = $conteo[0]['leadsGoogle'];
-                                                    $vg = empty($ventas[1]['Total']) ? 0 : $ventas[1]['Total'];
-                                                    $ratioGo = $vg > 0 ? round($vg / $lg, 2) * 100 : 0;
-                                                    ?>
-                                                    <h2 class="mb-0"><span class="counter-value"
-                                                            data-target="<?= !empty($ratioGo) ? $ratioGo : '' ?>">0</span>%
+                                                    @php
+                                                        $leadsGl = $conteo[0]['leadsGoogle'];
+                                                        $ventasGl = empty($ventas[1]['Total']) ? 0 : $ventas[1]['Total'];
+                                                        $ratioGo = 0;
+                                                        if ($leadsGl > 0) {
+                                                            $ratioGo =round($ventasGl / $leadsGl, 2) * 100;
+                                                        }
+                                                    @endphp
+                                                    <h2 class="mb-0"><span class="counter-value" data-target="{{ !empty($ratioGo) ? $ratioGo : '' }}">0</span>%
                                                     </h2>
                                                 </div>
                                             </div>
@@ -238,22 +228,6 @@
                                     </div>
                                 </div>
                             </div><!-- end col -->
-
-                            <!-- <div class="col">
-                                        <div class="mt-3 mt-lg-0 py-4 px-3">
-                                            <h5 class="text-muted text-uppercase fs-13">Annual Deals <i
-                                                    class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
-                                            </h5>
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-shrink-0">
-                                                    <i class="ri-service-line display-6 text-muted"></i>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h2 class="mb-0"><span class="counter-value" data-target="2659">0</span></h2>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>//end col -->
                         </div><!-- end row -->
                     </div><!-- end card body -->
                 </div><!-- end card -->
@@ -274,7 +248,7 @@
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h2 class="mb-0"><span class="counter-value"
-                                                    data-target="<?= !empty($conteo[0]['leadsFb']) ? $conteo[0]['leadsFb'] : '' ?>">0</span>
+                                                    data-target="{{ !empty($conteo[0]['leadsFb']) ? $conteo[0]['leadsFb'] : '' }}">0</span>
                                             </h2>
                                         </div>
                                     </div>
@@ -292,7 +266,7 @@
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h2 class="mb-0"><span class="counter-value"
-                                                    data-target="<?= !empty($llamadas[0]['TOTAL']) ? $llamadas[0]['TOTAL'] : '' ?>">0</span>
+                                                    data-target="{{ !empty($llamadas[0]['TOTAL']) ? $llamadas[0]['TOTAL'] : '' }}">0</span>
                                             </h2>
                                         </div>
                                     </div>
@@ -313,7 +287,7 @@
                                         <div class="flex-grow-1 ms-3">
                                             <h2 class="mb-0">
                                                 <span class="counter-value"
-                                                    data-target="<?= !empty($ventas[0]['Total']) ? $ventas[0]['Total'] : '' ?>">0</span>
+                                                    data-target="{{ !empty($ventas[0]['Total']) ? $ventas[0]['Total'] : '' }}">0</span>
                                             </h2>
                                         </div>
                                     </div>
@@ -323,7 +297,6 @@
                         <div class="col">
                             <div class="mt-3 mt-md-0 py-4 px-3">
                                 <h5 class="text-muted text-uppercase fs-13">Ratio
-                                    <!--<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>-->
                                 </h5>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
@@ -332,13 +305,16 @@
                                                 <i class="ri-facebook-circle-line display-6 text-muted"></i>
                                             </div>
                                             <div class="flex-grow-1 ms-3">
-                                                <?php
-                                                $lf = $conteo[0]['leadsFb'];
-                                                $vf = empty($ventas[0]['Total']) ? 0 : $ventas[0]['Total'];
-                                                $ratioFb = $vf > 0 ? round($vf / $lf, 2) * 100 : 0;
-                                                ?>
+                                                @php
+                                                    $leadsFb = $conteo[0]['leadsFb'];
+                                                    $ventasFb = empty($ventas[0]['Total']) ? 0 : $ventas[0]['Total'];
+                                                    $ratioFb = 0;
+                                                    if ($leadsFb > 0) {
+                                                        $ratioFb =round($ventasFb / $leadsFb, 2) * 100;
+                                                    }
+                                                @endphp
                                                 <h2 class="mb-0"><span class="counter-value"
-                                                        data-target="<?= !empty($ratioFb) ? $ratioFb : '' ?>">0</span>%
+                                                        data-target="{{ !empty($ratioFb) ? $ratioFb : '' }}">0</span>%
                                                 </h2>
                                             </div>
                                         </div>
@@ -437,10 +413,6 @@
                             @endforeach
                         </ul><!-- end ul -->
                     </div>
-                    <!-- <div class="p-3 pt-2">
-                                    <a href="javascript:void(0);" class="text-muted text-decoration-underline">Show
-                                        more...</a>
-                                </div> -->
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div><!-- end col -->
@@ -457,45 +429,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div class="col-xxl-6">
-                    <div class="card card-height-100">
-                        <div class="card-header align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Balance Overview</h4>
-                            <div class="flex-shrink-0">
-                                <div class="dropdown card-header-dropdown">
-                                    <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fw-semibold text-uppercase fs-12">Sort by: </span><span class="text-muted">Current Year<i class="mdi mdi-chevron-down ms-1"></i></span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="#">Today</a>
-                                        <a class="dropdown-item" href="#">Last Week</a>
-                                        <a class="dropdown-item" href="#">Last Month</a>
-                                        <a class="dropdown-item" href="#">Current Year</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body px-0">
-                            <ul class="list-inline main-chart text-center mb-0">
-                                <li class="list-inline-item chart-border-left me-0 border-0">
-                                    <h4 class="text-primary">$584k <span class="text-muted d-inline-block fs-13 align-middle ms-2">Revenue</span>
-                                    </h4>
-                                </li>
-                                <li class="list-inline-item chart-border-left me-0">
-                                    <h4>$497k<span class="text-muted d-inline-block fs-13 align-middle ms-2">Expenses</span>
-                                    </h4>
-                                </li>
-                                <li class="list-inline-item chart-border-left me-0">
-                                    <h4><span data-plugin="counterup">3.6</span>%<span class="text-muted d-inline-block fs-13 align-middle ms-2">Profit
-                                            Ratio</span></h4>
-                                </li>
-                            </ul>
-
-                            <div id="deals" data-colors='["--vz-success", "--vz-danger"]' class="apex-charts" dir="ltr"></div>
-                        </div>
-                    </div>
-                </div> -->
     </div><!-- end row -->
 
     </div>
