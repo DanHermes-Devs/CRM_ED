@@ -127,6 +127,7 @@ class EducationController extends Controller
                 $estudio_certifcate  ='NO';
                 $cotizacion_certifcate  ='NO';
                 $pago_certifcate  ='NO';
+                $usuarioCierreVenta = $request->agent_OCM;
             }
 
             $info = [
