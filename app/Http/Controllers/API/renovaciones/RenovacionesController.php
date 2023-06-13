@@ -29,14 +29,14 @@ class RenovacionesController extends Controller
                 $ventaRenovacion = Venta::where('nSerie', $request->nSerie)
                     ->where('tVenta', 'RENOVACION')
                     ->first();
-                
+
                 if($ventaRenovacion)
                 {
-                    /** 
+                    /**
                      * FIXME: Si la codificacion enviada de OCM es Renovacion de todos modos entra y no se crean los recibos, el tema es que si la ultima gestion era
-                     * Agenda por ejemplo se puede actualizar a Atencion a cliente, y de atencion a cliente a Promesa de pago o Renovacion, pero para esos casos se 
+                     * Agenda por ejemplo se puede actualizar a Atencion a cliente, y de atencion a cliente a Promesa de pago o Renovacion, pero para esos casos se
                      * deben generar recibos
-                     * 
+                     *
                     **/
                     if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO' && $ventaRenovacion->UGestion != 'RENOVACION') {
                         $ventaRenovacion->contactId = $request->contactId;
@@ -61,7 +61,8 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->FinVigencia = $FinVigencia->toDateString();
                         $ventaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                         $ventaRenovacion->fecha_ultima_gestion = Carbon::now();
-                        $ventaRenovacion->aseguradora_vendida = $request->Aseguradora;
+                        $ventaRenovacion->Aseguradora = $request->Aseguradora;
+                        $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
 
                         $ventaRenovacion->save();
@@ -106,7 +107,8 @@ class RenovacionesController extends Controller
                         $venta->FinVigencia = $FinVigencia->toDateString();
                         $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                         $venta->fecha_ultima_gestion = Carbon::now();
-                        $venta->aseguradora_vendida = $request->Aseguradora;
+                        $venta->Aseguradora = $request->Aseguradora;
+                        $venta->aseguradora_vendida = $request->aseguradora_vendida;
                         $venta->tVenta = 'RENOVACION';
 
                         $venta->save();
@@ -139,7 +141,8 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->FinVigencia = $FinVigencia->toDateString();
                         $ventaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                         $ventaRenovacion->fecha_ultima_gestion = Carbon::now();
-                        $ventaRenovacion->aseguradora_vendida = $request->Aseguradora;
+                        $ventaRenovacion->Aseguradora = $request->Aseguradora;
+                        $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
 
                         $ventaRenovacion->save();
@@ -183,7 +186,8 @@ class RenovacionesController extends Controller
                     $venta->FinVigencia = $FinVigencia->toDateString();
                     $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                     $venta->fecha_ultima_gestion = Carbon::now();
-                    $venta->aseguradora_vendida = $request->Aseguradora;
+                    $venta->Aseguradora = $request->Aseguradora;
+                    $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
 
                     $venta->save();
@@ -243,7 +247,8 @@ class RenovacionesController extends Controller
                     $contactid->FinVigencia = $FinVigencia->toDateString();
                     $contactid->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
                     $contactid->fecha_ultima_gestion = Carbon::now();
-                    $contactid->aseguradora_vendida = $request->Aseguradora;
+                    $contactid->Aseguradora = $request->Aseguradora;
+                    $contactid->aseguradora_vendida = $request->aseguradora_vendida;
 
                     // SI EL LOGIN INTRANET ES DIFERENTE AL LOGIN OCM ACTUALIZAMOS EL LOGIN INTRANET
                     if ($request->LoginOcm !== $contactid->LoginIntranet) {
@@ -297,6 +302,8 @@ class RenovacionesController extends Controller
                     $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                     $venta->FinVigencia = $FinVigencia->toDateString();
                     $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                    $venta->Aseguradora = $request->Aseguradora;
+                    $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
 
                     if ($request->LoginOcm !== $venta->LoginIntranet) {
@@ -330,7 +337,8 @@ class RenovacionesController extends Controller
                         $venta->aseguradora_vendida = $request->Aseguradora;
                     }
                     $venta->fecha_ultima_gestion = Carbon::now();
-                    $venta->aseguradora_vendida = $request->Aseguradora;
+                    $venta->Aseguradora = $request->Aseguradora;
+                    $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
 
                     $venta->save();
