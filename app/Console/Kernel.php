@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\AttendancesCronJob;
 use App\Console\Commands\InsertDataToEndpoint;
+use App\Console\Commands\sendPaymentReminderSMS;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
     protected $commands = [
         InsertDataToEndpoint::class,
-        AttendancesCronJob::class
+        AttendancesCronJob::class,
+        sendPaymentReminderSMS::class
     ];
     /**
      * Define the application's command schedule.
@@ -31,12 +33,16 @@ class Kernel extends ConsoleKernel
                     ->{$config->frequency}()
                     ->withoutOverlapping()
                     ->after(function () use ($config, $insertData) { // Añadimos $insertData aquí
+                        $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
+
                         if ($config->skilldata == 'OUT_COBRANZAMotor') {
                             $insertData->sendPaymentReminderSMS();
-                            $insertData->sendPaymentPendingRecordsToOCM($config->url, $config->skilldata, $config->idload_skilldata, $config->aseguradora, $config->motor_b, $config->motor_c);
+                            $insertData->sendPaymentPendingRecordsToOCM($url_ocm, $config->skilldata, $config->idload_skilldata);
                         }
                     });
         }
+
+        $schedule->command('sendPaymentReminderSMS')->everyMinute();
     }
 
 
