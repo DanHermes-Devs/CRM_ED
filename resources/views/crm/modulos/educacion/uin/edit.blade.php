@@ -150,10 +150,10 @@
                                 </div> --}}
 
                                 <div class="mb-3">
-                                    <label for="account_UIN" class="form-label">Cuenta UIN:</label>
-                                    <input type="text" class="form-control @error('account_UIN') is-invalid @enderror" id="account_UIN" name="account_UIN" value="{{ $coti->account_UIN != '' ? $coti->account_UIN : '' }}" >
+                                    <label for="client_matricula" class="form-label">Cuenta UIN:</label>
+                                    <input type="text" class="form-control @error('client_matricula') is-invalid @enderror" id="client_matricula" name="client_matricula" value="{{ $coti->client_matricula != '' ? $coti->client_matricula : '' }}" >
 
-                                    @error('account_UIN')
+                                    @error('client_matricula')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
                                         </span>

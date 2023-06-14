@@ -130,8 +130,14 @@
                         </tr>
                         <tr>
                             <th>Cuenta Universidad Insurgentes</th>
-                            <td>{{ $coti->account_UIN ? $coti->account_UIN :'No se encuentra registrada la cuenta UIN actuamente' }}</td>
+                            <td>{{ $coti->client_matricula ? $coti->client_matricula :'No se encuentra registrada la cuenta UIN actuamente' }}</td>
                         </tr>
+                        @if( $coti->client_modality === 'PRESENCIAL')
+                        <tr>
+                            <th>PLANEL</th>
+                            <td>{{ $coti->client_plantel ? $coti->client_plantel :'No se encuentra registrada la cuenta UIN actuamente' }}</td>
+                        </tr>
+                        @endif
                     </table>
                 </div>
             </div>

@@ -152,7 +152,9 @@ class EducationController extends Controller
                 'client_delegation' => $request->client_delegation,
                 'client_state' => $request->client_state,
                 'client_sex' => $request->client_sex,
-                'client_birth' => $request->client_birth
+                'client_birth' => $request->client_birth,
+                'client_plantel' => $request->client_plante,
+                'client_matricula' => $request->client_matricula
             ];
             // no se puede modificarf la fecha de cotización pero si los otros campos
 
@@ -207,14 +209,6 @@ class EducationController extends Controller
 
 
         }
-
-
-
-
-
-
-
-
 
     }
 
