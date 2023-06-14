@@ -129,15 +129,19 @@
                             <td>{{ $coti->pago_certifcate ? $coti->pago_certifcate : 'NO' }}</td>
                         </tr>
                         <tr>
-                            <th>Cuenta Universidad Insurgentes</th>
-                            <td>{{ $coti->client_matricula ? $coti->client_matricula :'No se encuentra registrada la cuenta UIN actuamente' }}</td>
+                            <th>Cuenta Universidad Insurgentes (Matrícula)</th>
+                            <td>{{ $coti->client_matricula ? $coti->client_matricula :'No se encuentra registrada la cuenta UIN actualmente' }}</td>
                         </tr>
-                        @if( $coti->client_modality === 'PRESENCIAL')
                         <tr>
-                            <th>PLANEL</th>
-                            <td>{{ $coti->client_plantel ? $coti->client_plantel :'No se encuentra registrada la cuenta UIN actuamente' }}</td>
+                            <th>Plantel</th>
+                            <td>
+                            @if($coti->client_modality === 'PRESENCIAL')
+                                {{ $coti->client_plantel ? $coti->client_plantel :'No se encuentra registrada la cuenta UIN actualmente' }}
+                            @else
+                                La modalidad no es presencial
+                            @endif
+                            </td>
                         </tr>
-                        @endif
                     </table>
                 </div>
             </div>
