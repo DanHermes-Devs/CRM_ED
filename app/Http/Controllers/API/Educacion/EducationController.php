@@ -91,8 +91,6 @@ class EducationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-
     public function store(Request $request)
     {
         //identificar si el usuario se encuentra en ZEUS
@@ -152,16 +150,16 @@ class EducationController extends Controller
                 'client_delegation' => $request->client_delegation,
                 'client_state' => $request->client_state,
                 'client_sex' => $request->client_sex,
-                'client_birth' => $request->client_birth
+                'client_birth' => $request->client_birth,
+                'client_plantel' => $request->client_plantel,
+                'client_matricula' => $request->client_matricula,
             ];
             // no se puede modificarf la fecha de cotización pero si los otros campos
-
             Education::where('contact_id', $request->contact_id)
             ->update($info);
             // $coti = Education::findOrFail($id)->first();
 
         }else{
-
             // Se verifica qsi existe el usuario en ZEUS
             if($usuario){
                 $education = new Education;
@@ -204,18 +202,7 @@ class EducationController extends Controller
                     "message" => "No se encontró tu usuario en ZEUS, Por favor, solicita el alta de tu usuario a tu supervisor.",
                 ]);
             }
-
-
         }
-
-
-
-
-
-
-
-
-
     }
 
     /**
@@ -254,7 +241,6 @@ class EducationController extends Controller
 
     public function edit(Request $request, $id)
     {
-
         $coti = Education::findOrFail($id);
         return view('crm.modulos.educacion.uin.edit', compact('coti'));
     }
