@@ -14,7 +14,6 @@ class AddClientPlantelClientMatriculaFieldsToEducationTable extends Migration
     public function up()
     {
         Schema::table('education', function (Blueprint $table) {
-            //
             $table->text('client_plantel')->nullable();
             $table->text('client_matricula')->nullable();
         });
@@ -28,7 +27,8 @@ class AddClientPlantelClientMatriculaFieldsToEducationTable extends Migration
     public function down()
     {
         Schema::table('education', function (Blueprint $table) {
-            //
+            $table->dropColumn('client_plantel');
+            $table->dropColumn('client_matricula');
         });
     }
 }

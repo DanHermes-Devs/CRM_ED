@@ -51,8 +51,6 @@ class sendPaymentReminderSMS extends Command
             ->get();
 
         foreach ($receipts as $receipt) {
-
-            $this->info($receipt);
             $fecha_formateada = Carbon::parse($receipt->fecha_proximo_pago)->format('d-m-Y');
 
             $smsText = "{$receipt->venta->Aseguradora}: Te recordamos que el pago de tu poliza #{$receipt->venta->nPoliza} se debe realizar el día {$fecha_formateada} si quieres pagarlo hoy llama al 5593445265. Conduce con precaución";
@@ -65,7 +63,7 @@ class sendPaymentReminderSMS extends Command
                 <tem:EnviaSMS>
                     <tem:Usuario>'.$this->user.'</tem:Usuario>
                     <tem:Password>'.$this->password.'</tem:Password>
-                    <tem:Telefonos>5518840878</tem:Telefonos>
+                    <tem:Telefonos>'.$receipt->venta->TelCelular.'</tem:Telefonos>
                     <tem:Mensaje>'.$smsText.'</tem:Mensaje>
                     <tem:codigoPais>52</tem:codigoPais>
                     <tem:SMSDosVias>0</tem:SMSDosVias>
@@ -111,6 +109,7 @@ class sendPaymentReminderSMS extends Command
 
             // Parseamos la respuesta
             $parser = simplexml_load_string($response2);
+            $this->info($response2);
             return $parser;
         }
     }
