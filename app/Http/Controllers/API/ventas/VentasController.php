@@ -186,8 +186,13 @@ class VentasController extends Controller
                                     // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                                     $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                                 } catch (\Exception $e) {
-                                    // Si eso también falla, devuelve un error
-                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                                    try {
+                                        // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                        $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                                    } catch (\Exception $e) {
+                                        // Si todo falla, devuelve un error
+                                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                                    }
                                 }
                             }
                             $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
@@ -220,10 +225,16 @@ class VentasController extends Controller
                                     // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                                     $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                                 } catch (\Exception $e) {
-                                    // Si eso también falla, devuelve un error
-                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                                    try {
+                                        // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                        $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                                    } catch (\Exception $e) {
+                                        // Si todo falla, devuelve un error
+                                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                                    }
                                 }
                             }
+
                             $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                             $ventaDiferencia->FinVigencia = $FinVigencia->toDateString();
                             $ventaDiferencia->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -255,10 +266,16 @@ class VentasController extends Controller
                                     // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                                     $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                                 } catch (\Exception $e) {
-                                    // Si eso también falla, devuelve un error
-                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                                    try {
+                                        // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                        $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                                    } catch (\Exception $e) {
+                                        // Si todo falla, devuelve un error
+                                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                                    }
                                 }
                             }
+
                             $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                             $ventaNuevaRenovacion->FinVigencia = $FinVigencia->toDateString();
                             $ventaNuevaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -291,10 +308,16 @@ class VentasController extends Controller
                                 // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                                 $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                             } catch (\Exception $e) {
-                                // Si eso también falla, devuelve un error
-                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                                try {
+                                    // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                    $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                                } catch (\Exception $e) {
+                                    // Si todo falla, devuelve un error
+                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                                }
                             }
                         }
+
                         $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                         $ventaExistente->FinVigencia = $FinVigencia->toDateString();
                         $ventaExistente->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -336,10 +359,16 @@ class VentasController extends Controller
                                 // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                                 $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                             } catch (\Exception $e) {
-                                // Si eso también falla, devuelve un error
-                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                                try {
+                                    // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                    $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                                } catch (\Exception $e) {
+                                    // Si todo falla, devuelve un error
+                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                                }
                             }
                         }
+
                         $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                         $ventaDuplicadaPosible->FinVigencia = $FinVigencia->toDateString();
                         $ventaDuplicadaPosible->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -367,10 +396,16 @@ class VentasController extends Controller
                                 // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                                 $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                             } catch (\Exception $e) {
-                                // Si eso también falla, devuelve un error
-                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                                try {
+                                    // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                    $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                                } catch (\Exception $e) {
+                                    // Si todo falla, devuelve un error
+                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                                }
                             }
                         }
+
                         $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                         $preventaNueva->FinVigencia = $FinVigencia->toDateString();
                         $preventaNueva->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -417,10 +452,16 @@ class VentasController extends Controller
                             // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                             $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                         } catch (\Exception $e) {
-                            // Si eso también falla, devuelve un error
-                            return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                            try {
+                                // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                                $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                            } catch (\Exception $e) {
+                                // Si todo falla, devuelve un error
+                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                            }
                         }
                     }
+
                     $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                     $venta->FinVigencia = $FinVigencia->toDateString();
                     $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
@@ -449,10 +490,16 @@ class VentasController extends Controller
                         // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
                         $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
                     } catch (\Exception $e) {
-                        // Si eso también falla, devuelve un error
-                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d o d-m-Y.']);
+                        try {
+                            // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
+                            $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
+                        } catch (\Exception $e) {
+                            // Si todo falla, devuelve un error
+                            return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
+                        }
                     }
                 }
+
                 $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
                 $promesaPago->FinVigencia = $FinVigencia->toDateString();
                 $promesaPago->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
