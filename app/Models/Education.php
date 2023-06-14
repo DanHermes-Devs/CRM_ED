@@ -45,7 +45,9 @@ class Education extends Model
         'estudio_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
         'cotizacion_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
         'pago_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
-        'confirmed_account' // SI ESTA CONFIRMADA LA CUENTA
+        'confirmed_account', // SI ESTA CONFIRMADA LA CUENTA
+        'client_plantel', // SE AÑADE EL PLANTE SI ES PRECENCIAL
+        'client_matricula' // LA MATRICULA SI ES QUE SE TIENE
     ];
 
     // Relacion con el usuario
