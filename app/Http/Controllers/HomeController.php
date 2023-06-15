@@ -102,7 +102,6 @@ class HomeController extends Controller
 //======================================================================
     public function filter(Request $request)
     {
-
         $campanas = $this->TraerCampana($request->campana);
         $table_FB = isset($campanas['tableFb']) ? $campanas['tableFb'] : NULL;
         $table_GO = isset($campanas['tableGo']) ? $campanas['tableGo'] : NULL;
@@ -111,7 +110,6 @@ class HomeController extends Controller
         $tipoVenta = isset($campanas['tipoVenta']) ? $campanas['tipoVenta'] : 'COTIZACION';
         $date_inicial = isset($request->fecha_inicio) ? $request->fecha_inicio : "CURDATE()";
         $date_final  = isset($request->fecha_fin) ? $request->fecha_fin : "CURDATE() + 1";
-
         // REFACTORY
         $conteo = $this->conteoLeadsTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final);
         $llamadas = $this->llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final);
@@ -133,8 +131,7 @@ class HomeController extends Controller
 private function conteoLeadsTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final)
 {
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
-    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateStart($date_final) : $date_final);
-
+    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
     $conteoLeads = "SELECT SUM(CASE skilldef WHEN '".$skill_Def_FB."' THEN 1 ELSE 0 END) as leadsFb ";
     if(isset($skill_Def_GO)){
         $conteoLeads .= ",SUM(CASE skilldef WHEN '".$skill_Def_GO."' THEN 1 ELSE 0 END) as leadsGoogle ";
@@ -157,15 +154,12 @@ private function conteoLeadsTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill
     }
     $conteoLeads .=") AS Leads";
     return  $this->followQuery($conteoLeads);
-
-
-
 }
 
 private function llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final)
 {
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
-    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateStart($date_final) : $date_final);
+    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
 
     $llamadasporCampana = "SELECT skilldata,COUNT(distinct(numbercall)) as TOTAL
                            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
@@ -204,7 +198,7 @@ private function cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,
 
     if(!isset($skill_Def_GO)){ $skill_Def_GO = ''; }
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
-    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateStart($date_final) : $date_final);
+    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
     $ventasPorCampana = "SELECT  tipos.tipoLlamadas, COALESCE(log.Total, 0) AS Total
         FROM ( SELECT 'VentasFb' AS tipoLlamadas UNION ALL SELECT 'VentasGoogle' ) AS tipos
         LEFT JOIN (
@@ -226,7 +220,7 @@ private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_
 {
     if(isset($skill_Def_GO)){ $skill_Def_GO = ''; }
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
-    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateStart($date_final) : $date_final);
+    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
     $resultadosAgents ="SELECT lc.agent, a.nombre,
     COUNT( lc.resultdesc ) AS totalLlamadas, cpg.primerContacto,(CASE WHEN va.total > 0 THEN va.total ELSE 0 END) As ventas,
     ROUND(( ((CASE WHEN va.total > 0 THEN va.total ELSE 0 END)/cpg.primerContacto) * 100  ), 1) AS Ratio
@@ -268,7 +262,7 @@ private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_
 private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final)
 {
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
-    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateStart($date_final) : $date_final);
+    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
     $resultadosContacto = "SELECT l.resultdesc AS resultadoUC,COUNT(distinct(numbercall)) as Total
                             FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
                             FROM ocmdb.ocm_log_calls lc
