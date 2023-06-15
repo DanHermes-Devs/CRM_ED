@@ -41,8 +41,8 @@ class InsertDataToEndpoint extends Command
      */
     public function handle()
     {
-        $url_ocm = 'http://apiproject.test/api/AddReg';
-        // $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
+        // $url_ocm = 'http://apiproject.test/api/AddReg';
+        $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
         // Obtén el valor de skilldata de la opción
         $skilldata = $this->argument('skilldata');
@@ -228,115 +228,6 @@ class InsertDataToEndpoint extends Command
                 $record->OCMSent = true;
                 $record->ocmdaytosend = Carbon::now();
                 $record->save();
-            }
-        }
-    }
-
-    public function sendPaymentReminderSMS()
-    {
-        // Buscar en la base de datos los recibos cuyo estado de pago sea "PENDIENTE",
-        // que fueron creados hace 3 días o menos, y cuyo campo 'fecha_proximo_pago' no sea nulo.
-        $receipts = Receipt::where('estado_pago', 'PENDIENTE')
-            ->with('venta')
-            ->where('fecha_proximo_pago', '<=', Carbon::now()->addDays(3))
-            ->get()
-            ->reject(function ($receipt) {
-                return is_null($receipt->fecha_proximo_pago);
-            });
-
-
-        foreach ($receipts as $receipt) {
-            $fecha_formateada = Carbon::parse($receipt->fecha_proximo_pago)->format('d-m-Y');
-
-            $smsText = "{$receipt->venta->Aseguradora}: Te recordamos que el pago de tu poliza #{$receipt->venta->nPoliza} se debe realizar el día {$fecha_formateada} si quieres pagarlo hoy llama al 5593445265. Conduce con precaución";
-            // <tem:Telefonos>'.$receipt->venta->TelCelular.'</tem:Telefonos>
-            $xml_post_string = '
-                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <tem:EnviaSMS>
-                        <tem:Usuario>'.$this->user.'</tem:Usuario>
-                        <tem:Password>'.$this->password.'</tem:Password>
-                        
-                        <tem:Mensaje>'.$smsText.'</tem:Mensaje>
-                        <tem:codigoPais>52</tem:codigoPais>
-                        <tem:Telefonos>5518840878</tem:Telefonos>
-                        <tem:SMSDosVias>0</tem:SMSDosVias>
-                        <tem:Unicode>0</tem:Unicode>
-                        <tem:MensajeLargo>1</tem:MensajeLargo>
-                        <tem:ModoNotificacion>0</tem:ModoNotificacion>
-                        <tem:Prioridad>1</tem:Prioridad>
-                        <tem:NotificarRespuestas>0</tem:NotificarRespuestas>
-                        <tem:FrecuenciaMinutos>0</tem:FrecuenciaMinutos>
-                        <tem:AntiSpam>0</tem:AntiSpam>
-                        <tem:NoTransaccion>0</tem:NoTransaccion>
-                        <tem:ValidaListaNegra>0</tem:ValidaListaNegra>
-                        <tem:ValidaZonaHoraria>0</tem:ValidaZonaHoraria>
-                    </tem:EnviaSMS>
-                </soapenv:Body>
-                </soapenv:Envelope>';
-
-            $headers = [
-                "Content-type: text/xml;charset=\"utf-8\"",
-                "Accept: text/xml",
-                "Cache-Control: no-cache",
-                "Pragma: no-cache",
-                "SOAPAction: http://tempuri.org/IInsertaSMS/EnviaSMS",
-                "Content-length: ".strlen($xml_post_string),
-            ];
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-            curl_setopt($ch, CURLOPT_URL, $this->url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->user.":".$this->password);
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            $response1 = str_replace("<soap:Body>", "", $response);
-            $response2 = str_replace("</soap:Body>", "", $response1);
-
-            // Parseamos la respuesta
-            $parser = simplexml_load_string($response2);
-            return $parser;
-        }
-    }
-
-    public function sendPaymentPendingRecordsToOCM($url_ocm, $skilldata, $idload)
-    {
-        // Obtenemos todos los recibos pendientes de pago que cumplen las condiciones
-        $fechaLimite = Carbon::today();
-
-        $receipts = Receipt::where('estado_pago', 'PENDIENTE')
-            ->whereDate('fecha_proximo_pago', $fechaLimite->addDays(3)->toDateString())
-            ->get();
-
-        // Recorremos cada uno de los recibos obtenidos
-        foreach ($receipts as $receipt) {
-            // Verificamos si el registro de venta asociado a este recibo ya ha sido enviado a OCM
-            if (!$receipt->venta->OCMSent) {
-                // Preparamos los datos para enviar a la API
-                $data = $this->prepareData($receipt, $skilldata, $idload);
-
-                // Enviamos los datos a la API
-                $response = $this->sendData($url_ocm, $data);
-
-                // Verificamos si la respuesta de la API es exitosa
-                if ($response->successful()) {
-                    // Marcamos el registro de venta como enviado a OCM
-                    $receipt->venta->OCMSent = true;
-
-                    // Guardamos la fecha del ultimo envio
-                    $receipt->ocmdaytosend = Carbon::now();
-
-                    $receipt->save();
-                }
             }
         }
     }
