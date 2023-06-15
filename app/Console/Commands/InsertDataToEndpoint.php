@@ -225,8 +225,15 @@ class InsertDataToEndpoint extends Command
 
             // Verificar si la respuesta de la API es exitosa
             if ($response->successful()) {
-                $record->OCMSent = true;
-                $record->ocmdaytosend = Carbon::now();
+                // Si el salto es a motor B, actualiza el campo OCMSent
+                if ($skilldata === 'RENOVACIONES_B_MOTOR' || $skilldata === 'RENOVACIONES_QUALITAS_B_MOTOR') {
+                    $record->OCMSent = true;
+                    $record->ocmdaytosend = Carbon::now();
+                }elseif($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'RENOVACIONES_QUALITAS_C_MOTOR'){
+                    $record->OCMSent_motor_c = true;
+                    $record->ocmdaytosend_motor_c = Carbon::now();
+                }
+
                 $record->save();
             }
         }
