@@ -64,13 +64,14 @@ class sendPaymentPendingRecordsToOCM extends Command
 
                 // Verificamos si la respuesta de la API es exitosa
                 if ($response->successful()) {
-                    // Marcamos el registro de venta como enviado a OCM
+                    // Marcamos el campo ocmdaytosend_cobranza como la fecha actual
+                    $receipt->venta->ocmdaytosend_cobranza = Carbon::now()->toDateTimeString();
+
+                    // Marcamos como true el campo OCMSent_obranza del registro de venta asociado a este recibo
                     $receipt->venta->OCMSent_obranza = true;
 
-                    // Guardamos la fecha del ultimo envio
-                    $receipt->venta->ocmdaytosend_cobranza = Carbon::now();
-
-                    $receipt->save();
+                    // Guardamos los cambios
+                    $receipt->venta->save();
                 }
             }
         }
