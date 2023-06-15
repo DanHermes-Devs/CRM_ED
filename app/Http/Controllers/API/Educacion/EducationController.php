@@ -205,15 +205,6 @@ class EducationController extends Controller
                 ]);
             }
         }
-
-
-
-
-
-
-
-
-
     }
 
     /**
