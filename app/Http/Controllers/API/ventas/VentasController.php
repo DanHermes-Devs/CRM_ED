@@ -178,26 +178,26 @@ class VentasController extends Controller
                             $ventaDuplicada->Fpreventa = Carbon::now();
                             $ventaDuplicada->nPoliza = ltrim($request->nPoliza, '0');
                             $ventaDuplicada->nueva_poliza = ltrim($request->nPoliza, '0');
-                            try {
-                                // Intenta interpretar la fecha como 'Y/m/d'
-                                $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                            } catch (\Exception $e) {
+                            $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                            $FinVigencia = null;
+
+                            foreach ($formats as $format) {
                                 try {
-                                    // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                                    $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                                    $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                                    break;  // Si la fecha es correctamente parseada, rompe el bucle
                                 } catch (\Exception $e) {
-                                    try {
-                                        // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                        $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                                    } catch (\Exception $e) {
-                                        // Si todo falla, devuelve un error
-                                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                                    }
+                                    // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                                 }
                             }
-                            $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+
+                            // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                            if ($FinVigencia === null) {
+                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                            }
+
                             $ventaDuplicada->FinVigencia = $FinVigencia->toDateString();
-                            $ventaDuplicada->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                            $ventaDuplicada->FfVigencia = $FinVigencia->copy()->addYear();
                             $ventaDuplicada->tVenta = 'VENTA DUPLICADA';
                             $ventaDuplicada->fecha_ultima_gestion = Carbon::now();
                             $ventaDuplicada->aseguradora_vendida = $request->Aseguradora;
@@ -217,27 +217,26 @@ class VentasController extends Controller
                             $ventaDiferencia->Fpreventa = Carbon::now();
                             $ventaDiferencia->nPoliza = ltrim($request->nPoliza, '0');
                             $ventaDiferencia->nueva_poliza = ltrim($request->nPoliza, '0');
-                            try {
-                                // Intenta interpretar la fecha como 'Y/m/d'
-                                $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                            } catch (\Exception $e) {
+                            $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                            $FinVigencia = null;
+
+                            foreach ($formats as $format) {
                                 try {
-                                    // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                                    $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                                    $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                                    break;  // Si la fecha es correctamente parseada, rompe el bucle
                                 } catch (\Exception $e) {
-                                    try {
-                                        // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                        $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                                    } catch (\Exception $e) {
-                                        // Si todo falla, devuelve un error
-                                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                                    }
+                                    // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                                 }
                             }
 
-                            $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                            // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                            if ($FinVigencia === null) {
+                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                            }
+
                             $ventaDiferencia->FinVigencia = $FinVigencia->toDateString();
-                            $ventaDiferencia->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                            $ventaDiferencia->FfVigencia = $FinVigencia->copy()->addYear();
                             $ventaDiferencia->tVenta = 'VENTA';
                             $ventaDiferencia->save();
 
@@ -258,27 +257,26 @@ class VentasController extends Controller
                             $ventaNuevaRenovacion->Fpreventa = Carbon::now();
                             $ventaNuevaRenovacion->nPoliza = ltrim($request->nPoliza, '0');
                             $ventaNuevaRenovacion->nueva_poliza = ltrim($request->nPoliza, '0');
-                            try {
-                                // Intenta interpretar la fecha como 'Y/m/d'
-                                $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                            } catch (\Exception $e) {
+                            $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                            $FinVigencia = null;
+
+                            foreach ($formats as $format) {
                                 try {
-                                    // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                                    $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                                    $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                                    break;  // Si la fecha es correctamente parseada, rompe el bucle
                                 } catch (\Exception $e) {
-                                    try {
-                                        // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                        $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                                    } catch (\Exception $e) {
-                                        // Si todo falla, devuelve un error
-                                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                                    }
+                                    // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                                 }
                             }
 
-                            $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                            // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                            if ($FinVigencia === null) {
+                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                            }
+
                             $ventaNuevaRenovacion->FinVigencia = $FinVigencia->toDateString();
-                            $ventaNuevaRenovacion->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                            $ventaNuevaRenovacion->FfVigencia = $FinVigencia->copy()->addYear();
                             $ventaNuevaRenovacion->tVenta = 'RENOVACION';
                             $ventaNuevaRenovacion->save();
 
@@ -300,27 +298,26 @@ class VentasController extends Controller
                         $ventaExistente->Fpreventa = Carbon::now();
                         $ventaExistente->nPoliza = ltrim($request->nPoliza, '0');
                         $ventaExistente->nueva_poliza = ltrim($request->nPoliza, '0');
-                        try {
-                            // Intenta interpretar la fecha como 'Y/m/d'
-                            $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                        } catch (\Exception $e) {
+                        $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                        $FinVigencia = null;
+
+                        foreach ($formats as $format) {
                             try {
-                                // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                                $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                                $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                                break;  // Si la fecha es correctamente parseada, rompe el bucle
                             } catch (\Exception $e) {
-                                try {
-                                    // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                    $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                                } catch (\Exception $e) {
-                                    // Si todo falla, devuelve un error
-                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                                }
+                                // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                             }
                         }
 
-                        $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                        // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                        if ($FinVigencia === null) {
+                            return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                        }
+
                         $ventaExistente->FinVigencia = $FinVigencia->toDateString();
-                        $ventaExistente->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $ventaExistente->FfVigencia = $FinVigencia->copy()->addYear();
                         $ventaExistente->tVenta = 'VENTA';
                         $ventaExistente->fecha_ultima_gestion = Carbon::now();
                         $ventaExistente->save();
@@ -351,27 +348,26 @@ class VentasController extends Controller
                         $ventaDuplicadaPosible->Fpreventa = Carbon::now();
                         $ventaDuplicadaPosible->nPoliza = ltrim($request->nPoliza, '0');
                         $ventaDuplicadaPosible->nueva_poliza = ltrim($request->nPoliza, '0');
-                        try {
-                            // Intenta interpretar la fecha como 'Y/m/d'
-                            $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                        } catch (\Exception $e) {
+                        $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                        $FinVigencia = null;
+
+                        foreach ($formats as $format) {
                             try {
-                                // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                                $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                                $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                                break;  // Si la fecha es correctamente parseada, rompe el bucle
                             } catch (\Exception $e) {
-                                try {
-                                    // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                    $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                                } catch (\Exception $e) {
-                                    // Si todo falla, devuelve un error
-                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                                }
+                                // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                             }
                         }
 
-                        $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                        // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                        if ($FinVigencia === null) {
+                            return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                        }
+
                         $ventaDuplicadaPosible->FinVigencia = $FinVigencia->toDateString();
-                        $ventaDuplicadaPosible->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $ventaDuplicadaPosible->FfVigencia = $FinVigencia->copy()->addYear();
                         $ventaDuplicadaPosible->tVenta = 'POSIBLE DUPLICIDAD';
                         $ventaDuplicadaPosible->save();
 
@@ -388,27 +384,26 @@ class VentasController extends Controller
                         $preventaNueva->Fpreventa = Carbon::now();
                         $preventaNueva->nPoliza = ltrim($request->nPoliza, '0');
                         $preventaNueva->nueva_poliza = ltrim($request->nPoliza, '0');
-                        try {
-                            // Intenta interpretar la fecha como 'Y/m/d'
-                            $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                        } catch (\Exception $e) {
+                        $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                        $FinVigencia = null;
+
+                        foreach ($formats as $format) {
                             try {
-                                // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                                $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                                $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                                break;  // Si la fecha es correctamente parseada, rompe el bucle
                             } catch (\Exception $e) {
-                                try {
-                                    // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                    $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                                } catch (\Exception $e) {
-                                    // Si todo falla, devuelve un error
-                                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                                }
+                                // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                             }
                         }
 
-                        $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                        // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                        if ($FinVigencia === null) {
+                            return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                        }
+
                         $preventaNueva->FinVigencia = $FinVigencia->toDateString();
-                        $preventaNueva->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                        $preventaNueva->FfVigencia = $FinVigencia->copy()->addYear();
                         $preventaNueva->tVenta = 'VENTA';
                         $preventaNueva->save();
 
@@ -444,27 +439,26 @@ class VentasController extends Controller
                     $venta->Fpreventa = Carbon::now();
                     $venta->nPoliza = ltrim($request->nPoliza, '0');
                     $venta->nueva_poliza = ltrim($request->nPoliza, '0');
-                    try {
-                        // Intenta interpretar la fecha como 'Y/m/d'
-                        $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                    } catch (\Exception $e) {
+                    $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                    $FinVigencia = null;
+
+                    foreach ($formats as $format) {
                         try {
-                            // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                            $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                            $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                            break;  // Si la fecha es correctamente parseada, rompe el bucle
                         } catch (\Exception $e) {
-                            try {
-                                // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                                $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                            } catch (\Exception $e) {
-                                // Si todo falla, devuelve un error
-                                return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                            }
+                            // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                         }
                     }
 
-                    $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                    // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                    if ($FinVigencia === null) {
+                        return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                    }
+
                     $venta->FinVigencia = $FinVigencia->toDateString();
-                    $venta->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                    $venta->FfVigencia = $FinVigencia->copy()->addYear();
                     $venta->tVenta = 'VENTA';
                     $venta->save();
 
@@ -482,27 +476,26 @@ class VentasController extends Controller
                 $promesaPago->Fpreventa = Carbon::now();
                 $promesaPago->nPoliza = ltrim($request->nPoliza, '0');
                 $promesaPago->nueva_poliza = ltrim($request->nPoliza, '0');
-                try {
-                    // Intenta interpretar la fecha como 'Y/m/d'
-                    $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
-                } catch (\Exception $e) {
+                $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                $FinVigencia = null;
+
+                foreach ($formats as $format) {
                     try {
-                        // Si eso falla, intenta interpretar la fecha como 'd-m-Y'
-                        $FinVigencia = Carbon::createFromFormat('d-m-Y', $request->FinVigencia)->startOfDay();
+                        $FinVigencia = Carbon::createFromFormat($format, $request->FinVigencia)->startOfDay();
+                        break;  // Si la fecha es correctamente parseada, rompe el bucle
                     } catch (\Exception $e) {
-                        try {
-                            // Si eso también falla, intenta interpretar la fecha como 'd/m/Y'
-                            $FinVigencia = Carbon::createFromFormat('d/m/Y', $request->FinVigencia)->startOfDay();
-                        } catch (\Exception $e) {
-                            // Si todo falla, devuelve un error
-                            return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y o d/m/Y.']);
-                        }
+                        // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
                     }
                 }
 
-                $FinVigencia = Carbon::createFromFormat('Y/m/d', $request->FinVigencia)->startOfDay();
+                // Si $FinVigencia es null después del bucle, significa que ninguno de los formatos coincidió
+                if ($FinVigencia === null) {
+                    return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
+                }
+
                 $promesaPago->FinVigencia = $FinVigencia->toDateString();
-                $promesaPago->FfVigencia = Carbon::parse($request->FinVigencia)->addYear();
+                $promesaPago->FfVigencia = $FinVigencia->copy()->addYear();
                 $promesaPago->tVenta = 'VENTA';
                 $promesaPago->save();
 
