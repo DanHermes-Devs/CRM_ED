@@ -63,52 +63,58 @@
                             @if ($coti->client_modality == 'PRESENCIAL')
                                 <h5 class="alert alert-info text-center">LOS DOCUMENTOS NO SON NECESARIOS DEBIDO A QUE YA ESTA CATALOGADA COMO PRESENCIA</h5>
                             @else
+                            <div class="row">
+                                <div class="col-xl-3 my-3">
+                                    <input class="form-check-input depencbox" type="checkbox" value="SI" name="mastercbox"  id="mastercbox">
+                                        <label class="form-check-label" for="mastercbox">Seleccionar todo</label>
+                                </div>
+                            </div>
                             <div class="row mb-5">
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="birth_certifcate"  id="birth_certifcate" {{ $coti->birth_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="birth_certifcate"  id="birth_certifcate" {{ $coti->birth_certifcate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="birth_certifcate">Acta de nacimiento</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="curp_certificate" id="curp_certificate" {{ $coti->curp_certificate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="curp_certificate" id="curp_certificate" {{ $coti->curp_certificate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="curp_certificate">Curp</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="ine_certifcate" id="ine_certifcate" {{ $coti->ine_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="ine_certifcate" id="ine_certifcate" {{ $coti->ine_certifcate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="ine_certifcate">INE</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="inscripcion_certificate" id="inscripcion_certificate" {{ $coti->inscripcion_certificate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="inscripcion_certificate" id="inscripcion_certificate" {{ $coti->inscripcion_certificate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="inscripcion_certificate">Solicitud de inscripción</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="domicilio_certifcate" id="domicilio_certifcate" {{ $coti->domicilio_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="domicilio_certifcate" id="domicilio_certifcate" {{ $coti->domicilio_certifcate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="domicilio_certifcate">Comprobante de domicilio</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="estudio_certifcate" id="estudio_certifcate" {{ $coti->estudio_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="estudio_certifcate" id="estudio_certifcate" {{ $coti->estudio_certifcate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="estudio_certifcate">Certificado de estudios nivel medio- titulo</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="cotizacion_certifcate" id="cotizacion_certifcate" {{ $coti->cotizacion_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="cotizacion_certifcate" id="cotizacion_certifcate" {{ $coti->cotizacion_certifcate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="cotizacion_certifcate">Cotización</label>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 mt-3 mb-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="SI" name="pago_certifcate" id="pago_certifcate" {{ $coti->pago_certifcate == 'SI' ? 'checked' : '' }}>
+                                        <input class="form-check-input depencbox" type="checkbox" value="SI" name="pago_certifcate" id="pago_certifcate" {{ $coti->pago_certifcate == 'SI' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="pago_certifcate">Comprobante de pago</label>
                                     </div>
                                 </div>
@@ -191,7 +197,11 @@
                     $("#account_UIN").prop("readonly", true);
                     $("#account_UIN").val('');
                 }
-  });
+            });
+            $("#mastercbox").change(function() {
+                var isChecked = $(this).prop("checked");
+                $(".depencbox").prop("checked", isChecked);
+            });
         });
     </script>
 @endsection

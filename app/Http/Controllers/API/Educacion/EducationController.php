@@ -111,6 +111,7 @@ class EducationController extends Controller
                 $birth_certifcate  ='SI';
                 $curp_certificate  ='SI';
                 $ine_certifcate  ='SI';
+                $inscripcion_certificate = 'SI';
                 $domicilio_certifcate  ='SI';
                 $estudio_certifcate  ='SI';
                 $cotizacion_certifcate  ='SI';
@@ -121,6 +122,7 @@ class EducationController extends Controller
                 $birth_certifcate  ='NO';
                 $curp_certificate  ='NO';
                 $ine_certifcate  ='NO';
+                $inscripcion_certificate = 'NO';
                 $domicilio_certifcate  ='NO';
                 $estudio_certifcate  ='NO';
                 $cotizacion_certifcate  ='NO';
@@ -133,6 +135,7 @@ class EducationController extends Controller
                 'curp_certificate' => $curp_certificate,
                 'usuario_ocm' => $usuarioCierreVenta,
                 'ine_certifcate' => $ine_certifcate,
+                'inscripcion_certificate' => $inscripcion_certificate,
                 'domicilio_certifcate' => $domicilio_certifcate,
                 'estudio_certifcate' => $estudio_certifcate,
                 'cotizacion_certifcate' => $cotizacion_certifcate,
@@ -162,7 +165,7 @@ class EducationController extends Controller
             // $coti = Education::findOrFail($id)->first();
 
         }else{
-            // Se verifica qsi existe el usuario en ZEUS
+            // Se verifica si existe el usuario en ZEUS
             if($usuario){
                 $education = new Education;
                 $education->contact_id = $request->contact_id;
