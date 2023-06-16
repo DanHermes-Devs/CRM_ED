@@ -44,7 +44,7 @@ class VentasImport implements ToModel, WithValidation
             'FinVigencia' => !empty($row[18]) ? Carbon::createFromFormat('d/m/Y', $row[18])->startOfDay()->toDateString() : null,
             'FfVigencia' => !empty($row[18]) ? Carbon::createFromFormat('d/m/Y', $row[18])->startOfDay()->addYear()->toDateString() : null,
             'Paquete' => $row[19],
-            'nPoliza' => $this->parseDateTime($row[20], 'd/m/Y H:i'),
+            'nPoliza' => $row[20],
             'Aseguradora' => $row[21],
             'FrePago' => $row[22],
             'tVenta' => $row[23],
