@@ -15,16 +15,17 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->text('id_project');
-            $table->text('id_user');
-            $table->unsignedBigInteger('id_supervisor')->nullable();
-            $table->string('grupo');
-            $table->text('descripcion');
+            $table->string('nombre_grupo');
+            $table->string('turno');
+            $table->string('descripcion');
             $table->integer('estatus');
+            $table->unsignedBigInteger('campaign_id');
+            $table->unsignedBigInteger('pais_id');
             $table->softDeletes();
-
-            $table->foreign('id_supervisor')->references('id')->on('users');
             $table->timestamps();
+
+            $table->foreign('campaign_id')->references('id')->on('campaigns');
+            $table->foreign('pais_id')->references('id')->on('paises');
         });
     }
 

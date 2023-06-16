@@ -22,4 +22,9 @@ class Pais extends Model
     protected $hidden = [
         'deleted_at'
     ];
+
+    // RELACION DE UNO A MUCHOS CON LA TABLA GROUPS
+    public function groups(){
+        return $this->hasMany(Group::class);
+    }
 }
