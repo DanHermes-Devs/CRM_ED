@@ -41,6 +41,9 @@ class Campaign extends Model
     {
         return $this->hasMany('App\Models\User', 'id_campana', 'id');
     }
-    
 
+    // RELACION DE UNO A MUCHOS CON LA TABLA GROUPS
+    public function groups(){
+        return $this->hasMany(Group::class);
+    }
 }

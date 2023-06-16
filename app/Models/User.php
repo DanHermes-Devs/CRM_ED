@@ -85,9 +85,8 @@ class User extends Authenticatable
     }
 
     // Relacion con grupos
-    public function groups()
-    {
-        return $this->hasMany(Group::class, 'id_user');
+    public function group(){
+        return $this->belongsTo(Group::class);
     }
 
     // Relacion con receipts

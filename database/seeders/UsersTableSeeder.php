@@ -64,6 +64,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             1 => 
             array (
@@ -110,6 +111,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             2 => 
             array (
@@ -156,6 +158,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             3 => 
             array (
@@ -202,6 +205,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             4 => 
             array (
@@ -248,6 +252,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             5 => 
             array (
@@ -294,6 +299,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             6 => 
             array (
@@ -340,6 +346,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             7 => 
             array (
@@ -386,6 +393,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             8 => 
             array (
@@ -432,6 +440,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             9 => 
             array (
@@ -478,6 +487,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             10 => 
             array (
@@ -524,6 +534,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             11 => 
             array (
@@ -570,6 +581,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             12 => 
             array (
@@ -616,6 +628,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             13 => 
             array (
@@ -662,6 +675,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             14 => 
             array (
@@ -708,6 +722,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             15 => 
             array (
@@ -754,6 +769,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             16 => 
             array (
@@ -800,6 +816,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             17 => 
             array (
@@ -847,6 +864,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             18 => 
             array (
@@ -893,6 +911,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             19 => 
             array (
@@ -939,6 +958,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             20 => 
             array (
@@ -985,6 +1005,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             21 => 
             array (
@@ -1031,6 +1052,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             22 => 
             array (
@@ -1077,6 +1099,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             23 => 
             array (
@@ -1123,6 +1146,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             24 => 
             array (
@@ -1169,6 +1193,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             25 => 
             array (
@@ -1215,6 +1240,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             26 => 
             array (
@@ -1261,6 +1287,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             27 => 
             array (
@@ -1307,6 +1334,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             28 => 
             array (
@@ -1353,6 +1381,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             29 => 
             array (
@@ -1399,6 +1428,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             30 => 
             array (
@@ -1445,6 +1475,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             31 => 
             array (
@@ -1491,6 +1522,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             32 => 
             array (
@@ -1537,6 +1569,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             33 => 
             array (
@@ -1583,6 +1616,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             34 => 
             array (
@@ -1629,6 +1663,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             35 => 
             array (
@@ -1675,6 +1710,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             36 => 
             array (
@@ -1721,6 +1757,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             37 => 
             array (
@@ -1767,6 +1804,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             38 => 
             array (
@@ -1813,6 +1851,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             39 => 
             array (
@@ -1859,6 +1898,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             40 => 
             array (
@@ -1905,6 +1945,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             41 => 
             array (
@@ -1951,6 +1992,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             42 => 
             array (
@@ -1997,6 +2039,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             43 => 
             array (
@@ -2043,6 +2086,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             44 => 
             array (
@@ -2089,6 +2133,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             45 => 
             array (
@@ -2135,6 +2180,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             46 => 
             array (
@@ -2181,6 +2227,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             47 => 
             array (
@@ -2227,6 +2274,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             48 => 
             array (
@@ -2273,6 +2321,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             49 => 
             array (
@@ -2319,6 +2368,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
             50 => 
             array (
@@ -2365,6 +2415,7 @@ class UsersTableSeeder extends Seeder
                 'observaciones' => NULL,
                 'hora_entrada' => NULL,
                 'hora_salida' => NULL,
+                'group_id' => NULL,
             ),
         ));
         

@@ -21,9 +21,18 @@ class Group extends Model
         'deleted_at'
     ];
 
-    // Relacion con proyecto
-    public function project()
-    {
-        return $this->belongsTo(Project::class, 'id_project');
+    // RELACION DE UNO A MUCHOS CON LA TABLA USERS
+    public function users(){
+        return $this->hasMany(User::class);
+    }
+    
+    // RELACION DE UNO A MUCHOS CON LA TABLA CAMPAIGNS
+    public function campaign(){
+        return $this->belongsTo(Campaign::class);
+    }
+    
+    // RELACION DE UNO A MUCHOS CON LA TABLA PAISES
+    public function pais(){
+        return $this->belongsTo(Pais::class);
     }
 }
