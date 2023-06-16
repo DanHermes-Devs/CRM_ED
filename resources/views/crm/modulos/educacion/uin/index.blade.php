@@ -109,7 +109,16 @@
                                             @if (auth()->user()->hasAnyRole(['Agente Renovaciones','Administrador', 'Coordinador']))
                                                 <option value="COBRADA">COBRADA</option>
                                             @endif
-                                            <option value="ALUMNO">ALUMNO</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="confirmed_account">Cuenta confirmada:</label>
+                                        <select name="confirmed_account" id="confirmed_account" class="form-select">
+                                            <option value="">-- Selecciona --</option>
+                                            <option value="SI">SI</option>
+                                            <option value="NO">NO</option>
                                         </select>
                                     </div>
                                 </div>
@@ -125,6 +134,8 @@
                                 <th>Lead</th><!-- contact_id -->
                                 <th>Codificación</th>
                                 <th>Fecha de agenda o cotización</th>
+                                <th>Fecha cobrada</th>
+                                <th>Fecha confirmada</th>
                                 <th>Campaña</th>
                                 <th>Nombre Cliente</th>
                                 <th>Modalidad</th>
@@ -167,6 +178,7 @@
             var client_landline = $('#client_landline').val();
             var client_celphone = $('#client_celphone').val();
             var codification = $('#codification').val();
+            var confirmed_account = $('#confirmed_account').val();
             var user = $('#user').val();
             $('#tabla_education').DataTable({
                 processing: true,
@@ -185,6 +197,7 @@
                         client_landline: client_landline,
                         client_celphone: client_celphone,
                         codification: codification,
+                        confirmed_account:confirmed_account,
                         user: user,
                     },
                 },
@@ -193,6 +206,8 @@
                     {data: 'contact_id', name: 'contact_id'},
                     {data: 'codification', name: 'codification'},
                     {data: 'schedule_date', name: 'schedule_date'},
+                    {data: 'date_cobranza', name: 'date_cobranza'},
+                    {data: 'date_confirmada', name: 'date_confirmada'},
                     {data: 'campana', name: 'campana'},
                     {data: 'client_name', name: 'client_name'},
                     {data: 'client_modality', name: 'client_modality'},
@@ -231,7 +246,29 @@
                         render: function(data, type, row) {
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin fecha</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 2,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin fecha</span>`;
+                            }else {
+                                return `${data}`;
+                            }
+                        }
+                    },
+                    {
+                        target: 2,
+                        render: function(data, type, row) {
+                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
+                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
+                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin fecha</span>`;
                             }else {
                                 return `${data}`;
                             }

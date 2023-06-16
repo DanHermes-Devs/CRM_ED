@@ -47,7 +47,10 @@ class Education extends Model
         'pago_certifcate', // DOCUMENTO PARA VALIDAR SI ES ONLINE O MIXTO
         'confirmed_account', // SI ESTA CONFIRMADA LA CUENTA
         'client_plantel', // SE AÑADE EL PLANTE SI ES PRECENCIAL
-        'client_matricula' // LA MATRICULA SI ES QUE SE TIENE
+        'client_matricula', // LA MATRICULA SI ES QUE SE TIENE
+        'date_cobranza', // FECHA TIPIFICADA COMO COBRADA
+        'date_confirmada' // FECHA EN LA QUE FUE CAMBIADA EN BACKOFFICE COMO CONFIRMADA
+
     ];
 
     // Relacion con el usuario

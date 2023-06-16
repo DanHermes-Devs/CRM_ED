@@ -58,6 +58,7 @@
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="client_modality" id="client_modality" value="{{ $coti->client_modality }}">
+                            <input type="hidden" name="date_confirmada" id="date_confirmada" value="{{ $date_now }}">
                             <h5><label for="documents_portal" class="form-label">Documentos cargados:</label></h5>
 
                             @if ($coti->client_modality == 'PRESENCIAL')
@@ -125,7 +126,7 @@
                             <div class="row">
                                 <div class="mb-3">
                                     <label for="confirmed_account" class="form-label">Cuenta Confirmada:</label>
-                                    <select class="form-select @error('status') is-invalid @enderror" id="confirmed_account" name="confirmed_account">
+                                    <select class="form-select @error('status') is-invalid @enderror" id="confirmed_account" name="confirmed_account" {{ $coti->confirmed_account == 'SI' ? 'disabled="disabled"' : '' }}>
                                         <option value="">Seleccione una opción</option>
                                         <option value="SI" {{ $coti->confirmed_account == 'SI' ? 'selected' : '' }}>SI</option>
                                         <option value="NO" {{ $coti->confirmed_account == 'NO' ? 'selected' : '' }}>NO</option>
