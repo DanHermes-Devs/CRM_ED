@@ -189,7 +189,7 @@
                             @endif
 
                             {{-- Si el usuario es director, no mostramos el contenido h1 hola --}}
-                            @if(Auth::user()->hasAnyRole(['Administrador', 'Supervisor', 'BI', 'Coordinador', 'Agente de ventas', 'Agente de Cobranza', 'Agente Renovaciones']))
+                            @if(Auth::user()->hasAnyRole(['Administrador', 'Supervisor', 'BI', 'Coordinador', 'Agente de Ventas', 'Agente de Cobranza', 'Agente Renovaciones']))
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="true"
                                         aria-controls="sidebarMultilevel">
@@ -239,6 +239,31 @@
                                                                 </a>
                                                             </li>
                                                         @endif --}}
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#modulo_seguridad" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="modulo_seguridad" data-key="t-level-1.2">
+                                                    Módulo Seguridad
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="modulo_seguridad" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="#modulo_adt" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                                aria-controls="modulo_adt" data-key="t-level-1.2">
+                                                                ADT
+                                                            </a>
+                                                            <div class="menu-dropdown collapse" id="modulo_adt" style="">
+                                                                <ul class="nav nav-sm flex-column">
+                                                                    <li class="nav-item">
+                                                                        <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
+                                                                            Ventas
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </li>
