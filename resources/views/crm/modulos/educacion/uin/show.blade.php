@@ -41,12 +41,30 @@
                             <td>{{ $coti->fp_venta ? $coti->fp_venta : 'No se registro la fecha de cotización correctamente' }}</td>
                         </tr>
                         <tr>
+                            <th>Cuenta confirmada</th>
+                            <td>{{ $coti->confirmed_account ? 'LA CUENTA ESTA CONFIRMADA' : 'No se ha confirmado la cuenta' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha en que se confirmo</th>
+                            <td>{{ $coti->date_confirmada ? $coti->date_confirmada : 'No se ha confirmado la cuenta' }}</td>
+                        </tr>
+                        <tr>
                             <th>Cliente</th>
                             <td>{{ $coti->client_name ? $coti->client_name : 'No se registro el nombre del cliente correctamente' }}</td>
                         </tr>
                         <tr>
                             <th>Codificación</th>
                             <td>{{ $coti->codification ? $coti->codification : 'No se registro la codificación correctamente' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Cuenta cobrada</th>
+                            <td>
+                            @if($coti->codification === 'COBRADA')
+                                {{ $coti->date_cobranza ? $coti->date_cobranza :'La cuenta fue ingresada antes del ajuste' }}
+                            @else
+                                La cuenta no ha sido codificada como COBRADA
+                            @endif
+                            </td>
                         </tr>
                         <tr>
                             <th>Fecha ingresada en OCM</th>

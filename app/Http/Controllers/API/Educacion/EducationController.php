@@ -20,12 +20,17 @@ class EducationController extends Controller
     public function index(Request $request)
     {
         $query = Education::query();
+
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
             $query->whereBetween('fp_venta', [$request->fecha_inicio, $request->fecha_fin]);
         }
 
         if ($request->filled(['client_name'])) {
             $query->where('client_name', [$request->client_name]);
+        }
+
+        if ($request->filled(['date_cobrada'])) {
+            $query->where('date_cobrada', [$request->date_cobrada]);
         }
          // Búsquedas exactas
          $camposExactos = [
@@ -116,6 +121,7 @@ class EducationController extends Controller
                 $estudio_certifcate  ='SI';
                 $cotizacion_certifcate  ='SI';
                 $pago_certifcate  ='SI';
+                $date_cobranza = Carbon::now()->toDateTimeString();
                 // se ocupa el usuario_ocm para saber quien fue el que cerro la venta
                 $usuarioCierreVenta = $request->agent_OCM;
             }else{
@@ -127,6 +133,7 @@ class EducationController extends Controller
                 $estudio_certifcate  ='NO';
                 $cotizacion_certifcate  ='NO';
                 $pago_certifcate  ='NO';
+                $date_cobranza = NULL;
                 $usuarioCierreVenta = $request->agent_OCM;
             }
 
@@ -158,6 +165,7 @@ class EducationController extends Controller
                 'client_matricula' => $request->client_matricula,
                 'client_plantel' => $request->client_plantel,
                 'client_matricula' => $request->client_matricula,
+                'client_cobranza' => $date_cobranza
             ];
             // no se puede modificarf la fecha de cotización pero si los otros campos
             Education::where('contact_id', $request->contact_id)
@@ -194,6 +202,9 @@ class EducationController extends Controller
                 $education->client_plantel = $request->client_plantel;
                 $education->client_matricula = $request->client_matricula;
                 //$education->fill($request->all());
+                if($request->codificacion == 'COBRADA'){
+                    $education->date_cobrada = Carbon::now()->toDateTimeString();
+                }
                 $education->save();
 
                 return response()->json([
@@ -231,9 +242,15 @@ class EducationController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $info = $request->all();
+        if(!isset($request->confirmed_account) || $request->confirmed_account === 'NO'){
+            $info = $request->except('date_confirmada');
+        }
+        //dd($info);
         // POR SEGURIDAD SE GENERA DE CAMPO POR CAMPO
         $edu = Education::where('id', $id)->first();
-        $edu->fill($request->all());
+        $edu->fill($info);
         $edu->save();
         $coti = Education::findOrFail($id);
 
@@ -247,7 +264,8 @@ class EducationController extends Controller
     public function edit(Request $request, $id)
     {
         $coti = Education::findOrFail($id);
-        return view('crm.modulos.educacion.uin.edit', compact('coti'));
+        $date_now = Carbon::now()->toDateTimeString();
+        return view('crm.modulos.educacion.uin.edit', compact('coti','date_now'));
     }
 
     /**
