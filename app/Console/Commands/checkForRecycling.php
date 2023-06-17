@@ -19,9 +19,6 @@ class checkForRecycling extends Command
      * @var string
      */
     protected $signature = 'command:checkForRecycling';
-    protected $url = "http://b2c.marcatel.com.mx/MarcatelSMSWCF/ServicioInsertarSMS.svc/mex/";
-    protected $user = "RENOVACIONES_QUALITAS";
-    protected $password = "#T42AC30LzVu";
 
     /**
      * The console command description.
@@ -47,6 +44,8 @@ class checkForRecycling extends Command
      */
     public function handle()
     {
+        $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
+
         $records = Venta::where('ocmdaytosend', '=', Carbon::now()->subDays(7)->startOfDay()->format('Y-m-d'))
             ->where('tVenta', 'RENOVACION')
             ->whereNotIn('UGestion', ['RENOVACION', 'PROMESA DE PAGO'])
@@ -80,9 +79,6 @@ class checkForRecycling extends Command
                 }
             }
 
-            $record->campana = $skilldata;
-            $record->save();
-
             $data = $this->prepareData($record, $skilldata, $idload);
             $response = $this->sendData($url_ocm, $data);
 
@@ -95,6 +91,7 @@ class checkForRecycling extends Command
                     $record->ocmdaytosend_motor_c = Carbon::now();
                 }
 
+                $record->campana = $skilldata;
                 $record->save();
             }
         }
