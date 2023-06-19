@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use App\Models\Receipt;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class sendPaymentReminderSMS extends Command
 {
@@ -109,7 +110,7 @@ class sendPaymentReminderSMS extends Command
 
             // Parseamos la respuesta
             $parser = simplexml_load_string($response2);
-            $this->info($response2);
+            Log::channel('sendPaymentReminderSMS')->info($smsText);
             return $parser;
         }
     }

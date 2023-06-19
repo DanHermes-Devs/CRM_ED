@@ -7,6 +7,7 @@ use App\Models\Venta;
 use App\Models\Receipt;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class sendPaymentPendingRecordsToOCM extends Command
 {
@@ -72,6 +73,8 @@ class sendPaymentPendingRecordsToOCM extends Command
 
                     // Guardamos los cambios
                     $receipt->venta->save();
+
+                    Log::channel('sendPaymentPendingRecordsToOCM')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $receipt->venta->contactId);
                 }
             }
         }
@@ -120,7 +123,7 @@ class sendPaymentPendingRecordsToOCM extends Command
                 'formaPago' => $record->fPago,
                 'noPoliza' => $record->nPoliza,
                 'marca' => $record->Marca,
-                'submarca' => $record->Submarca,
+                'submarca' => $record->SubMarca,
                 'modelo' => $record->Modelo,
                 'numeroSerie' => $record->nSerie,
                 'numeroMotor' => $record->nMotor,

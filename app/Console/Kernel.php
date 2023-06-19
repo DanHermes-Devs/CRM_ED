@@ -30,11 +30,13 @@ class Kernel extends ConsoleKernel
 
         foreach ($configs as $config) {
             $schedule->command("insert:data-to-endpoint {$config->skilldata} {$config->idload_skilldata} {$config->aseguradora} {$config->motor_b} {$config->motor_c}")
-                    ->{$config->frequency}();
+                    ->{$config->frequency}()
+                    ->withoutOverlapping();
         }
 
-        $schedule->command('sendPaymentReminderSMS')->everyMinute();
-        $schedule->command('command:sendPaymentPendingRecordsToOCM')->everyMinute();
+        $schedule->command('command:sendPaymentReminderSMS')->dailyAt('08:00');
+        $schedule->command('command:sendPaymentPendingRecordsToOCM')->dailyAt('08:00');
+        $schedule->command('command:checkForRecycling')->dailyAt('05:00');
     }
 
 

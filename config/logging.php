@@ -54,6 +54,24 @@ return [
             'level' => 'info',
         ],
 
+        'checkForRecycling' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/checkForRecycling.log'),
+            'level' => 'info',
+        ],
+
+        'sendPaymentReminderSMS' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sendPaymentReminderSMS.log'),
+            'level' => 'info',
+        ],
+
+        'sendPaymentPendingRecordsToOCM' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sendPaymentPendingRecordsToOCM.log'),
+            'level' => 'info',
+        ],
+
         'login' => [
             'driver' => 'daily',
             'path' => storage_path('logs/login.log'),
