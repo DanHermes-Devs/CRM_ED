@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API\Educacion;
 
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Education;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 class EducationController extends Controller
 {
@@ -32,6 +34,10 @@ class EducationController extends Controller
         if ($request->filled(['date_cobrada'])) {
             $query->where('date_cobrada', [$request->date_cobrada]);
         }
+
+        if ($request->filled(['confirmed_account'])) {
+            $query->where('confirmed_account', [$request->confirmed_account]);
+        }
          // Búsquedas exactas
          $camposExactos = [
             'contact_id' => 'contact_id',
@@ -48,9 +54,6 @@ class EducationController extends Controller
             }
         }
 
-        // Filtramos por agente
-        $usuario = User::find($request->user);
-
         // Búsqueda por tipo de venta
         if ($request->filled('codification')) {
             $query->where('codification', $request->codification);
@@ -60,10 +63,8 @@ class EducationController extends Controller
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
-        if ($rol == 'Agente de Ventas') {
-            $resultados = $resultados->where('codification', 'COTIZACION')
-                ->where('codification', 'ALUMNO')
-                ->where('agent_OCM', 'Agente2');
+        if ($rol == 'Agente de Ventas' ) {
+            $resultados = $resultados->where('agente_intra', $usuario);
         } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
         } else {
@@ -76,7 +77,10 @@ class EducationController extends Controller
         // Recuperamos todos los usuario con rol Agente de Ventas y lo mandmos a la vista
         $agentes = User::role('Agente de Ventas')->get();
 
+        $query->join('users','users.id','=', 'education.agent_intra');
         $resultados = $query->get();
+
+
         //RESPUESTA PARA PINTAR LAS QUERYS
         if (request()->ajax()) {
             return DataTables()

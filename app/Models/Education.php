@@ -17,7 +17,6 @@ class Education extends Model
         'agent_OCM', // USUARIO OCM QUE INGRESO LA PREVENTA
         'fp_venta', // FECHA DE ADD A CRM
         'agent_intra', // USUARIO DE LA INTRANET AL QUE PERTENECE LA PREVENTA
-        'agent_name', // NOMBRE DEL AGENTE QUE INGRESO LA PREVENTA
         'supervisor', // SUPERVISOR A CARGO DEL AGENTE
         'codification', //INDICA LA GESTIÓN
         'client_name', // NOMBNRE DE QUIEN LLAMA O SE LE LLAMA
