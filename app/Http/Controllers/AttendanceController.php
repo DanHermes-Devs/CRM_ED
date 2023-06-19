@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Campaign;
+use Carbon\CarbonPeriod;
 use App\Models\Attendance;
-use Carbon\Carbon;
+use App\Models\Group;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -15,16 +18,46 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $campana = $request->get('campana');
-        $supervisor = $request->get('supervisor');
+        request()->flash();
+        $fecha_1 = request()->get('fecha_pago_1');
+        $fecha_2 = request()->get('fecha_pago_2');
+        $agenteId = request()->get('agente');
+        $campanaId = request()->get('campana');
+        $supervisorId = request()->get('supervisor');
 
-        // Mostramos todos los usuarios que no tengan rol Administrador, Coordinador, Supervisor y Director, los demas si deben mostrarse
+        $fecha_inicio = Carbon::parse($fecha_1)->format('Y-m-d');
+        $fecha_fin = Carbon::parse($fecha_2)->format('Y-m-d');
+
+        $asistencias = Attendance::whereBetween('fecha_login', [$fecha_inicio, $fecha_fin])->get();
+
+        // Agrupa las asistencias por fecha y usuario
+        $asistenciasPorFecha = $asistencias->groupBy(['fecha']);
+
+        $fechas = CarbonPeriod::create($fecha_inicio, $fecha_fin);
+
+        // Convierte el resultado en una colección (puede que necesites hacer esto para utilizar métodos de colección más adelante)
+        $fechas = collect($fechas);
+
+        // Mostramos todos los usuarios que no tengan rol Administrador, Coordinador, Supervisor y Director, los demas si deben mostrarse en la tabla
         $usuarios = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['Administrador', 'Coordinador', 'Supervisor', 'Director']);
         })
-        ->with('attendances')
+        ->whereNotNull('hora_entrada')
+        ->whereNotNull('hora_salida')
+        ->whereHas('attendances')
+        ->when($campanaId, function ($query, $campanaId) {
+            $query->whereHas('group', function ($query) use ($campanaId) {
+                $query->where('campaign_id', $campanaId);
+            });
+        })
+        ->when($supervisorId, function ($query) use ($supervisorId) {
+            $query->where('id_superior', $supervisorId);
+        })
+        ->when($agenteId, function ($query, $agenteId) {
+            $query->where('id', $agenteId);
+        })
         ->withCount([
             'attendances as total_retardos' => function ($query) {
                 $query->where('tipo_asistencia', 'R');
@@ -39,7 +72,7 @@ class AttendanceController extends Controller
                 $query->where('tipo_asistencia', 'A+');
             }
         ])
-        ->get();
+        ->paginate(10);
 
         // Retornamos las campañas
         $campanas = Campaign::all();
@@ -47,17 +80,30 @@ class AttendanceController extends Controller
         // Retornamos a los supervisores
         $supervisores = User::role('Supervisor')->get();
 
-        if (request()->ajax()) {
-            return DataTables()
-                ->of($usuarios)
-                ->addColumn('action', 'crm.modulo_usuarios.asistencias.actions')
-                ->rawColumns(['action'])
-                ->escapeColumns([])
-                ->make(true);
-        }
+        // Retornamos a los agentes con rol Agente de Ventas
+        $agentes = User::role('Agente de Ventas')->get();
 
-        return view('crm.modulo_usuarios.asistencias.asistencias', compact('campanas', 'supervisores', 'usuarios'));
+        return view('crm.modulo_usuarios.asistencias.asistencias', compact('campanas', 'supervisores', 'usuarios', 'asistencias', 'asistenciasPorFecha', 'fechas', 'agentes'));
     }
+
+    public function getSupervisores($campaign_id)
+    {
+        $grupos = Group::where('campaign_id', $campaign_id)->get();
+        $supervisores = [];
+        foreach ($grupos as $grupo) {
+            $supervisores_grupo = User::role('Supervisor')->where('group_id', $grupo->id)->get();
+            $supervisores = array_merge($supervisores, $supervisores_grupo->toArray());
+        }
+        return response()->json($supervisores);
+    }
+
+    public function getAgentes($supervisor_id)
+    {
+        // $agentes = User::role('Agente de Ventas')->where('group_id', User::find($supervisor_id)->group_id)->get();
+        $agentes = User::role(['Agente de Ventas', 'Agente Renovaciones', 'Agente de Cobranza'])->where('id_superior', $supervisor_id)->get();
+        return response()->json($agentes);
+    }
+
 
     public function asistenciaUsuario($id)
     {
@@ -83,61 +129,5 @@ class AttendanceController extends Controller
             'code' => true,
             'message' => 'Se actualizo la asistencia correctamente'
         ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Attendance $attendance)
-    {
-        //
     }
 }

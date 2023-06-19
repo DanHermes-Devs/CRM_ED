@@ -29,6 +29,15 @@
         <div class="col-xl-12">
             <div class="card crm-widget py-4 px-3">
                 <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="text-left mb-3">AGREGAR NUEVA CAMPAÑA</h4>
+                        <a href="{{ route('campaigns.index') }}" class="btn btn-info mb-3">
+                            <div class="d-flex align-items-center gap-1">
+                                <i class="ri-arrow-left-line"></i>
+                                Regresar
+                            </div>
+                        </a>
+                    </div>
                     <form method="POST" action="{{ route('campaigns.store') }}"  role="form" enctype="multipart/form-data">
                         @csrf
 

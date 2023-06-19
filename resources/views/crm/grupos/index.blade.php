@@ -79,7 +79,7 @@
                 },
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'grupo', name: 'grupo'},
+                    {data: 'nombre_grupo', name: 'nombre_grupo'},
                     {data: 'descripcion', name: 'descripcion'},
                     {data: 'estatus', name: 'estatus'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},

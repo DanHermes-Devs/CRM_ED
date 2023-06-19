@@ -57,6 +57,22 @@
                         </div>
                     @endif
 
+                    @php
+                        $formats = ['Y/m/d', 'd-m-Y', 'd/m/Y', 'Y-m-d'];
+
+                        $FinVigencia = null;
+
+                        foreach ($formats as $format) {
+                            try {
+                                $FinVigencia = Carbon\Carbon::createFromFormat($format, '30/06/2023')->startOfDay();
+                                dump($FinVigencia);
+                                break;  // Si la fecha es correctamente parseada, rompe el bucle
+                            } catch (\Exception $e) {
+                                // Si ocurre una excepción, simplemente ignórala y continúa con el siguiente formato
+                            }
+                        }
+                    @endphp
+    
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">

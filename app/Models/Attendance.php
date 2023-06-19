@@ -21,6 +21,8 @@ class Attendance extends Model
         'observaciones',
     ];
 
+    protected $dates = ['fecha_login'];
+
     // Relacion con user
     public function user()
     {

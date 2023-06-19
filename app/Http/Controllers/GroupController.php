@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campaign;
 use App\Models\Group;
+use App\Models\Pais;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,15 +46,13 @@ class GroupController extends Controller
      */
     public function create()
     {
-        $proyectos = Project::all();
-        $usuarios = User::all();
-        // Traemos todos los usuarios con role de supervisor
-        $supervisores = User::role('Supervisor')->get();
+        // Traemos todas las campañas con estatus activo
+        $campanas = Campaign::where('status', 1)->get();
 
-        // Traemos todos los usuarios con role Agente de Cobranza, Agente de Ventas, Agente Renovaciones
-        $agentes = User::role(['Agente de Cobranza', 'Agente de Ventas', 'Agente Renovaciones'])->get();
+        // Mostrar los paises con estatus activo
+        $paises = Pais::where('estatus', 1)->get();
 
-        return view('crm.grupos.create', compact('proyectos', 'usuarios', 'supervisores', 'agentes'));
+        return view('crm.grupos.create', compact('campanas', 'paises'));
     }
 
     /**
@@ -64,44 +64,33 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'grupo' => 'required',
+            'nombre_grupo' => 'required',
             'descripcion' => 'required',
             'estatus' => 'required',
-            'proyecto' => 'required',
-            'usuarios' => 'required',
-            'supervisor' => 'required',
+            'turno' => 'required',
+            'campaign_id' => 'required',
+            'pais_id' => 'required',
         ], [
-            'grupo.required' => 'El campo grupo es obligatorio',
+            'nombre_grupo.required' => 'El campo grupo es obligatorio',
             'descripcion.required' => 'El campo descripción es obligatorio',
             'estatus.required' => 'El campo estatus es obligatorio',
-            'proyecto.required' => 'El campo proyecto es obligatorio',
-            'usuarios.required' => 'El campo usuarios es obligatorio',
-            'supervisor.required' => 'El campo supervisor es obligatorio',
+            'turno.required' => 'El campo turno es obligatorio',
+            'campaign_id.required' => 'El campo campaña es obligatorio',
+            'pais_id.required' => 'El campo país es obligatorio',
         ]);
 
         $grupo = new Group();
 
-        $grupo->grupo = $request->grupo;
+        $grupo->nombre_grupo = $request->nombre_grupo;
         $grupo->descripcion = $request->descripcion;
         $grupo->estatus = $request->estatus;
-        $grupo->id_project = $request->proyecto;
-        $grupo->id_user = json_encode($request->usuarios);
-        $grupo->id_supervisor = $request->supervisor;
+        $grupo->turno = $request->turno;
+        $grupo->campaign_id = $request->campaign_id;
+        $grupo->pais_id = $request->pais_id;
         $grupo->save();
 
         return redirect()->route('grupos.index')
             ->with('success', 'Grupo creado con éxito.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Group  $group
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Group $group)
-    {
-        //
     }
 
     /**
@@ -113,12 +102,13 @@ class GroupController extends Controller
     public function edit($id)
     {
         $grupo = Group::find($id);
-        $proyectos = Project::all();
-        $usuarios = User::all();
+        // Traemos todas las campañas con estatus activo
+        $campanas = Campaign::where('status', 1)->get();
 
-        $json_users = json_decode($grupo->id_user);
+        // Mostrar los paises con estatus activo
+        $paises = Pais::where('estatus', 1)->get();
 
-        return view('crm.grupos.edit', compact('grupo', 'proyectos', 'usuarios', 'json_users'));
+        return view('crm.grupos.edit', compact('grupo', 'campanas', 'paises'));
     }
 
     /**
@@ -130,23 +120,31 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Buscamos el grupo por el id
+        $grupo = Group::find($id);
+        
         $request->validate([
-            'grupo' => 'required',
+            'nombre_grupo' => 'required',
             'descripcion' => 'required',
             'estatus' => 'required',
+            'turno' => 'required',
+            'campaign_id' => 'required',
+            'pais_id' => 'required',
         ], [
-            'grupo.required' => 'El campo grupo es obligatorio',
+            'nombre_grupo.required' => 'El campo grupo es obligatorio',
             'descripcion.required' => 'El campo descripción es obligatorio',
             'estatus.required' => 'El campo estatus es obligatorio',
+            'turno.required' => 'El campo turno es obligatorio',
+            'campaign_id.required' => 'El campo campaña es obligatorio',
+            'pais_id.required' => 'El campo país es obligatorio',
         ]);
 
-        $grupo = new Group();
-
-        $grupo->grupo = $request->grupo;
+        $grupo->nombre_grupo = $request->nombre_grupo;
         $grupo->descripcion = $request->descripcion;
         $grupo->estatus = $request->estatus;
-        $grupo->id_project = $request->proyecto;
-        $grupo->id_user = json_encode($request->usuarios);
+        $grupo->turno = $request->turno;
+        $grupo->campaign_id = $request->campaign_id;
+        $grupo->pais_id = $request->pais_id;
         $grupo->save();
 
         return redirect()->route('grupos.index')

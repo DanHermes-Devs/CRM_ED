@@ -57,6 +57,7 @@ class User extends Authenticatable
         'fecha_baja',
         'motivo_baja',
         'observaciones',
+        'group_id',
     ];
 
     /**

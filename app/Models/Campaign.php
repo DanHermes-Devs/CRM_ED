@@ -31,7 +31,13 @@ class Campaign extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre_campana','descripcion_campana','status'];
+    protected $fillable = [
+        'nombre_campana',
+        'descripcion_campana',
+        'status',
+        'empresa',
+        'tipo_proyecto',
+    ];
 
 
     /**
