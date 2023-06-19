@@ -77,9 +77,10 @@ class EducationController extends Controller
         // Recuperamos todos los usuario con rol Agente de Ventas y lo mandmos a la vista
         $agentes = User::role('Agente de Ventas')->get();
 
-        $query->join('users','users.id','=', 'education.agent_intra');
-        $resultados = $query->get();
+        $query->join('users', 'users.id', '=', 'education.agent_intra')
+                ->select('education.*', DB::raw('CONCAT(users.apellido_paterno, " ", users.apellido_materno, " ", users.name) AS agent_fullname'));
 
+        $resultados = $query->get();
 
         //RESPUESTA PARA PINTAR LAS QUERYS
         if (request()->ajax()) {

@@ -214,7 +214,7 @@
                     {data: 'client_program', name: 'client_program'},
                     {data: 'client_specialty', name: 'client_specialty'},
                     {data: 'fp_venta', name: 'fp_venta'},
-                    {data: 'name', name: 'name' },
+                    {data: 'agent_fullname', name: 'agent_fullname' },
                     {data: 'account_UIN', name: 'account_UIN'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ],
@@ -380,7 +380,7 @@
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){
                                 return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
                             }else {
-                                return `${row.apellido_paterno} ${row.apellido_materno} ${row.name}`;
+                                return `${data}`;
                             }
                         }
                     }
