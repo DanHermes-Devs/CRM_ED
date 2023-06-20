@@ -74,7 +74,9 @@ class sendPaymentPendingRecordsToOCM extends Command
                     // Guardamos los cambios
                     $receipt->venta->save();
 
-                    Log::channel('sendPaymentPendingRecordsToOCM')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $receipt->venta->contactId);
+                    $fecha_hoy = Carbon::now()->format('Y-m-d');
+
+                    Log::channel('sendPaymentPendingRecordsToOCM')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $receipt->venta->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                 }
             }
         }

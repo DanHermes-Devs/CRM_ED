@@ -110,7 +110,8 @@ class sendPaymentReminderSMS extends Command
 
             // Parseamos la respuesta
             $parser = simplexml_load_string($response2);
-            Log::channel('sendPaymentReminderSMS')->info($smsText);
+            $fecha_hoy = Carbon::now()->format('Y-m-d');
+            Log::channel('sendPaymentReminderSMS')->info($smsText . ' Fecha de inserción en OCM: ' . $fecha_hoy);
             return $parser;
         }
     }

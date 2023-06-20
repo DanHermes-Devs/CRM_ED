@@ -101,7 +101,10 @@ class checkForRecycling extends Command
                     }
 
                     $record->save();
-                    Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId);
+
+                    $fecha_hoy = Carbon::now()->format('Y-m-d');
+                    
+                    Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                 }
             }
         }
