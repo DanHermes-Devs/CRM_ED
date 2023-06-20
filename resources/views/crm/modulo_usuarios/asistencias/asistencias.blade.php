@@ -100,6 +100,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    
                                     <div class="col-12 col-md-3 mb-3">
                                         <label for="supervisor" class="form-label">Supervisor:</label>
                                         <select name="supervisor" id="supervisor" class="form-select">
@@ -111,6 +112,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <input type="text" name="id_campana" id="id_campana">
                                     <div class="col-12 col-md-3 mb-3">
                                         <label for="agente" class="form-label">Agente:</label>
                                         <select name="agente" id="agente" class="form-select">
@@ -335,6 +337,8 @@
                         success: function(data) {
                             $('#supervisor').empty();
                             $('#supervisor').append('<option value="">-- Selecciona un Supervisor --</option>');
+                            // En el id id_campana guardamos el id de la campaña seleccionada
+                            $('#id_campana').val(campaignId);
                             $.each(data, function(key, value) {
                                 $('#supervisor').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                             });
@@ -345,9 +349,10 @@
 
             $('#supervisor').change(function() {
                 var supervisorId = $(this).val();
+                var group_id = $('#id_campana').val();
                 if (supervisorId) {
                     $.ajax({
-                        url: '/get-agentes/' + supervisorId,
+                        url: '/get-agentes/' + supervisorId + '/' + group_id,
                         type: 'GET',
                         dataType: 'json',
                         success: function(data) {

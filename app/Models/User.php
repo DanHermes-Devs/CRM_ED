@@ -88,7 +88,7 @@ class User extends Authenticatable
     // Relacion con grupos
     public function groups()
     {
-        return $this->belongsToMany(Group::class, 'group_supervisors');
+        return $this->belongsToMany(Group::class, 'group_supervisors', 'user_id', 'group_id');
     }
 
     public function group()

@@ -112,7 +112,7 @@ class AttendanceController extends Controller
     }
 
 
-    public function getAgentes($supervisor_id)
+    public function getAgentes($supervisor_id, $group_id)
     {
         $supervisor = User::find($supervisor_id);
 
@@ -120,15 +120,23 @@ class AttendanceController extends Controller
             return response()->json([]);
         }
 
-        $grupos = $supervisor->groups;
+        $grupo = Group::find($group_id);
 
-        $agentes = [];
-
-        foreach($grupos as $grupo) {
-            $agentes_grupo = User::role(['Agente de Ventas', 'Agente Renovaciones', 'Agente de Cobranza'])
-                            ->where('group_id', $grupo->id)->get();
-            $agentes = array_merge($agentes, $agentes_grupo->toArray());
+        if(!$grupo) {
+            return response()->json([]);
         }
+
+        // Verifica si el supervisor está asignado al grupo
+        if(!$supervisor->groups->contains($grupo)) {
+            return response()->json(['error' => 'El supervisor no está asignado a este grupo.']);
+        }
+
+        $agentes = $grupo->users()
+            ->whereHas('roles', function($query) {
+                $query->where('name', 'Agente de Ventas')
+                    ->orWhere('name', 'Agente Renovaciones')
+                    ->orWhere('name', 'Agente de Cobranza');
+            })->get();
 
         return response()->json($agentes);
     }

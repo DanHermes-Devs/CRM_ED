@@ -90,7 +90,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/crear-incidencia', [IncidentController::class, 'store'])->name('crear-incidencia');
     Route::put('/actualizar-asistencia', [AttendanceController::class, 'actualizarAsistencia'])->name('actualizar-asistencia');
     Route::get('get-supervisores/{campaign_id}', [AttendanceController::class, 'getSupervisores'])->name('get-supervisores');
-    Route::get('get-agentes/{supervisor_id}', [AttendanceController::class, 'getAgentes'])->name('get-agentes');
+    Route::get('get-agentes/{supervisor_id}/{group_id}', [AttendanceController::class, 'getAgentes'])->name('get-agentes');
 
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);
