@@ -335,7 +335,6 @@
                         success: function(data) {
                             $('#supervisor').empty();
                             $('#supervisor').append('<option value="">-- Selecciona un Supervisor --</option>');
-                            // PINTAMOS EL SELECT CON ID SUPERVISOR
                             $.each(data, function(key, value) {
                                 $('#supervisor').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                             });
@@ -354,9 +353,12 @@
                         success: function(data) {
                             $('#agente').empty();
                             $('#agente').append('<option value="">-- Selecciona un Agente --</option>');
-                            // PINTAMOS EL SELECT CON ID AGENTE
                             $.each(data, function(key, value) {
-                                $('#agente').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                                $('#agente').append('<option value="'+ value.id +'">'
+                                    + value.apellido_paterno + " "
+                                    + value.apellido_materno + " "
+                                    + value.name +
+                                '</option>');
                             });
                         }
                     });

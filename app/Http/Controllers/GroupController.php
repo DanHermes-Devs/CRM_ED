@@ -98,7 +98,7 @@ class GroupController extends Controller
 
             // Si el usuario existe y es un supervisor, lo asociamos con el grupo.
             if ($supervisor && $supervisor->hasRole('Supervisor')) {
-                $supervisor->groups()->sync($grupo->id);
+                $supervisor->groups()->syncWithoutDetaching($grupo->id);
             }
         }
 
@@ -169,7 +169,7 @@ class GroupController extends Controller
 
             // Si el usuario existe y es un supervisor, lo asociamos con el grupo.
             if ($supervisor && $supervisor->hasRole('Supervisor')) {
-                $supervisor->groups()->sync($grupo->id);
+                $supervisor->groups()->syncWithoutDetaching($grupo->id);
             }
         }
 
