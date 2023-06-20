@@ -21,6 +21,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PersonalFileController;
 use App\Http\Controllers\API\ventas\VentasController;
 use App\Http\Controllers\API\Educacion\EducationController;
+use App\Http\Controllers\API\Seguridad\ADTController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/proyectos', ProjectController::class);
     Route::resource('/grupos', GroupController::class);
     Route::resource('/educacion-uin', EducationController::class);
+    Route::resource('/seguridad-adt', ADTController::class);
 
     Route::get('/cobranza', [CobranzaController::class, 'index'])->name('cobranza.index');
     Route::post('/cobranza/asignar/{recibo_id}', [CobranzaController::class, 'asignarRecibo'])->name('cobranza.asignar');

@@ -151,7 +151,7 @@
 
                 <div class="navbar-brand-box">
                     <!-- Dark Logo-->
-                    <a href="index.html" class="logo logo-dark">
+                    <a href="{{ route('dasboard') }}" class="logo logo-dark">
                         <span class="logo-sm">
                             <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" alt="" height="22">
                         </span>
@@ -160,7 +160,7 @@
                         </span>
                     </a>
                     <!-- Light Logo-->
-                    <a href="index.html" class="logo logo-light">
+                    <a href="{{ route('dasboard') }}" class="logo logo-light">
                         <span class="logo-sm">
                             <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" class="w-100 py-3">
                         </span>
