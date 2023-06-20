@@ -121,18 +121,18 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <!-- item-->
-                                    <h6 class="dropdown-header">Bienvenido  @if (Auth::check())
+                                    <h6 class="dropdown-header">Bienvenido(a)  @if (Auth::check())
                                         {{ Auth::user()->name }}
                                     @endif!</h6>
-                                    <a class="dropdown-item" href="pages-profile.html"><i
+                                    {{-- <a class="dropdown-item" href="pages-profile.html"><i
                                             class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
-                                            class="align-middle">Perfil</span></a>
+                                            class="align-middle">Perfil</span></a> --}}
 
                                     @guest
                                     @endguest
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
-                                        <span class="align-middle" data-key="t-logout">{{ __('logout') }}</span>
+                                        <span class="align-middle" data-key="t-logout">{{ __('Cerrar Sesión') }}</span>
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -267,51 +267,52 @@
                                                     </ul>
                                                 </div>
                                             </li>
-                                            @if (Auth::user()->hasAnyRole(['Administrador', 'Coordinador']))
-                                                <li class="nav-item">
-                                                    <a href="#modulo_rrhh" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                        aria-controls="modulo_rrhh" data-key="t-level-1.2">
-                                                        Módulo R.R.H.H.
-                                                    </a>
-                                                    <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
-                                                        <ul class="nav nav-sm flex-column">
-                                                            <li class="nav-item">
-                                                                <a href="#usuario" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                                    aria-controls="usuario" data-key="t-level-1.2">
-                                                                    Usuarios
-                                                                </a>
-                                                                <div class="menu-dropdown collapse" id="usuario" style="">
-                                                                    <ul class="nav nav-sm flex-column">
-                                                                        <li class="nav-item">
-                                                                            <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
-                                                                                Todos los Usuarios
-                                                                            </a>
-                                                                            <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
-                                                                                Roles
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a href="#asistencia" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
-                                                                    aria-controls="asistencia" data-key="t-level-1.2">
-                                                                    Asistencias
-                                                                </a>
-                                                                <div class="menu-dropdown collapse" id="asistencia" style="">
-                                                                    <ul class="nav nav-sm flex-column">
-                                                                        <li class="nav-item">
-                                                                            <a href="{{ route('asistencias') }}" class="nav-link" data-key="t-analytics">
-                                                                                Asistencias
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            @endif
+                                        </ul>
+                                    </div>
+                                </li>
+                            @endif
+
+                            @if (Auth::user()->hasAnyRole(['Administrador', 'RH']))
+                                <li class="nav-item">
+                                    <a class="nav-link menu-link" href="#modulo_rrhh" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                        aria-controls="modulo_rrhh">
+                                        <i class="ri-folder-user-line"></i> <span data-key="t-dashboards">Módulo R.R.H.H.</span>
+                                    </a>
+                                    <div class="menu-dropdown collapse" id="modulo_rrhh" style="">
+                                        <ul class="nav nav-sm flex-column">
+                                            <li class="nav-item">
+                                                <a href="#usuario" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="usuario" data-key="t-level-1.2">
+                                                    Usuarios
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="usuario" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="{{ route('usuarios') }}" class="nav-link" data-key="t-analytics">
+                                                                Todos los Usuarios
+                                                            </a>
+                                                            <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-analytics">
+                                                                Roles
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#asistencia" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="asistencia" data-key="t-level-1.2">
+                                                    Asistencias
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="asistencia" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="{{ route('asistencias') }}" class="nav-link" data-key="t-analytics">
+                                                                Asistencias
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>
