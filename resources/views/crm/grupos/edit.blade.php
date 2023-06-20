@@ -102,20 +102,9 @@
                                     @enderror
                                 </div>
                             </div>
-                            
-                            <div>
-                                <div class="mb-3">
-                                    <label for="descripcion" class="form-label">Descripción:</label>
-                                    <textarea class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" rows="3">{{ old('descripcion', $grupo->descripcion) }}</textarea>
 
-                                    @error('descripcion')
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }} </strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
                                     <label for="estatus" class="form-label">Estatus:</label>
                                     <select class="form-select @error('estatus') is-invalid @enderror" id="estatus" name="estatus">
                                         <option value="">Seleccione una opción</option>
@@ -124,6 +113,35 @@
                                     </select>                                    
 
                                     @error('estatus')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="supervisor" class="form-label">Supervisor:</label>
+                                    <select class="form-select @error('supervisor') is-invalid @enderror" id="supervisor" name="supervisor">
+                                        <option value="">Seleccione una opción</option>
+                                        @foreach ($supervisores as $supervisor)
+                                            <option value="{{ $supervisor->id }}" {{ $grupo->supervisor == $supervisor->id ? 'selected' : '' }}>{{ $supervisor->name }}</option>
+                                        @endforeach
+                                    </select>                                    
+
+                                    @error('supervisor')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción:</label>
+                                    <textarea class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" rows="3">{{ old('descripcion', $grupo->descripcion) }}</textarea>
+
+                                    @error('descripcion')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
                                         </span>

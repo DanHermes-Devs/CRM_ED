@@ -52,7 +52,10 @@ class GroupController extends Controller
         // Mostrar los paises con estatus activo
         $paises = Pais::where('estatus', 1)->get();
 
-        return view('crm.grupos.create', compact('campanas', 'paises'));
+        // Regresamos los usuarios con perfil Supervisor
+        $supervisores = User::role('Supervisor')->get();
+
+        return view('crm.grupos.create', compact('campanas', 'paises', 'supervisores'));
     }
 
     /**
@@ -89,6 +92,16 @@ class GroupController extends Controller
         $grupo->pais_id = $request->pais_id;
         $grupo->save();
 
+        $supervisor_id = $request->input('supervisor');
+        if($supervisor_id){
+            $supervisor = User::find($supervisor_id);
+
+            // Si el usuario existe y es un supervisor, lo asociamos con el grupo.
+            if ($supervisor && $supervisor->hasRole('Supervisor')) {
+                $supervisor->groups()->attach($grupo->id);
+            }
+        }
+
         return redirect()->route('grupos.index')
             ->with('success', 'Grupo creado con éxito.');
     }
@@ -108,7 +121,10 @@ class GroupController extends Controller
         // Mostrar los paises con estatus activo
         $paises = Pais::where('estatus', 1)->get();
 
-        return view('crm.grupos.edit', compact('grupo', 'campanas', 'paises'));
+        // Regresamos los usuarios con perfil Supervisor
+        $supervisores = User::role('Supervisor')->get();
+
+        return view('crm.grupos.edit', compact('grupo', 'campanas', 'paises', 'supervisores'));
     }
 
     /**
@@ -146,6 +162,16 @@ class GroupController extends Controller
         $grupo->campaign_id = $request->campaign_id;
         $grupo->pais_id = $request->pais_id;
         $grupo->save();
+
+        $supervisor_id = $request->input('supervisor');
+        if($supervisor_id){
+            $supervisor = User::find($supervisor_id);
+
+            // Si el usuario existe y es un supervisor, lo asociamos con el grupo.
+            if ($supervisor && $supervisor->hasRole('Supervisor')) {
+                $supervisor->groups()->attach($grupo->id);
+            }
+        }
 
         return redirect()->route('grupos.index')
             ->with('success', 'Grupo actualizado con éxito.');

@@ -37,7 +37,7 @@ class Group extends Model
     }
 
     // RELACION DE UNO A MUCHOS CON LA TABLA GROUP_SUPERVISORS
-    public function groupSupervisors(){
-        return $this->hasMany(GroupSupervisor::class);
+    public function supervisors(){
+        return $this->belongsToMany(User::class, 'group_supervisors');
     }
 }
