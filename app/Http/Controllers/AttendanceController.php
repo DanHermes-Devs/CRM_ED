@@ -8,6 +8,7 @@ use App\Models\Campaign;
 use Carbon\CarbonPeriod;
 use App\Models\Attendance;
 use App\Models\Group;
+use App\Models\GroupSupervisor;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -89,36 +90,40 @@ class AttendanceController extends Controller
 
     public function getSupervisores($campaign_id)
     {
-        // Encontramos todos los grupos de la campaña
+        // OBTENEMOS LOS GRUPOS DE LA CAMPAÑA
         $grupos = Group::where('campaign_id', $campaign_id)->get();
 
         $supervisores = [];
 
-        // Iteramos sobre cada grupo
         foreach ($grupos as $grupo) {
-            // Ahora obtenemos los supervisores del grupo utilizando la nueva relación
-            $supervisores_grupo = $grupo->users()->role('Supervisor')->get();
-            $supervisores = array_merge($supervisores, $supervisores_grupo->toArray());
+            // TRAEMOS EL SUPERVISOR DEL GRUPO CON LA TABLA PIVOTE GROUP_SUPERVISORS
+            $group_supervisor = GroupSupervisor::where('group_id', $grupo->id)->first();
+            
+            // Si el group_supervisor no es null, buscar el supervisor correspondiente
+            if ($group_supervisor) {
+                // TRAEMOS AL SUPERVISOR DE ESA CAMPAÑA
+                $supervisor = User::find($group_supervisor->user_id);
+                // Añade al supervisor al array de supervisores
+                $supervisores[] = $supervisor;
+            }
         }
 
         return response()->json($supervisores);
     }
 
+
     public function getAgentes($supervisor_id)
     {
-        // Primero obtenemos el supervisor
         $supervisor = User::find($supervisor_id);
 
         if(!$supervisor) {
             return response()->json([]);
         }
 
-        // Luego obtenemos los grupos de este supervisor
         $grupos = $supervisor->groups;
 
         $agentes = [];
 
-        // Para cada grupo, obtenemos los agentes y los agregamos al arreglo de agentes
         foreach($grupos as $grupo) {
             $agentes_grupo = User::role(['Agente de Ventas', 'Agente Renovaciones', 'Agente de Cobranza'])
                             ->where('group_id', $grupo->id)->get();
@@ -127,7 +132,6 @@ class AttendanceController extends Controller
 
         return response()->json($agentes);
     }
-
 
     public function asistenciaUsuario($id)
     {

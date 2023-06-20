@@ -88,11 +88,12 @@ class User extends Authenticatable
     // Relacion con grupos
     public function groups()
     {
-        if ($this->hasRole('Supervisor')) {
-            return $this->belongsToMany(Group::class, 'group_supervisors');
-        } else {
-            return $this->belongsTo(Group::class);
-        }
+        return $this->belongsToMany(Group::class, 'group_supervisors');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 
     // Relacion con receipts
