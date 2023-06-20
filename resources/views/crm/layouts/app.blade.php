@@ -124,9 +124,7 @@
                                     <h6 class="dropdown-header">Bienvenido  @if (Auth::check())
                                         {{ Auth::user()->name }}
                                     @endif!</h6>
-                                    <a class="dropdown-item" href="pages-profile.html"><i
-                                            class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
-                                            class="align-middle">Perfil</span></a>
+                                    {{-- <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Perfil</span></a> --}}
 
                                     @guest
                                     @endguest
@@ -151,7 +149,7 @@
 
                 <div class="navbar-brand-box">
                     <!-- Dark Logo-->
-                    <a href="index.html" class="logo logo-dark">
+                    <a href="{{ route('dasboard') }}" class="logo logo-dark">
                         <span class="logo-sm">
                             <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" alt="" height="22">
                         </span>
@@ -160,7 +158,7 @@
                         </span>
                     </a>
                     <!-- Light Logo-->
-                    <a href="index.html" class="logo logo-light">
+                    <a href="{{ route('dasboard') }}" class="logo logo-light">
                         <span class="logo-sm">
                             <img src="{{ asset('./assets/images/brand/logo_white.svg') }}" class="w-100 py-3">
                         </span>
