@@ -86,8 +86,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/get-user-incidencia/{id}', [IncidentController::class, 'index'])->name('consultar-usuario');
     Route::get('/asistencia-usuario/{id}', [AttendanceController::class, 'asistenciaUsuario'])->name('consultar-asistencia-usuario');
     Route::get('/incidencias-usuario/{id}', [IncidentController::class, 'incidenciasUsuario'])->name('consultar-incidencias-usuario');
+    Route::get('/incidencia/{id}', [IncidentController::class, 'edit'])->name('editar-incidencia');
     Route::post('/crear-incidencia', [IncidentController::class, 'store'])->name('crear-incidencia');
     Route::put('/actualizar-asistencia', [AttendanceController::class, 'actualizarAsistencia'])->name('actualizar-asistencia');
+    Route::get('get-supervisores/{campaign_id}', [AttendanceController::class, 'getSupervisores'])->name('get-supervisores');
+    Route::get('get-agentes/{supervisor_id}/{group_id}', [AttendanceController::class, 'getAgentes'])->name('get-agentes');
 
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);

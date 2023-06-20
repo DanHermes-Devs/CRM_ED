@@ -57,6 +57,7 @@ class User extends Authenticatable
         'fecha_baja',
         'motivo_baja',
         'observaciones',
+        'group_id',
     ];
 
     /**
@@ -85,7 +86,13 @@ class User extends Authenticatable
     }
 
     // Relacion con grupos
-    public function group(){
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_supervisors', 'user_id', 'group_id');
+    }
+
+    public function group()
+    {
         return $this->belongsTo(Group::class);
     }
 

@@ -9,6 +9,7 @@ use App\Models\Campaign;
 use App\Models\Incident;
 use Illuminate\Support\Arr;
 use App\Imports\UsersImport;
+use App\Models\Group;
 use App\Models\PersonalFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,10 +60,10 @@ class UsuarioController extends Controller
     {
         $roles = Role::pluck('name', 'name')->all();
 
-        // Mostramos las campañas
-        $campanas = Campaign::all();
+        // Mostramos los grupos con estatus activo
+        $grupos = Group::where('estatus', 1)->get();
 
-        return view('crm.modulo_usuarios.create', compact('roles', 'campanas'));
+        return view('crm.modulo_usuarios.create', compact('roles', 'grupos'));
     }
 
     /**
@@ -102,7 +103,6 @@ class UsuarioController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'estatus' => $request->estatus,
-            'id_campana' => $request->id_campana,
             'sexo' => $request->sexo,
             'fecha_nacimiento' => $request->fecha_nacimiento,
             'rfc' => $request->rfc,
@@ -121,7 +121,7 @@ class UsuarioController extends Controller
             'persona_emergencia' => $request->persona_emergencia,
             'tel_emergencia' => $request->tel_emergencia,
             'esquema_laboral' => $request->esquema_laboral,
-            'proyecto_asignado' => $request->proyecto_asignado,
+            'group_id' => $request->group_id,
             'turno' => $request->turno,
             'hora_entrada' => $request->hora_entrada,
             'hora_salida' => $request->hora_salida,
@@ -138,17 +138,6 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Usuario  $usuario
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Usuario $usuario)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Usuario  $usuario
@@ -160,13 +149,13 @@ class UsuarioController extends Controller
         $roles = Role::pluck('name', 'name')->all();
         $usuarioRole = $usuario->roles->pluck('name', 'name')->all();
 
-        // Mostramos las campañas
-        $campanas = Campaign::all();
+        // Mostramos los grupos con estatus activo
+        $grupos = Group::where('estatus', 1)->get();
 
         // Mostramos el proyecto que tiene asignado
         $user = PersonalFile::where('id_usuario', $id)->pluck('id_proyecto');
 
-        return view('crm.modulo_usuarios.edit', compact('usuario', 'roles', 'usuarioRole', 'campanas'));
+        return view('crm.modulo_usuarios.edit', compact('usuario', 'roles', 'usuarioRole', 'grupos'));
     }
 
     /**
@@ -196,7 +185,40 @@ class UsuarioController extends Controller
             'roles.required'  => 'Dato requerido: Rol.',
         ]);
 
-        $input = $request->all();
+        $input = [
+            'usuario' => $request->usuario,
+            'name' => $request->name,
+            'apellido_paterno' => $request->apellido_paterno,
+            'apellido_materno' => $request->apellido_materno,
+            'email' => $request->email,
+            'estatus' => $request->estatus,
+            'sexo' => $request->sexo,
+            'fecha_nacimiento' => $request->fecha_nacimiento,
+            'rfc' => $request->rfc,
+            'curp' => $request->curp,
+            'estado_civil' => $request->estado_civil,
+            'no_imss' => $request->no_imss,
+            'cr_infonavit' => $request->cr_infonavit,
+            'cr_fonacot' => $request->cr_fonacot,
+            'tipo_sangre' => $request->tipo_sangre,
+            'ba_nomina' => $request->ba_nomina,
+            'cta_clabe' => $request->cta_clabe,
+            'alergias' => $request->alergias,
+            'padecimientos' => $request->padecimientos,
+            'tel_casa' => $request->tel_casa,
+            'tel_celular' => $request->tel_celular,
+            'persona_emergencia' => $request->persona_emergencia,
+            'tel_emergencia' => $request->tel_emergencia,
+            'esquema_laboral' => $request->esquema_laboral,
+            'group_id' => $request->group_id,
+            'turno' => $request->turno,
+            'hora_entrada' => $request->hora_entrada,
+            'hora_salida' => $request->hora_salida,
+            'fecha_ingreso' => $request->fecha_ingreso,
+            'fecha_baja' => $request->fecha_baja,
+            'motivo_baja' => $request->motivo_baja,
+            'observaciones' => $request->observaciones,
+        ];
 
         if (!empty($input['password'])) {
             $input['password'] = bcrypt($input['password']);

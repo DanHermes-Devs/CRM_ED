@@ -7,6 +7,7 @@ use App\Models\Venta;
 use App\Models\Receipt;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class sendPaymentPendingRecordsToOCM extends Command
 {
@@ -72,6 +73,10 @@ class sendPaymentPendingRecordsToOCM extends Command
 
                     // Guardamos los cambios
                     $receipt->venta->save();
+
+                    $fecha_hoy = Carbon::now()->format('Y-m-d');
+
+                    Log::channel('sendPaymentPendingRecordsToOCM')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $receipt->venta->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                 }
             }
         }
@@ -120,7 +125,7 @@ class sendPaymentPendingRecordsToOCM extends Command
                 'formaPago' => $record->fPago,
                 'noPoliza' => $record->nPoliza,
                 'marca' => $record->Marca,
-                'submarca' => $record->Submarca,
+                'submarca' => $record->SubMarca,
                 'modelo' => $record->Modelo,
                 'numeroSerie' => $record->nSerie,
                 'numeroMotor' => $record->nMotor,

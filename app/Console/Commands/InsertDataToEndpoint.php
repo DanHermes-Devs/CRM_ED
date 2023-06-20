@@ -87,22 +87,28 @@ class InsertDataToEndpoint extends Command
 
                 // Si la respuesta de la API es exitosa
                 if ($response->successful()) {
-                    // Asignamos el skilldata a la campana de la venta
-                    $record->campana = $skilldata;
+                    if($response['result'] == 'error'){
+                        Log::info("Error: " . $response['description']);
+                    }else{
+                        // Asignamos el skilldata a la campana de la venta
+                        $record->campana = $skilldata;
 
-                    // Marca el registro como enviado a OCM
-                    $record->OCMSent = true;
+                        // Marca el registro como enviado a OCM
+                        $record->OCMSent = true;
 
-                    // Guardamos la fecha del ultimo envio
-                    $record->ocmdaytosend = Carbon::now();
+                        // Guardamos la fecha del ultimo envio
+                        $record->ocmdaytosend = Carbon::now();
 
-                    // Guarda el cambio en la base de datos
-                    $record->save();
+                        // Guarda el cambio en la base de datos
+                        $record->save();
+
+                        $fecha_hoy = Carbon::now()->format('Y-m-d');
+
+                        Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy);
+                    }
                 }
             }
         }
-
-        $this->checkForRecycling($url_ocm);
     }
 
     // Esta función privada llamada prepareData toma dos argumentos: un registro y un valor de skilldata
@@ -184,58 +190,6 @@ class InsertDataToEndpoint extends Command
                 'Accept' => 'application/json',
                 'ApiToken' => 'Expon1753',
             ])->post($url_ocm, $data);
-        }
-    }
-
-    // Esta función privada llamada checkForRecycling no toma argumentos. (Validar si es necesario consumir algun endpoint)
-    private function checkForRecycling($url_ocm)
-    {
-        $records = Venta::where('ocmdaytosend', '<', Carbon::now()->subDays(8)->startOfDay())
-            ->where('tVenta', 'RENOVACION')
-            ->whereNotIn('UGestion', ['RENOVACION', 'PROMESA DE PAGO'])
-            ->get();
-
-        foreach ($records as $record) {
-            $skilldata = '';
-            $idload = '';
-            // Mostramos un mensaje para ver que se está ejecutando el comando
-            if ($record->Aseguradora === 'MAPFRE') {
-                if ($record->campana === 'RENOVACIONES_B_MOTOR') {
-                    $skilldata = 'RENOVACIONES_C_MOTOR';
-                } else {
-                    $skilldata = 'RENOVACIONES_B_MOTOR';
-                }
-            } elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
-                if ($record->campana === 'RENOVACIONES_QUALITAS_B_MOTOR') {
-                    $skilldata = 'RENOVACIONES_QUALITAS_C_MOTOR';
-                } else {
-                    $skilldata = 'RENOVACIONES_QUALITAS_B_MOTOR';
-                }
-            }
-
-            // Actualizar la venta
-            $record->campana = $skilldata;
-            $record->save();
-
-            // Preparar los datos para enviar a la API
-            $data = $this->prepareData($record, $skilldata, $idload);
-
-            // Enviar los datos a la API
-            $response = $this->sendData($url_ocm, $data);
-
-            // Verificar si la respuesta de la API es exitosa
-            if ($response->successful()) {
-                // Si el salto es a motor B, actualiza el campo OCMSent
-                if ($skilldata === 'RENOVACIONES_B_MOTOR' || $skilldata === 'RENOVACIONES_QUALITAS_B_MOTOR') {
-                    $record->OCMSent = true;
-                    $record->ocmdaytosend = Carbon::now();
-                }elseif($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'RENOVACIONES_QUALITAS_C_MOTOR'){
-                    $record->OCMSent_motor_c = true;
-                    $record->ocmdaytosend_motor_c = Carbon::now();
-                }
-
-                $record->save();
-            }
         }
     }
 }

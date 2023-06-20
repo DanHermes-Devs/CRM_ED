@@ -16,6 +16,7 @@ class Incident extends Model
         'agente',
         'login_ocm',
         'tipo_incidencia',
+        'user_modification',
         'fecha_desde',
         'fecha_hasta',
     ];

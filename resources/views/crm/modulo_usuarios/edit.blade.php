@@ -110,20 +110,13 @@
 
                             <div class="col-12 col-md-3">
                                 <div class="mb-3">
-                                    <label for="id_campana" class="form-label">Campaña:</label>
-                                    <select class="form-select @error('id_campana') is-invalid @enderror" id="id_campana" name="id_campana">
+                                    <label for="group_id" class="form-label">Grupo Asignado:</label>
+                                    <select class="form-select @error('group_id') is-invalid @enderror" id="group_id" name="group_id">
                                         <option value="">Selecciona una opción</option>
-                                        @foreach ($campanas as $campana)
-                                            <option value="{{ $campana->id }}">{{ $campana->nombre_campana }}</option>
+                                        @foreach($grupos as $grupo)
+                                            <option value="{{ $grupo->id }}">{{ $grupo->nombre_grupo }}</option>
                                         @endforeach
                                     </select>
-
-    
-                                    @error('id_campana')
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }} </strong>
-                                        </span>
-                                    @enderror
                                 </div>
                             </div>
 
@@ -366,13 +359,6 @@
                                             <strong>{{ $message }} </strong>
                                         </span>
                                     @enderror
-                                </div>
-                            </div>
-                            
-                            <div class="col-12 col-md-3">
-                                <div class="mb-3">
-                                    <label for="proyecto_asignado" class="form-label">Proyecto Asignado:</label>
-                                    <input type="text" class="form-control" id="proyecto_asignado" name="proyecto_asignado" value="Poryecto 1" readonly>
                                 </div>
                             </div>
 

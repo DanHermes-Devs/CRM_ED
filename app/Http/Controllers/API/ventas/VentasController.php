@@ -196,7 +196,7 @@ class VentasController extends Controller
                                 return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                             }
 
-                            $ventaDuplicada->FinVigencia = $FinVigencia->toDateString();
+                            $ventaDuplicada->FinVigencia = $FinVigencia;
                             $ventaDuplicada->FfVigencia = $FinVigencia->copy()->addYear();
                             $ventaDuplicada->tVenta = 'VENTA DUPLICADA';
                             $ventaDuplicada->fecha_ultima_gestion = Carbon::now();
@@ -235,7 +235,7 @@ class VentasController extends Controller
                                 return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                             }
 
-                            $ventaDiferencia->FinVigencia = $FinVigencia->toDateString();
+                            $ventaDiferencia->FinVigencia = $FinVigencia;
                             $ventaDiferencia->FfVigencia = $FinVigencia->copy()->addYear();
                             $ventaDiferencia->tVenta = 'VENTA';
                             $ventaDiferencia->save();
@@ -275,7 +275,7 @@ class VentasController extends Controller
                                 return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                             }
 
-                            $ventaNuevaRenovacion->FinVigencia = $FinVigencia->toDateString();
+                            $ventaNuevaRenovacion->FinVigencia = $FinVigencia;
                             $ventaNuevaRenovacion->FfVigencia = $FinVigencia->copy()->addYear();
                             $ventaNuevaRenovacion->tVenta = 'RENOVACION';
                             $ventaNuevaRenovacion->save();
@@ -316,7 +316,7 @@ class VentasController extends Controller
                             return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                         }
 
-                        $ventaExistente->FinVigencia = $FinVigencia->toDateString();
+                        $ventaExistente->FinVigencia = $FinVigencia;
                         $ventaExistente->FfVigencia = $FinVigencia->copy()->addYear();
                         $ventaExistente->tVenta = 'VENTA';
                         $ventaExistente->fecha_ultima_gestion = Carbon::now();
@@ -366,7 +366,7 @@ class VentasController extends Controller
                             return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                         }
 
-                        $ventaDuplicadaPosible->FinVigencia = $FinVigencia->toDateString();
+                        $ventaDuplicadaPosible->FinVigencia = $FinVigencia;
                         $ventaDuplicadaPosible->FfVigencia = $FinVigencia->copy()->addYear();
                         $ventaDuplicadaPosible->tVenta = 'POSIBLE DUPLICIDAD';
                         $ventaDuplicadaPosible->save();
@@ -402,7 +402,7 @@ class VentasController extends Controller
                             return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                         }
 
-                        $preventaNueva->FinVigencia = $FinVigencia->toDateString();
+                        $preventaNueva->FinVigencia = $FinVigencia;
                         $preventaNueva->FfVigencia = $FinVigencia->copy()->addYear();
                         $preventaNueva->tVenta = 'VENTA';
                         $preventaNueva->save();
@@ -457,7 +457,7 @@ class VentasController extends Controller
                         return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                     }
 
-                    $venta->FinVigencia = $FinVigencia->toDateString();
+                    $venta->FinVigencia = $FinVigencia;
                     $venta->FfVigencia = $FinVigencia->copy()->addYear();
                     $venta->tVenta = 'VENTA';
                     $venta->save();
@@ -494,7 +494,7 @@ class VentasController extends Controller
                     return response()->json(['error' => 'La fecha FinVigencia debe estar en formato Y/m/d, d-m-Y, d/m/Y o Y-m-d.']);
                 }
 
-                $promesaPago->FinVigencia = $FinVigencia->toDateString();
+                $promesaPago->FinVigencia = $FinVigencia;
                 $promesaPago->FfVigencia = $FinVigencia->copy()->addYear();
                 $promesaPago->tVenta = 'VENTA';
                 $promesaPago->save();

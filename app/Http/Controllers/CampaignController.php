@@ -59,8 +59,15 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
         request()->validate(Campaign::$rules);
+        
+        $campaign = new Campaign;
+        $campaign->nombre_campana = $request->nombre_campana;
+        $campaign->descripcion_campana = $request->descripcion_campana;
+        $campaign->status = $request->status;
+        $campaign->empresa = $request->empresa;
+        $campaign->tipo_proyecto = $request->tipo_proyecto;
 
-        $campaign = Campaign::create($request->all());
+        $campaign->save();
 
         return redirect()->route('campaigns.index')
             ->with('success', 'Campaña creada correctamente');
@@ -109,7 +116,14 @@ class CampaignController extends Controller
     {
         request()->validate(Campaign::$rules);
 
-        $campaign->update($request->all());
+        $campaign = Campaign::find($campaign->id);
+        $campaign->nombre_campana = $request->nombre_campana;
+        $campaign->descripcion_campana = $request->descripcion_campana;
+        $campaign->status = $request->status;
+        $campaign->empresa = $request->empresa;
+        $campaign->tipo_proyecto = $request->tipo_proyecto;
+
+        $campaign->save();
 
         return redirect()->route('campaigns.index')
             ->with('success', 'Campaña actualizada correctamente');

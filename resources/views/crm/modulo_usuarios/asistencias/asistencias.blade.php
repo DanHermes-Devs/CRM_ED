@@ -44,6 +44,10 @@
     .mr_3 {
         margin-right: 1rem !important;
     }
+
+    a.link-personalizado {
+        text-decoration: underline!important;
+    }
 </style>
 @section('content')
     <div class="container-fluid">
@@ -80,57 +84,148 @@
                                 </div>
                             </a>
                         </div>
-
+                        
                         {{-- Formulario para agregar nuevo usuario --}}
                         <div class="row">
-                            <form action="{{ route('grupos.store') }}" method="POST" novalidate>
-                                @csrf
-                                <div class="d-flex align-items-end gap-3">
+                            <form action="{{ route('asistencias') }}" method="GET">
+                                <div class="row align-items-end">
                                     <div class="col-12 col-md-3 mb-3">
                                         <label for="campana" class="form-label">Campaña:</label>
                                         <select name="campana" id="campana" class="form-select">
-                                            <option value="0">-- Selecciona una Campaña --</option>
+                                            <option value="">-- Selecciona una Campaña --</option>
                                             @foreach ($campanas as $campana)
-                                                <option value="{{ $campana->id }}"
-                                                    {{ old('campana') == $campana->id ? 'selected' : '' }}>
-                                                    {{ $campana->nombre_campana }}</option>
+                                                <option value="{{ $campana->id }}" {{ old('campana') == $campana->id ? 'selected' : '' }}>
+                                                    {{ $campana->nombre_campana }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
+                                    
                                     <div class="col-12 col-md-3 mb-3">
                                         <label for="supervisor" class="form-label">Supervisor:</label>
                                         <select name="supervisor" id="supervisor" class="form-select">
-                                            <option value="0">-- Selecciona una Campaña --</option>
+                                            <option value="">-- Selecciona un Supervisor --</option>
                                             @foreach ($supervisores as $supervisor)
-                                                <option value="{{ $supervisor->id }}"
+                                                <option class="text-uppercase" value="{{ $supervisor->id }}"
                                                     {{ old('supervisor') == $supervisor->id ? 'selected' : '' }}>
-                                                    {{ $supervisor->usuario }}</option>
+                                                    {{ $supervisor->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <input type="text" name="id_campana" id="id_campana">
+                                    <div class="col-12 col-md-3 mb-3">
+                                        <label for="agente" class="form-label">Agente:</label>
+                                        <select name="agente" id="agente" class="form-select">
+                                            <option value="">-- Selecciona un Agente --</option>
+                                            @foreach ($agentes as $agente)
+                                                <option class="text-uppercase" value="{{ $agente->id }}"
+                                                    {{ old('agente') == $agente->id ? 'selected' : '' }}>
+                                                    {{ $agente->apellido_paterno }} {{ $agente->apellido_materno }} {{ $agente->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-3 mb-3">
-                                        <label for="fecha_pago_1" class="form-label">Rango Fecha:</label>
-                                        <input type="text" name="fecha_pago_1" class="form-control" id="fecha_pago_1">
+                                        <label for="fecha_pago_1" class="form-label">Fecha 1:</label>
+                                        <input type="date" name="fecha_pago_1" class="form-control" id="fecha_pago_1" value="{{ old('fecha_pago_1') }}">
+
                                     </div>
-                                    <button type="submit" id="buscar_asistencias"
-                                        class="btn btn-primary waves-effect waves-light mb-3">Filtrar</button>
+                                    <div class="col-12 col-md-3 mb-3">
+                                        <label for="fecha_pago_2" class="form-label">Fecha 2:</label>
+                                        <input type="date" name="fecha_pago_2" class="form-control" id="fecha_pago_2" value="{{ old('fecha_pago_2') }}">
+                                    </div>
+                                    <div class="col-12 col-md-3 mb-3">
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light w-100">Filtrar</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
 
                         <div class="row">
-                            <table class="table table-middle table-nowrap mb-0 display nowrap" id="tabla_asistencias">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Agente</th>
-                                        <th>Total de Asistencias</th>
-                                        <th>Total de Retardos</th>
-                                        <th>Total de Faltas</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-middle table-nowrap mb-0 display nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Agente</th>
+                                            <th class="text-center">Total de Asistencias</th>
+                                            <th class="text-center">Total de Retardos</th>
+                                            <th class="text-center">Total de Faltas</th>
+                                            @foreach ($fechas as $fecha)
+                                                <th class="text-center">{{ $fecha->format('d-m-Y') }}</th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($usuarios as $usuario)
+                                            <tr>
+                                                <td>{{ $usuario->apellido_paterno }} {{ $usuario->apellido_materno }} {{ $usuario->name }}</td>
+                                                <td>{{ $usuario->usuario }}</td>
+                                                <td class="text-center">
+                                                    @if ($usuario->total_asistencias == 0)
+                                                        <span
+                                                            class="badge rounded-pill badge-soft-primary badge-border text-primary fs-5">
+                                                            0
+                                                        </span>
+                                                    @else
+                                                        <span
+                                                            class="badge rounded-pill badge-soft-success badge-border text-success fs-5">
+                                                            {{ $usuario->total_asistencias }}
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($usuario->total_retardos == 0)
+                                                        <span
+                                                            class="badge rounded-pill badge-soft-primary badge-border text-primary fs-5">
+                                                            0
+                                                        </span>
+                                                    @else
+                                                        <span
+                                                            class="badge rounded-pill badge-soft-warning badge-border text-warning fs-5">
+                                                            {{ $usuario->total_retardos }}
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($usuario->total_faltas == 0)
+                                                        <span
+                                                            class="badge rounded-pill badge-soft-primary badge-border text-primary fs-5">
+                                                            0
+                                                        </span>
+                                                    @else
+                                                        <span
+                                                            class="badge rounded-pill badge-soft-danger badge-border text-danger fs-5">
+                                                            {{ $usuario->total_faltas }}
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                @foreach ($fechas as $fecha)
+                                                @php
+                                                    $asistencia = $usuario->attendances->first(function ($asistencia) use ($fecha) {
+                                                        $fechaAsistencia = \Carbon\Carbon::parse($asistencia->fecha_login);
+                                                        return $fechaAsistencia->format('Y-m-d') == $fecha->format('Y-m-d');
+                                                    });
+                                                @endphp
+                                                <td class="text-center">
+                                                    @if ($asistencia)
+                                                        <a href="#" class="modal_show_incidencias link-personalizado" data-id="{{ $usuario->id }}">
+                                                            {{ $asistencia->tipo_asistencia }}
+                                                        </a>
+                                                    @else
+                                                        <a href="#" class="modal_show_incidencias link-personalizado" data-id="{{ $usuario->id }}">
+                                                            Sin dato
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="mt-3">
+                                    {!! $usuarios->appends(request()->except('_token'))->links('pagination::bootstrap-4') !!}
+                                </div>
+                            </div>
                         </div>
                     </div><!-- end card body -->
                 </div><!-- end card -->
@@ -159,130 +254,72 @@
                         </div>
                     </div>
 
-                    <ul class="nav nav-tabs mb-4" id="nav-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="tab-home-tab" data-bs-toggle="tab"
-                                data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
-                                aria-selected="true">Asistencias</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab-profile-tab" data-bs-toggle="tab"
-                                data-bs-target="#pills-profile" type="button" role="tab"
-                                aria-controls="pills-profile" aria-selected="false">Incidencias</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="tab-home-tab" tabindex="0">
-                            <table id="tab_asistencias" class="table table-middle table-nowrap mb-0 display nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Entrada</th>
-                                        <th>Salida</th>
-                                        <th>Asistencia</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="tab-profile-tab" tabindex="0">
-                            <form id="form">
-                                <div class="row align-items-end mb-4">
-                                    <div class="col-12 col-md-3">
-                                        <div class="form-label">Tipo de Incidencia</div>
-                                        <select class="form-select" name="tipo_incidencia">
-                                            <option>-- Selecciona una opción --</option>
-                                            <option value="A">ASISTENCIA</option>
-                                            <option value="C">CAPACITACIÓN</option>
-                                            <option value="V">VACACIONES</option>
-                                            <option value="F">FALTA</option>
-                                            <option value="FJ">FALTA JUSTIFICADA</option>
-                                            <option value="DL">DESCANSO LABORADO</option>
-                                            <option value="DFL">DIA FESTIVO LABORADO</option>
-                                            <option value="IE">INCAPACIDAD POR ENFERMEDAD</option>
-                                            <option value="IM">INCAPACIDAD POR MATERNIDAD</option>
-                                            <option value="IR">INCAPACIDAD POR RIESGO DE TRABAJO</option>
-                                            <option value="PD">PRIMA DOMINICAL</option>
-                                            <option value="D">DESCANSO</option>
-                                            <option value="PSG">PERMISO SIN GOCE DE SUELDO</option>
-                                            <option value="S">SUSPENSIÓN</option>
-                                            <option value="PP">PERMISO POR PATERNIDAD</option>
-                                            <option value="PDEF">PERMISO POR DEFUNCIÓN</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-12 col-md-3">
-                                        <label for="fecha_inicio">Fecha Inicio:</label>
-                                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control">
-                                    </div>
-
-                                    <div class="col-12 col-md-3">
-                                        <label for="fecha_fin">Fecha Fin:</label>
-                                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control">
-                                    </div>
-                                    
-                                    <div class="col-12 col-md-3">
-                                        <input type="submit" value="Guardar Incidencia" id="guardar_incidencia" class="btn btn-primary">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <table id="tab_incidencias" class="table table-middle table-nowrap mb-0 display nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th>Fecha</th>
-                                                <th>Agente</th>
-                                                <th>Tipo de Incidencia</th>
-                                                <th>Fecha Inicio</th>
-                                                <th>Fecha Fin</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                {{-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div> --}}
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="asistenciaModal" tabindex="-1" aria-labelledby="asistenciaModalLabel" aria-hidden="true">
-        <div class="modal-dialog" id="modal_dialog_asistenciaModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="asistenciaModalLabel">Editar Asistencia</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="form_editar_asistencia">
-                        <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3">
-                                <label for="motivo" class="form-label">Motivo</label>
-                                <select name="motivo" id="motivo" class="form-select">
+                    <form id="form">
+                        <input type="hidden" name="incidencia_id" id="incidencia_id">
+                        <div class="row align-items-end mb-4">
+                            <div class="col-12 col-md-3">
+                                <div class="form-label">Tipo de Incidencia</div>
+                                <select class="form-select" name="tipo_incidencia" id="tipo_incidencia">
                                     <option>-- Selecciona una opción --</option>
+                                    <option value="A">ASISTENCIA</option>
+                                    <option value="C">CAPACITACIÓN</option>
+                                    <option value="V">VACACIONES</option>
+                                    <option value="F">FALTA</option>
+                                    <option value="FJ">FALTA JUSTIFICADA</option>
+                                    <option value="DL">DESCANSO LABORADO</option>
+                                    <option value="DFL">DIA FESTIVO LABORADO</option>
                                     <option value="IE">INCAPACIDAD POR ENFERMEDAD</option>
                                     <option value="IM">INCAPACIDAD POR MATERNIDAD</option>
                                     <option value="IR">INCAPACIDAD POR RIESGO DE TRABAJO</option>
+                                    <option value="PD">PRIMA DOMINICAL</option>
+                                    <option value="D">DESCANSO</option>
+                                    <option value="PSG">PERMISO SIN GOCE DE SUELDO</option>
+                                    <option value="S">SUSPENSIÓN</option>
+                                    <option value="PP">PERMISO POR PATERNIDAD</option>
+                                    <option value="PDEF">PERMISO POR DEFUNCIÓN</option>
                                 </select>
                             </div>
-                            <div class="col-12 col-md-6 mb-3">
-                                <label for="documentacion" class="form-label">¿Cuenta con la documentación?</label>
-                                <select name="documentacion" id="documentacion" class="form-select">
+
+                            <div class="col-12 col-md-2">
+                                <label for="fecha_inicio">Fecha Inicio:</label>
+                                <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control">
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <label for="fecha_fin">Fecha Fin:</label>
+                                <input type="date" name="fecha_fin" id="fecha_fin" class="form-control">
+                            </div>
+
+                            <div class="col-12 col-md-3 d-none" id="entrega_de_documentos">
+                                <label for="entrega_documentos" class="entrego_documentos">¿Entrega documentos?</label>
+                                <select name="entrega_documentos" id="entrega_documentos" class="form-select">
                                     <option>-- Selecciona una opción --</option>
                                     <option value="SI">SI</option>
                                     <option value="NO">NO</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <input type="submit" value="Actualizar asistencia" class="btn btn-primary" disabled>
+                            
+                            <div class="col-12 col-md-2">
+                                <input type="submit" value="Guardar Incidencia" id="guardar_incidencia" class="btn btn-primary">
+                            </div>
                         </div>
                     </form>
+
+                    <div class="row">
+                        <table id="tab_incidencias" class="table table-middle table-nowrap mb-0 display nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Agente</th>
+                                    <th>Log</th>
+                                    <th>Tipo de Incidencia</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -290,104 +327,76 @@
 
     <script>
         $(document).ready(function() {
-            var start_date = null;
-            var end_date = null;
-
-            $('#fecha_pago_1').daterangepicker({
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    applyLabel: 'Aplicar',
-                    cancelLabel: 'Limpiar',
-                },
-            });
-
-            $('input[name="fecha_pago_1"]').on('apply.daterangepicker', function(ev, picker) {
-                // Almacena las fechas seleccionadas en las variables
-                start_date = picker.startDate.format('YYYY-MM-DD');
-                end_date = picker.endDate.format('YYYY-MM-DD');
-            });
-
-            $('body').on('click', '#buscar_asistencias', function(e) {
-                e.preventDefault();
-                $('#tabla_asistencias').DataTable().destroy();
-                $('#tabla_asistencias').show();
-
-                var campana = $('#campana').val();
-                var supervisor = $('#supervisor').val();
-                var fecha_inicio = start_date;
-                var fecha_fin = end_date;
-
-                $('#tabla_asistencias').DataTable({
-                    scrollCollapse: true,
-                    processing: true,
-                    serverSide: true,
-                    bAutoWidth: false,
-                    ajax: {
-                        url: "{{ route('asistencias') }}",
+            $('#campana').change(function() {
+                var campaignId = $(this).val();
+                if (campaignId) {
+                    $.ajax({
+                        url: '/get-supervisores/' + campaignId,
                         type: 'GET',
-                        data: {
-                            campana: campana,
-                            supervisor: supervisor,
-                            fecha_inicio: fecha_inicio,
-                            fecha_fin: fecha_fin,
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#supervisor').empty();
+                            $('#supervisor').append('<option value="">-- Selecciona un Supervisor --</option>');
+                            // En el id id_campana guardamos el id de la campaña seleccionada
+                            $('#id_campana').val(campaignId);
+                            $.each(data, function(key, value) {
+                                $('#supervisor').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                            });
                         }
-                    },
-                    columns: [{
-                            data: 'name',
-                            render: function(data, type, row) {
-                                return `${data}`;
-                            }
-                        },
-                        {
-                            data: 'usuario',
-                            render: function(data, type, row) {
-                                return `${data}`;
-                            }
-                        },
-                        {
-                            data: 'total_asistencias',
-                            render: function(data, type, row) {
-                                if (data == 0) {
-                                    return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary fs-5">0</span>`;
-                                } else {
-                                    return `<span class="badge rounded-pill badge-soft-success badge-border text-success fs-5">${data}</span>`;
-                                }
-                            }
-                        },
-                        {
-                            data: 'total_retardos',
-                            render: function(data, type, row) {
-                                if (data == 0) {
-                                    return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary fs-5">0</span>`;
-                                } else {
-                                    return `<span class="badge rounded-pill badge-soft-warning badge-border text-warning fs-5">${data}</span>`;
-                                }
-                            }
-                        },
-                        {
-                            data: 'total_faltas',
-                            render: function(data, type, row) {
-                                if (data == 0) {
-                                    return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary fs-5">0</span>`;
-                                } else {
-                                    return `<span class="badge rounded-pill badge-soft-danger badge-border text-danger fs-5">${data}</span>`;
-                                }
-                            }
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ],
-                    columnDefs: [{
-                        targets: [2, 3, 4],
-                        className: 'text-center align-middle'
-                    }],
-                    language: idiomaDataTable
+                    });
+                }
+            });
+
+            $('#supervisor').change(function() {
+                var supervisorId = $(this).val();
+                var group_id = $('#id_campana').val();
+                if (supervisorId) {
+                    $.ajax({
+                        url: '/get-agentes/' + supervisorId + '/' + group_id,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#agente').empty();
+                            $('#agente').append('<option value="">-- Selecciona un Agente --</option>');
+                            $.each(data, function(key, value) {
+                                $('#agente').append('<option value="'+ value.id +'">'
+                                    + value.apellido_paterno + " "
+                                    + value.apellido_materno + " "
+                                    + value.name +
+                                '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+
+            // AL DAR CLIC EN EL BOTON EDITAR QUE TIENE UN data-id, SE ABRE UN SWEETALERT CON UN FORMULARIO PARA EDITAR EL REGISTRO
+            $('body').on('click', '.edit_btn', function(e){
+                e.preventDefault();
+                var incidencia_id = $(this).data('id');
+
+                // Creamos la url para enviarla al controlador
+                var url = "{{ route('editar-incidencia', ':id') }}";
+                url = url.replace(':id', incidencia_id);
+
+                // Creamos el ajax para consultar al controlador
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: incidencia_id,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if(response.code == 200){
+                            $('#incidencia_id').val(response.incidencia.id);
+                            $('#tipo_incidencia').val(response.incidencia.tipo_incidencia);
+                            $('#fecha_inicio').val(response.incidencia.fecha_desde);
+                            $('#fecha_fin').val(response.incidencia.fecha_hasta);
+                            $('#entrega_documentos').val(response.incidencia.entrega_documentos);
+                            $('#observaciones').val(response.incidencia.observaciones);
+                        }
+                    }
                 });
-            })
+            });
 
             $('body').on('click', '.modal_show_incidencias', function(e) {
                 e.preventDefault();
@@ -407,8 +416,8 @@
                     data: user_id,
                     dataType: "JSON",
                     success: function(response) {
-                        console.log(response.usuario.usuario);
-                        $('#name_agent').val(response.usuario.name);
+                        var nombreCompleto = response.usuario.apellido_paterno + ' ' + response.usuario.apellido_materno + ' ' + response.usuario.name;
+                        $('#name_agent').val(nombreCompleto);
                         $('#user_id').val(response.usuario.id);
                         $('#usuario_name').val(response.usuario.usuario);
                     }
@@ -417,60 +426,6 @@
                 // Creamos la url para enviarla al controlador
                 var url_2 = "{{ route('consultar-asistencia-usuario', ':id') }}";
                 url_2 = url_2.replace(':id', user_id);
-
-                $('#tab_asistencias').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    responsive: true,
-                    bAutoWidth: true,
-                    ajax: {
-                        url: url_2,
-                        type: 'GET',
-                        data: {
-                            user_id: user_id,
-                        }
-                    },
-                    columns: [{
-                            data: 'fecha_login',
-                            render: function(data, type, row) {
-                                return `${data}`;
-                            }
-                        },
-                        {
-                            data: 'hora_login',
-                            render: function(data, type, row) {
-                                return `${data}`;
-                            }
-                        },
-                        {
-                            data: 'hora_logout',
-                            render: function(data, type, row) {
-                                return `${data}`;
-                            }
-                        },
-                        {
-                            data: 'tipo_asistencia',
-                            render: function(data, type, row) {
-                                if(data == 'A'){
-                                    return `<span class="badge rounded-pill badge-soft-success badge-border text-success fs-5">ASISTENCIA</span>`;
-                                }else if(data == 'A+'){
-                                    return `<span class="badge rounded-pill badge-soft-success badge-border text-success fs-5">ASISTENCIA (+)</span>`;
-                                }else if(data == 'F'){
-                                    return `<span class="badge rounded-pill badge-soft-danger badge-border text-danger fs-5">FALTA</span>`;
-                                }else if(data == 'R'){
-                                    return `<span class="badge rounded-pill badge-soft-warning badge-border text-warning fs-5">RETARDO</span>`;
-                                }
-                            }
-                        },
-                        {
-                            data: 'action',
-                            render: function(data, type, row) {
-                                return `${data}`;
-                            }
-                        },
-                    ],
-                    language: idiomaDataTable
-                });
                 
                 // Creamos la url para enviarla al controlador
                 var url_3 = "{{ route('consultar-incidencias-usuario', ':id') }}";
@@ -501,6 +456,12 @@
                             }
                         },
                         {
+                            data: 'user_modification',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
                             data: 'tipo_incidencia',
                             render: function(data, type, row) {
                                 return `${data}`;
@@ -518,11 +479,46 @@
                                 return `${data}`;
                             }
                         },
+                        { data: 'action', name: 'action'},
                     ],
                     language: idiomaDataTable
                 });
 
                 // $('#tabla_usuarios').DataTable().ajax.reload();
+            });
+
+            // DETECTAMOS CUANDO EL SELECT CON ID TIPO_INCIDENCIA CAMBIA DE VALOR Y SI EL VALOR ES IE, IM E IR LANZAMOS UN SWEETALERT CON EL SIGUIENTE MENSAJE "RECUERDA VALIDAR QUE EL EMPLEADO ENTREGUE LA DOCUMENTACION COMPLETA" Y LE DAMOS LA OPCION AL USUARIO DE ACEPTAR PARA CERRAR EL ALERT
+            $('select[name="tipo_incidencia"]').on('change', function(){
+                if($(this).val() == 'IE' || $(this).val() == 'IM' || $(this).val() == 'IR'){
+                    // BLOQUEAMOS EL BOTON DE GUARDAR INCIDENCIA
+                    $('input[type="submit"]').attr('disabled', 'disabled');
+
+                    // MOSTRAMOS EL SELECT CON ID ENTREGA_DOCUMENTOS
+                    $('#entrega_de_documentos').removeClass('d-none');
+
+                    Swal.fire({
+                        title: 'Recuerda validar que el empleado entregue la documentación completa',
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }else{
+                    // QUITAMOS EL ATRIBUTO DISABLED DEL BOTON DE GUARDAR INCIDENCIA
+                    $('input[type="submit"]').removeAttr('disabled');
+
+                    // OCULTAMOS EL SELECT CON ID ENTREGA_DOCUMENTOS
+                    $('#entrega_de_documentos').addClass('d-none');
+                }
+            });
+
+            // DETECTAMOS CUANDO EL SELECT CON ID ENTREGA_DOCUMENTOS CAMBIA DE VALOR Y SI EL VALOR ES SI, QUITAMOS EL ATRIBUTO DISABLED DEL BOTON DE GUARDAR INCIDENCIA
+            $('select[name="entrega_documentos"]').on('change', function(){
+                if($(this).val() == 'SI'){
+                    $('input[type="submit"]').removeAttr('disabled');
+                }else{
+                    $('input[type="submit"]').attr('disabled', 'disabled');
+                }
             });
 
             $('body').on('click', '#guardar_incidencia', function(e){
@@ -547,39 +543,20 @@
                     dataType: "JSON",
                     success: function (response) {
                         if(response.code == 200){
+                            // MOSTRAMOS UN SWEETALERT DE EXITO Y AL DAR EN ACEPTAR RECARGA LA PAGINA ACTUAL
                             Swal.fire({
+                                title: 'Incidencia guardada correctamente',
                                 icon: 'success',
-                                title: 'Incidencia Guardada',
-                                showConfirmButton: false,
-                                timer: 1500
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
                             });
                             $('#tab_incidencias').DataTable().ajax.reload();
                         }
-                    }
-                });
-            });
-
-            $('body').on('click', '.modal_show_asistencia', function(e){
-                e.preventDefault();
-                $('#asistenciaModal').modal('show');
-                var asistencia_id = $(this).data('id');
-
-                // Si el select con id documentacion cambia de valor a si, se quita el atributo disabled del boton si es no, no deja guardar
-                $('#documentacion').on('change', function(){
-                    if($(this).val() == 'SI'){
-                        $('input[type="submit"]').removeAttr('disabled');
-
-                        $.ajax({
-                            type: "method",
-                            url: "url",
-                            data: "data",
-                            dataType: "dataType",
-                            success: function (response) {
-                                
-                            }
-                        });
-                    }else{
-                        $('input[type="submit"]').attr('disabled', 'disabled');
                     }
                 });
             });

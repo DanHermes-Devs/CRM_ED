@@ -13,12 +13,12 @@ class Group extends Model
     protected $table = 'groups';
 
     protected $fillable = [
-        'id_project',
-        'id_user',
-        'grupo',
-        'description',
-        'status',
-        'deleted_at'
+        'nombre_grupo',
+        'descripcion',
+        'estatus',
+        'turno',
+        'campaign_id',
+        'pais_id',
     ];
 
     // RELACION DE UNO A MUCHOS CON LA TABLA USERS
@@ -34,5 +34,10 @@ class Group extends Model
     // RELACION DE UNO A MUCHOS CON LA TABLA PAISES
     public function pais(){
         return $this->belongsTo(Pais::class);
+    }
+
+    // RELACION DE UNO A MUCHOS CON LA TABLA GROUP_SUPERVISORS
+    public function supervisors(){
+        return $this->belongsToMany(User::class, 'group_supervisors');
     }
 }

@@ -5,6 +5,16 @@
         {!! $errors->first('nombre_campana', '<div class="invalid-feedback">:message</div>') !!}
     </div>
     <div class="mb-3 col-12 col-md-6">
+        {{ Form::label('Empresa') }}
+        {{ Form::text('empresa', $campaign->empresa, ['class' => 'form-control' . ($errors->has('empresa') ? ' is-invalid' : ''), 'placeholder' => 'Nombre de la campaña']) }}
+        {!! $errors->first('empresa', '<div class="invalid-feedback">:message</div>') !!}
+    </div>
+    <div class="mb-3 col-12 col-md-6">
+        {{ Form::label('Tipo de Proyecto') }}
+        {{ Form::text('tipo_proyecto', $campaign->tipo_proyecto, ['class' => 'form-control' . ($errors->has('tipo_proyecto') ? ' is-invalid' : ''), 'placeholder' => 'Nombre de la campaña']) }}
+        {!! $errors->first('tipo_proyecto', '<div class="invalid-feedback">:message</div>') !!}
+    </div>
+    <div class="mb-3 col-12 col-md-6">
         {{ Form::label('Descripción de la campaña') }}
         {{ Form::text('descripcion_campana', $campaign->descripcion_campana, ['class' => 'form-control' . ($errors->has('descripcion_campana') ? ' is-invalid' : ''), 'placeholder' => 'Descripción de la campaña']) }}
         {!! $errors->first('descripcion_campana', '<div class="invalid-feedback">:message</div>') !!}

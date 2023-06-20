@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use App\Models\Receipt;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class sendPaymentReminderSMS extends Command
 {
@@ -109,7 +110,8 @@ class sendPaymentReminderSMS extends Command
 
             // Parseamos la respuesta
             $parser = simplexml_load_string($response2);
-            $this->info($response2);
+            $fecha_hoy = Carbon::now()->format('Y-m-d');
+            Log::channel('sendPaymentReminderSMS')->info($smsText . ' Fecha de inserción en OCM: ' . $fecha_hoy);
             return $parser;
         }
     }

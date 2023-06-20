@@ -37,76 +37,111 @@
                         </div>
 
                         {{-- Formulario para agregar nuevo usuario --}}
-                        <form action="{{ route('grupos.store') }}" method="POST" novalidate>
+                        <form action="{{ route('grupos.update', $grupo->id) }}" method="POST" novalidate>
                             @csrf
+                            @method('PUT')
                             <div class="row">
-                                <div class="mb-3">
-                                    <label for="grupo" class="form-label">Nombre del Grupo:</label>
-                                    <input type="text" class="form-control @error('grupo') is-invalid @enderror" id="grupo" name="grupo" placeholder="Nombre del grupo" value="{{ old('grupo', $grupo->grupo) }}">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="nombre_grupo" class="form-label">Nombre del Grupo:</label>
+                                    <input type="text" class="form-control @error('nombre_grupo') is-invalid @enderror" id="nombre_grupo" name="nombre_grupo" placeholder="Nombre del grupo" value="{{ $grupo->nombre_grupo }}">
                                     
-                                    @error('grupo')
+                                    @error('nombre_grupo')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
                                         </span>
                                     @enderror
                                 </div>
 
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="turno" class="form-label">Turno:</label>
+                                    <select class="form-select @error('turno') is-invalid @enderror" id="turno" name="turno">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="1" {{ $grupo->turno == 1 ? 'selected' : '' }}>Matutino</option>
+                                        <option value="2" {{ $grupo->turno == 2 ? 'selected' : '' }}>Vespertino</option>
+                                        <option value="3" {{ $grupo->turno == 3 ? 'selected' : '' }}>Nocturno</option>
+                                    </select>
+                                    
+                                    @error('turno')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="campaign_id" class="form-label">Campaña:</label>
+                                    <select class="form-select @error('campaign_id') is-invalid @enderror" id="campaign_id" name="campaign_id">
+                                        <option value="">Seleccione una opción</option>
+                                        @foreach ($campanas as $campana)
+                                            <option value="{{ $campana->id }}" {{ $grupo->campaign_id == $campana->id ? 'selected' : '' }}>{{ $campana->nombre_campana }}</option>
+                                        @endforeach
+                                    </select>
+                                    
+                                    @error('campaign_id')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="pais_id" class="form-label">País:</label>
+                                    <select class="form-select @error('pais_id') is-invalid @enderror" id="pais_id" name="pais_id">
+                                        <option value="">Seleccione una opción</option>
+                                        @foreach ($paises as $pais)
+                                            <option value="{{ $pais->id }}" {{ $grupo->pais_id == $pais->id ? 'selected' : '' }}>{{ $pais->pais }}</option>
+                                        @endforeach
+                                    </select>
+                                    
+                                    @error('pais_id')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="estatus" class="form-label">Estatus:</label>
+                                    <select class="form-select @error('estatus') is-invalid @enderror" id="estatus" name="estatus">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="1" {{ $grupo->estatus == 1 ? 'selected' : '' }}>Activo</option>
+                                        <option value="0" {{ $grupo->estatus == 0 ? 'selected' : '' }}>Inactivo</option>
+                                    </select>                                    
+
+                                    @error('estatus')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-12 col-md-6 mb-3">
+                                    <label for="supervisor" class="form-label">Supervisor:</label>
+                                    <select class="form-select @error('supervisor') is-invalid @enderror" id="supervisor" name="supervisor">
+                                        <option value="">Seleccione una opción</option>
+                                        @foreach ($supervisores as $supervisor)
+                                            <option value="{{ $supervisor->id }}" {{ $grupo->supervisor == $supervisor->id ? 'selected' : '' }}>{{ $supervisor->name }}</option>
+                                        @endforeach
+                                    </select>                                    
+
+                                    @error('supervisor')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }} </strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            
+                            <div>
                                 <div class="mb-3">
                                     <label for="descripcion" class="form-label">Descripción:</label>
                                     <textarea class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" rows="3">{{ old('descripcion', $grupo->descripcion) }}</textarea>
 
                                     @error('descripcion')
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }} </strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                {{-- Checkboxes con lista de proyectos --}}
-                                <div class="col-6">
-                                    <div class="mb-3">
-                                        <label for="proyecto" class="form-label">Proyectos:</label>
-                                        <select name="proyecto" id="proyecto" class="form-select @error('proyecto') is-invalid @enderror">
-                                            @foreach ($proyectos as $proyecto)
-                                                {{-- Mostramos el proyecto seleccionado desde la bD --}}
-                                                <option value="{{ $proyecto->id }}" {{ $proyecto->id == $grupo->proyecto_id ? 'selected' : '' }}>{{ $proyecto->proyecto }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                    
-                                {{-- Checkboxes con lista de usuarios --}}
-                                <div class="col-6">
-                                    <div class="mb-3">
-                                        <label for="usuarios" class="form-label">Usuarios:</label>
-                                        <select name="usuarios[]" id="usuarios" class="form-select @error('usuarios') is-invalid @enderror" multiple>
-                                            @foreach ($usuarios as $usuario)
-                                                {{-- Validamos que la variable $json_users tenga algo --}}
-                                                @if (!$json_users)
-                                                    <option value="{{ $usuario->id }}" {{ in_array($usuario->id, $json_users) ? 'selected' : '' }}>{{ $usuario->name }}</option>
-                                                @else
-                                                    <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-
-                                        @error('usuarios')
-                                            <span class="invalid-feedback d-block" role="alert">
-                                                <strong>{{ $message }} </strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="estatus" class="form-label">Estatus:</label>
-                                    <select class="form-select @error('estatus') is-invalid @enderror" id="estatus" name="estatus">
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="1" {{ old('estatus') == 1 ? 'selected' : '' }}>Activo</option>
-                                        <option value="0" {{ old('estatus') == 0 ? 'selected' : '' }}>Inactivo</option>
-                                    </select>
-
-                                    @error('estatus')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
                                         </span>

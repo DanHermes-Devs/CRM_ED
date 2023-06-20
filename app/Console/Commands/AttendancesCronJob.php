@@ -51,87 +51,114 @@ class AttendancesCronJob extends Command
             die("Error al conectarse a la base de datos: " . mysqli_connect_error());
         }
 
-        // Ponemos la fecha de ayer 29 de mayo del 2023
         $fecha_actual = Carbon::now()->format('Y-m-d');
-        // En la fecha ponemos un rango de fechas de hoy hasta 10 dias anteriores para actualizar en la bd
-        // $fecha_actual = Carbon::now()->subDays(3)->format('Y-m-d');
 
-        $query = "SELECT agent, MIN(fecha) AS primer_login, MAX(fecha) AS primer_logout
-        FROM ocm_log_agentstatus
-        WHERE DATE(fecha) BETWEEN '2023-01-01' AND '$fecha_actual'
-        AND (estado = 'LOGIN' OR estado = 'LOGOUT')
-        GROUP BY agent;";
+        $query = "SELECT agent, fecha AS timestamp, estado
+            FROM ocm_log_agentstatus
+            WHERE DATE(fecha) = '2023-06-13'
+            AND (estado = 'LOGIN' OR estado = 'LOGOUT')
+            ORDER BY agent, fecha;        
+        ";
 
         $result = mysqli_query($connection, $query);
 
+        $agentesConLogin = [];
+
         if ($result) {
-            // Procesar los resultados de la consulta
             while ($row = mysqli_fetch_assoc($result)) {
-                // Obtener los valores de cada registro
                 $agent = $row['agent'];
-                $primer_registro = $row['primer_login'];
-                $primer_logout = $row['primer_logout'];
+                $timestamp = $row['timestamp'];
+                $estado = $row['estado'];
 
-                // Obtener el usuario correspondiente al agente en la tabla users
-                $user = User::where('usuario', $agent)->first();
+                if ($estado == 'LOGIN') {
+                    $agentesConLogin[$agent] = true;  // Agrega el agente a la lista
+                }
                 
+                $user = User::where('usuario', $agent)
+                ->whereNotNull('hora_entrada')
+                ->whereNotNull('hora_salida')
+                ->first();            
+        
                 if ($user) {
-                    // Separar la fecha y hora del primer registro
-                    $fecha_login = date('Y-m-d', strtotime($primer_registro));
-                    $hora_login = date('H:i:s', strtotime($primer_registro));
-
-                    // Separar la fecha y hora del primer logout
-                    $fecha_logout = date('Y-m-d', strtotime($primer_logout));
-                    $hora_logout = date('H:i:s', strtotime($primer_logout));
-
-                    // Verificar si ya existe un registro con la misma fecha actual y agente
-                    $existingAttendance = Attendance::where('agente', $agent)
-                    ->whereDate('fecha_login', $fecha_login)
-                    ->first();
-
-                    if(!$existingAttendance)
-                    {
-                        // Crear una instancia de Attendance
-                        $attendance = new Attendance();
-                        $attendance->agente = $agent;
-                        $attendance->fecha_login = $fecha_login;
-                        $attendance->hora_login = $hora_login;
-                        $attendance->fecha_logout = $fecha_logout;
-                        $attendance->hora_logout = $hora_logout;
-
-                        // Verificar si el agente existe en la tabla 'users' y asignar el agente_id correspondiente
-                        $attendance->agent_id = $user->id;
-
-                        // Obtener la hora de entrada del usuario
-                        $hora_entrada_usuario = date('H:i', strtotime($user->hora_entrada));
+                    $fecha = date('Y-m-d', strtotime($timestamp));
+                    $hora = date('H:i:s', strtotime($timestamp));
+            
+                    if ($estado == 'LOGIN') {
+                        $existingAttendance = Attendance::where('agente', $agent)
+                        ->whereDate('fecha_login', $fecha)
+                        ->first();
                         
-                        // Calcular la diferencia en minutos entre la hora de entrada de la asistencia y la hora de entrada del usuario
-                        $diferencia_minutos = (strtotime($hora_login) - strtotime($hora_entrada_usuario)) / 60;
-
-                        // Validación 1: Asistencia correcta
-                        if ($diferencia_minutos >= 0 && $diferencia_minutos <= 14) {
-                            $attendance->tipo_asistencia = 'A';
+                        if (!$existingAttendance) {
+                            $attendance = new Attendance();
+                            $attendance->agente = $agent;
+                            $attendance->fecha_login = $fecha;
+                            $attendance->hora_login = $hora;
+                            $attendance->agent_id = $user->id;
+        
+                            $hora_entrada_usuario = date('H:i', strtotime($user->hora_entrada));
+                            
+                            $diferencia_minutos = (strtotime($hora) - strtotime($hora_entrada_usuario)) / 60;
+        
+                            if ($diferencia_minutos >= 0 && $diferencia_minutos <= 14) {
+                                $attendance->tipo_asistencia = 'A';
+                            } elseif ($diferencia_minutos >= 15) {
+                                $attendance->tipo_asistencia = 'R';
+                            } else {
+                                $attendance->tipo_asistencia = "A+";
+                            }
+            
+                            $attendance->save();
                         }
-                        // Validación 2: Retardo
-                        elseif ($diferencia_minutos >= 15) {
-                            $attendance->tipo_asistencia = 'R';
+                    } elseif ($estado == 'LOGOUT') {
+                        $existingAttendance = Attendance::where('agente', $agent)
+                        ->whereDate('fecha_login', $fecha)
+                        ->first();
+                        
+                        if ($existingAttendance) {
+                            $existingAttendance->fecha_logout = $fecha;
+                            $existingAttendance->hora_logout = $hora;
+        
+                            if ($existingAttendance->tipo_asistencia === 'A' && $existingAttendance->hora_login === null) {
+                                $existingAttendance->tipo_asistencia = 'F';
+                            }
+                            
+                            $existingAttendance->save();
                         }
-                        // Validación 3: No inicio de sesión
-                        elseif ($primer_logout === null) {
-                            $attendance->tipo_asistencia = 'F';
-                        }else{
-                            $attendance->tipo_asistencia = "A+";
-                        }
-
-                        $attendance->save();
-
-                        // Mandamos mensaje a la consola del cron job
-                        $this->info('Asistencia actualizada para el agente: ' . $agent);
                     }
-                }                
+                }
+            }
+            //  Buscamos los agentes que no hicieron login y los agregamos a la tabla de asistencias
+            $usuariosSinLogin = User::whereDoesntHave('attendances', function ($query) use ($fecha_actual) {
+                $query->whereDate('fecha_login', $fecha_actual);
+            })->whereNotNull('hora_entrada')
+            ->whereNotNull('hora_salida')
+            ->whereNotIn('usuario', array_keys($agentesConLogin))  // Asegúrate de que el usuario no esté en la lista de agentes que hicieron "login"
+            ->get();
+
+            // Obtenemos el dia de la semana, 0 = Domingo, 1 = Lunes, ..., 6 = Sabado
+            $dia_semana = date('w', strtotime($fecha_actual));
+
+            if($dia_semana != 0 && Carbon::parse($fecha_actual)->lt(Carbon::today())) {
+                foreach ($usuariosSinLogin as $usuario) {
+                    $falta = new Attendance();
+                    $falta->agente = $usuario->usuario;
+                    $falta->fecha_login = $fecha_actual;
+                    $falta->agent_id = $usuario->id;
+                    $falta->tipo_asistencia = 'F';  // F para falta
+                    $falta->save();
+                }
+            }else{
+                // SI EL DIA DE LA SEMANA ES DOMINGO, NO SE AGREGAN FALTAS, SE AGREGA "Sin Datos" EN LA TABLA DE ASISTENCIAS
+                foreach ($usuariosSinLogin as $usuario) {
+                    $sinDatos = new Attendance();
+                    $sinDatos->agente = $usuario->usuario;
+                    $sinDatos->fecha_login = $fecha_actual;
+                    $sinDatos->agent_id = $usuario->id;
+                    $sinDatos->tipo_asistencia = 'Sin Datos';  // SD para Sin Datos
+                    $sinDatos->save();
+                }
             }
         } else {
-            // Manejo del error de consulta
             echo "Error al ejecutar la consulta: " . mysqli_error($connection);
         }
     }

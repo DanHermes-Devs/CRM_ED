@@ -46,10 +46,14 @@ class checkForRecycling extends Command
     {
         $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
-        $records = Venta::where('ocmdaytosend', '=', Carbon::now()->subDays(7)->startOfDay()->format('Y-m-d'))
+        $records = Venta::where('ocmdaytosend', '=', Carbon::now()->subDays(8)->startOfDay()->format('Y-m-d'))
             ->where('tVenta', 'RENOVACION')
             ->whereNotIn('UGestion', ['RENOVACION', 'PROMESA DE PAGO'])
-            ->take(2)
+            ->whereNull('OCMSent')
+            ->whereNull('ocmdaytosend')
+            ->whereNull('OCMSent_motor_c')
+            ->whereNull('ocmdaytosend_motor_c')
+            ->take(10)
             ->get();
 
 
@@ -68,13 +72,13 @@ class checkForRecycling extends Command
                     $idload = 134;
                 }
             } elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
-                if ($record->campana === 'RENOVACIONES_QUALITAS_B_MOTOR') {
-                    $skilldata = 'RENOVACIONES_QUALITAS_C_MOTOR';
+                if ($record->campana === 'REN_QUALITAS_B_MOTOR') {
+                    $skilldata = 'REN_QUALITAS_C_MOTOR';
                     $idload = 139;
-                } elseif ($record->campana === 'RENOVACIONES_QUALITAS_C_MOTOR') {
+                } elseif ($record->campana === 'REN_QUALITAS_C_MOTOR') {
                     // Si ya pertenece a MOTOR C, no hagas nada o realiza alguna otra acción
                 } else {
-                    $skilldata = 'RENOVACIONES_QUALITAS_B_MOTOR';
+                    $skilldata = 'REN_QUALITAS_B_MOTOR';
                     $idload = 138;
                 }
             }
@@ -83,16 +87,25 @@ class checkForRecycling extends Command
             $response = $this->sendData($url_ocm, $data);
 
             if ($response->successful()) {
-                if ($skilldata === 'RENOVACIONES_B_MOTOR' || $skilldata === 'RENOVACIONES_QUALITAS_B_MOTOR') {
-                    $record->OCMSent = true;
-                    $record->ocmdaytosend = Carbon::now();
-                }elseif($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'RENOVACIONES_QUALITAS_C_MOTOR'){
-                    $record->OCMSent_motor_c = true;
-                    $record->ocmdaytosend_motor_c = Carbon::now();
-                }
+                if($response['result'] == 'error'){
+                    Log::info("Error: " . $response['description']);
+                }else{
+                    if ($skilldata === 'RENOVACIONES_B_MOTOR' || $skilldata === 'REN_QUALITAS_B_MOTOR') {
+                        $record->campana = $skilldata;
+                        $record->OCMSent = true;
+                        $record->ocmdaytosend = Carbon::now();
+                    }elseif($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'REN_QUALITAS_C_MOTOR'){
+                        $record->campana = $skilldata;
+                        $record->OCMSent_motor_c = true;
+                        $record->ocmdaytosend_motor_c = Carbon::now();
+                    }
 
-                $record->campana = $skilldata;
-                $record->save();
+                    $record->save();
+
+                    $fecha_hoy = Carbon::now()->format('Y-m-d');
+                    
+                    Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
+                }
             }
         }
     }
