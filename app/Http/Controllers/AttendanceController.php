@@ -44,6 +44,7 @@ class AttendanceController extends Controller
         $usuarios = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['Administrador', 'Coordinador', 'Supervisor', 'Director']);
         })
+        ->where('estatus', '=', 1)
         ->whereNotNull('hora_entrada')
         ->whereNotNull('hora_salida')
         ->whereHas('attendances')
@@ -72,16 +73,16 @@ class AttendanceController extends Controller
                 $query->where('tipo_asistencia', 'A+');
             }
         ])
-        ->paginate(10);
+        ->paginate(100);
 
         // Retornamos las campañas
-        $campanas = Campaign::all();
+        $campanas = Campaign::where('status', '=', 1)->get();
 
         // Retornamos a los supervisores
         $supervisores = User::role('Supervisor')->get();
 
         // Retornamos a los agentes con rol Agente de Ventas
-        $agentes = User::role('Agente de Ventas')->get();
+        $agentes = User::role('Agente de Ventas')->where('estatus', '=', 1)->get();
 
         return view('crm.modulo_usuarios.asistencias.asistencias', compact('campanas', 'supervisores', 'usuarios', 'asistencias', 'asistenciasPorFecha', 'fechas', 'agentes'));
     }
