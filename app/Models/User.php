@@ -113,4 +113,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Education::class, 'agent_intra');
     }
+
+    // Relacion con group_supervisors
+    public function group_supervisors()
+    {
+        return $this->hasMany(GroupSupervisor::class, 'user_id');
+    }
 }

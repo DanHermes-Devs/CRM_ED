@@ -35,4 +35,9 @@ class Group extends Model
     public function pais(){
         return $this->belongsTo(Pais::class);
     }
+
+    // RELACION DE UNO A MUCHOS CON LA TABLA GROUP_SUPERVISORS
+    public function groupSupervisors(){
+        return $this->hasMany(GroupSupervisor::class);
+    }
 }
