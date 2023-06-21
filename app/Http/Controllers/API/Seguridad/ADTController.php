@@ -41,7 +41,6 @@ class ADTController extends Controller
                 "message" => "La cuenta ya esta registrada con la misma codificación",
             ]);
         }else{
-            $supervisor = User::where('usuario', $request->supervisor)->first();
             $adt = new Adt;
             $adt->contact_id = $request->contact_id;
             $adt->fecha_venta = $request->fecha_venta;
@@ -49,7 +48,6 @@ class ADTController extends Controller
             $adt->login_ocm = $request->login_ocm;
             $adt->login_intranet = $request->login_intranet;
             $adt->nombre_agente = $request->nombre_agente;
-            $adt->supervisor = $supervisor->id;
             $adt->codificacion = $request->codificacion;
             $adt->cuenta_adt = $request->cuenta_adt;
             $adt->cliente_nombre = $request->cliente_nombre;
