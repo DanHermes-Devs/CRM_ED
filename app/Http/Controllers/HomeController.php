@@ -234,7 +234,7 @@ private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_
                             WHERE skilldata  IN ('".$skill_Def_FB."', '".$skill_Def_GO."')
                     AND fecha BETWEEN ".$date_inicial." AND ".$date_final."
                     AND attempt = 1
-                    AND timecall > 5
+                    -- AND timecall > 5
                 ORDER BY fecha DESC) l
         WHERE row_numb = 1
             AND agent <> ''

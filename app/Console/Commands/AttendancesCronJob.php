@@ -55,9 +55,9 @@ class AttendancesCronJob extends Command
 
         $query = "SELECT agent, fecha AS timestamp, estado
             FROM ocm_log_agentstatus
-            WHERE DATE(fecha) = '2023-06-13'
+            WHERE DATE(fecha) BETWEEN '2023-06-01' AND '2023-06-16'
             AND (estado = 'LOGIN' OR estado = 'LOGOUT')
-            ORDER BY agent, fecha;        
+            ORDER BY agent, fecha;
         ";
 
         $result = mysqli_query($connection, $query);
@@ -73,32 +73,32 @@ class AttendancesCronJob extends Command
                 if ($estado == 'LOGIN') {
                     $agentesConLogin[$agent] = true;  // Agrega el agente a la lista
                 }
-                
+
                 $user = User::where('usuario', $agent)
                 ->whereNotNull('hora_entrada')
                 ->whereNotNull('hora_salida')
-                ->first();            
-        
+                ->first();
+
                 if ($user) {
                     $fecha = date('Y-m-d', strtotime($timestamp));
                     $hora = date('H:i:s', strtotime($timestamp));
-            
+
                     if ($estado == 'LOGIN') {
                         $existingAttendance = Attendance::where('agente', $agent)
                         ->whereDate('fecha_login', $fecha)
                         ->first();
-                        
+
                         if (!$existingAttendance) {
                             $attendance = new Attendance();
                             $attendance->agente = $agent;
                             $attendance->fecha_login = $fecha;
                             $attendance->hora_login = $hora;
                             $attendance->agent_id = $user->id;
-        
+
                             $hora_entrada_usuario = date('H:i', strtotime($user->hora_entrada));
-                            
+
                             $diferencia_minutos = (strtotime($hora) - strtotime($hora_entrada_usuario)) / 60;
-        
+
                             if ($diferencia_minutos >= 0 && $diferencia_minutos <= 14) {
                                 $attendance->tipo_asistencia = 'A';
                             } elseif ($diferencia_minutos >= 15) {
@@ -106,22 +106,22 @@ class AttendancesCronJob extends Command
                             } else {
                                 $attendance->tipo_asistencia = "A+";
                             }
-            
+
                             $attendance->save();
                         }
                     } elseif ($estado == 'LOGOUT') {
                         $existingAttendance = Attendance::where('agente', $agent)
                         ->whereDate('fecha_login', $fecha)
                         ->first();
-                        
+
                         if ($existingAttendance) {
                             $existingAttendance->fecha_logout = $fecha;
                             $existingAttendance->hora_logout = $hora;
-        
+
                             if ($existingAttendance->tipo_asistencia === 'A' && $existingAttendance->hora_login === null) {
                                 $existingAttendance->tipo_asistencia = 'F';
                             }
-                            
+
                             $existingAttendance->save();
                         }
                     }

@@ -72,6 +72,12 @@ return [
             'level' => 'info',
         ],
 
+        'insertDataToEndPoint' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/insertDataToEndPoint.log'),
+            'level' => 'info',
+        ],
+
         'login' => [
             'driver' => 'daily',
             'path' => storage_path('logs/login.log'),

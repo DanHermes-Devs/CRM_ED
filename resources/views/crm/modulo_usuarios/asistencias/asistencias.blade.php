@@ -28,7 +28,7 @@
     table#tab_asistencias {
         width: 100%!important;
     }
-    
+
     table#tab_incidencias {
         width: 100%!important;
     }
@@ -84,7 +84,7 @@
                                 </div>
                             </a>
                         </div>
-                        
+
                         {{-- Formulario para agregar nuevo usuario --}}
                         <div class="row">
                             <form action="{{ route('asistencias') }}" method="GET">
@@ -100,7 +100,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    
+
                                     <div class="col-12 col-md-3 mb-3">
                                         <label for="supervisor" class="form-label">Supervisor:</label>
                                         <select name="supervisor" id="supervisor" class="form-select">
@@ -112,7 +112,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <input type="text" name="id_campana" id="id_campana">
+                                    <input type="hidden" name="id_campana" id="id_campana">
                                     <div class="col-12 col-md-3 mb-3">
                                         <label for="agente" class="form-label">Agente:</label>
                                         <select name="agente" id="agente" class="form-select">
@@ -298,7 +298,7 @@
                                     <option value="NO">NO</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-12 col-md-2">
                                 <input type="submit" value="Guardar Incidencia" id="guardar_incidencia" class="btn btn-primary">
                             </div>
@@ -426,7 +426,7 @@
                 // Creamos la url para enviarla al controlador
                 var url_2 = "{{ route('consultar-asistencia-usuario', ':id') }}";
                 url_2 = url_2.replace(':id', user_id);
-                
+
                 // Creamos la url para enviarla al controlador
                 var url_3 = "{{ route('consultar-incidencias-usuario', ':id') }}";
                 url_3 = url_3.replace(':id', user_id);

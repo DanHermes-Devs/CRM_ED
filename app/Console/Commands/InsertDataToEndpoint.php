@@ -8,6 +8,7 @@ use App\Models\Receipt;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class InsertDataToEndpoint extends Command
 {
@@ -60,6 +61,8 @@ class InsertDataToEndpoint extends Command
             return;
         }
 
+        $processedRecordsLog = [];
+
         // Para cada registro en la colección de registros
         foreach ($records as $record) {
             // Inicializa una variable para almacenar el número de días a contar hacia atrás
@@ -71,7 +74,7 @@ class InsertDataToEndpoint extends Command
             }
             // Si el Aseguradora del registro es 'QUALITAS' o 'AXA', ajusta daysBack a 15
             elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
-                $daysBack = 15;
+                $daysBack = 16;
             }
 
             // Calcula la fecha a enviar a OCM, sumando los días al día actual
@@ -79,7 +82,6 @@ class InsertDataToEndpoint extends Command
 
             // Si la fecha calculada es hoy y el registro aún no ha sido enviado a OCM
             if ($dateForOCM->eq($record->FinVigencia) && !$record->OCMSent) {
-
                 // Prepara los datos para enviar a la API
                 $data = $this->prepareData($record, $skilldata, $idload);
 
@@ -104,10 +106,22 @@ class InsertDataToEndpoint extends Command
 
                         $fecha_hoy = Carbon::now()->format('Y-m-d');
 
-                        Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy);
+                        $processedRecordsLog[] = "Pólizas Enviadas (nPoliza): " . $record->nPoliza . " Pólizas Enviadas (nueva_poliza)" . $record->nueva_poliza . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy;
+
+                        Log::channel('insertDataToEndPoint')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                     }
                 }
             }
+        }
+
+        // Si hay registros procesados, envíalos por correo
+        if (!empty($processedRecordsLog)) {
+            $processedRecordsLog = implode("\n", $processedRecordsLog);
+            Mail::raw('Contenido del correo: ' . "\n\n" . $processedRecordsLog, function ($message) {
+                $message->from('no-reply@exponentedigital.mx', 'Exponente Digital - Incremental Sales');
+                $message->to(['dreyes@exponentedigital.mx', 'danhermes2019@outlook.com']);
+                $message->subject('Polizas Enviadas');
+            });
         }
     }
 
