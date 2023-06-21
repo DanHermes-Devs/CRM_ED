@@ -257,7 +257,7 @@
                                                             <div class="menu-dropdown collapse" id="modulo_adt" style="">
                                                                 <ul class="nav nav-sm flex-column">
                                                                     <li class="nav-item">
-                                                                        <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
+                                                                        <a href="{{ route('seguridad-adt.index') }}" class="nav-link" data-key="t-analytics">
                                                                             Ventas
                                                                         </a>
                                                                     </li>
