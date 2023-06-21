@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\PolizasEnviadasMailable;
 
 class InsertDataToEndpoint extends Command
 {
@@ -116,12 +117,8 @@ class InsertDataToEndpoint extends Command
 
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
-            $processedRecordsLog = implode("\n", $processedRecordsLog);
-            Mail::raw('Contenido del correo: ' . "\n\n" . $processedRecordsLog, function ($message) {
-                $message->from('no-reply@exponentedigital.mx', 'Exponente Digital - Incremental Sales');
-                $message->to(['dreyes@exponentedigital.mx', 'danhermes2019@outlook.com']);
-                $message->subject('Polizas Enviadas');
-            });
+            Mail::to(['dreyes@exponentedigital.mx', 'danhermes2019@outlook.com'])
+                ->send(new PolizasEnviadasMailable($processedRecordsLog));
         }
     }
 

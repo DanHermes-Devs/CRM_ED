@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\PolizasEnviadasMailable;
+use App\Mail\VolcadoOCM;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -40,10 +42,6 @@ class EnviarEmails extends Command
     {
         $testContent = "Este es un correo de prueba enviado desde Laravel.";
 
-        Mail::raw($testContent, function ($message) {
-            $message->from('no-reply@exponentedigital.mx', 'Exponente Digital - Incremental Sales');
-            $message->to(['dreyes@exponentedigital.mx', 'danhermes2019@outlook.com']);
-            $message->subject('Correo de Prueba');
-        });
+        Mail::to(['dreyes@exponentedigital.mx'])->send(new PolizasEnviadasMailable($testContent));
     }
 }
