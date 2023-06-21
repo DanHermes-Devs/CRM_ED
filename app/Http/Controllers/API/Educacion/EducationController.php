@@ -170,7 +170,7 @@ class EducationController extends Controller
                 'client_matricula' => $request->client_matricula,
                 'client_plantel' => $request->client_plantel,
                 'client_matricula' => $request->client_matricula,
-                'client_cobranza' => $date_cobranza
+                'date_cobranza' => $date_cobranza
             ];
             // no se puede modificarf la fecha de cotización pero si los otros campos
             Education::where('contact_id', $request->contact_id)
