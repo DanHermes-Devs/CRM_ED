@@ -62,7 +62,7 @@
                             <h5><label for="documents_portal" class="form-label">Documentos cargados:</label></h5>
 
                             @if ($coti->client_modality == 'PRESENCIAL')
-                                <h5 class="alert alert-info text-center">LOS DOCUMENTOS NO SON NECESARIOS DEBIDO A QUE YA ESTA CATALOGADA COMO PRESENCIA</h5>
+                                <h5 class="alert alert-info text-center">LOS DOCUMENTOS NO SON NECESARIOS DEBIDO A QUE YA ESTA CATALOGADA COMO PRESENCIAL</h5>
                             @else
                             <div class="row">
                                 <div class="col-xl-3 my-3">

@@ -20,8 +20,62 @@ class ADTController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Adt::query();
+
+        if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
+            $query->whereBetween('fecha_venta', [$request->fecha_inicio, $request->fecha_fin]);
+        }
+
+        if ($request->filled(['cliente_nombre'])) {
+            $query->where('client_name', [$request->client_name]);
+        }
+
+        if ($request->filled(['cliente_telefono'])) {
+            $query->where('cliente_telefono', [$request->cliente_telefono]);
+        }
+        if ($request->filled(['cliente_celular'])) {
+            $query->where('cliente_celular', [$request->cliente_celular]);
+        }
+
+        // Búsquedas exactas
+        $camposExactos = [
+            'contact_id' => 'contact_id',
+            'cliente_nombre' => 'cliente_nombre',
+            'cliente_telefono' => 'cliente_telefono',
+            'cliente_celular' => 'cliente_celular',
+        ];
+
+        foreach ($camposExactos as $campoDb => $campoReq) {
+
+            if ($request->filled($campoReq)) {
+                    $query->where($campoDb, $request->$campoReq);
+            }
+        }
+
+        $resultados = $query->get();
+        // Filtros por perfil de usuario
+        $rol = $request->rol;
+
+        if ($rol == 'Agente de Ventas' ) {
+            $resultados = $resultados->where('agente_intra', $usuario);
+        } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
+            // No aplicar filtros adicionales para supervisores y coordinadores
+        } else {
+            // No aplicar filtros adicionales para administradores
+        }
+
+        //RESPUESTA PARA PINTAR LAS QUERYS
+        if (request()->ajax()) {
+            return DataTables()
+                ->of($resultados)
+                ->addColumn('action', 'crm.modulos.seguridad.adt.actions')
+                ->rawColumns(['action'])
+                ->escapeColumns([])
+                ->make(true);
+        }
+
         return view('crm.modulos.seguridad.adt.index');
     }
 
@@ -43,7 +97,7 @@ class ADTController extends Controller
         }else{
             $adt = new Adt;
             $adt->contact_id = $request->contact_id;
-            $adt->fecha_venta = $request->fecha_venta;
+            $adt->fecha_venta = Carbon::now();
             $adt->campana = $request->campana;
             $adt->login_ocm = $request->login_ocm;
             $adt->login_intranet = $request->login_intranet;
@@ -95,7 +149,15 @@ class ADTController extends Controller
      */
     public function show($id)
     {
-        //
+        $adt = ADt::where("id", $id)->first();
+        return view('crm.modulos.seguridad.adt.show', compact('adt'));
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $adt = Adt::findOrFail($id);
+        $date_now = Carbon::now()->toDateTimeString();
+        return view('crm.modulos.seguridad.adt.edit', compact('adt','date_now'));
     }
 
     /**
