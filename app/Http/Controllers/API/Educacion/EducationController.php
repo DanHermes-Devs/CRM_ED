@@ -106,16 +106,16 @@ class EducationController extends Controller
         //identificar si el usuario se encuentra en ZEUS
         $usuario = User::where('usuario', $request->agent_OCM)->first();
         // busco la cuenta por contact_id
-        $education = Education::where('contact_id', $request->contact_id)->first();
+        $cuentaRegistrada = Education::where('contact_id', $request->contact_id)->first();
 
         // Se verifica que la cuenta este registrada y que la codificación sea igual, si es manda un error al log
-        if($education && ($education->codification == $request->codification )){
+        if($cuentaRegistrada && ($cuentaRegistrada->codification == $request->codification )){
             return response()->json([
                 "code" => 200,
                 "message" => "La cuenta ya esta registrada con la misma codificación",
             ]);
         // Si la cuenta esta registrada pero la codificacion es diferente se manda a actualizar la información
-        }else if($education && ($education->codification != $request->codification )){
+        }else if($cuentaRegistrada && ($cuentaRegistrada->codification != $request->codification )){
             // se verifica si la codificación es COBRADA
             if($request->codification == 'COBRADA'){
                 $birth_certifcate  ='SI';
@@ -142,39 +142,44 @@ class EducationController extends Controller
                 $usuarioCierreVenta = $request->agent_OCM;
             }
 
-            $education->birth_certifcate = $birth_certifcate;
-            $education->curp_certificate = $curp_certificate;
-            $education->usuario_ocm = $usuarioCierreVenta;
-            $education->ine_certifcate = $ine_certifcate;
-            $education->inscripcion_certificate = $inscripcion_certificate;
-            $education->domicilio_certifcate = $domicilio_certifcate;
-            $education->estudio_certifcate = $estudio_certifcate;
-            $education->cotizacion_certifcate = $cotizacion_certifcate;
-            $education->pago_certifcate = $pago_certifcate;
-            $education->campana = $request->campana;
-            $education->codification = $request->codification;
-            $education->client_name = $request->client_name;
-            $education->client_landline = $request->client_landline;
-            $education->client_celphone = $request->client_celphone;
-            $education->client_modality = $request->client_modality;
-            $education->client_program = $request->client_program;
-            $education->client_specialty = $request->client_specialty;
-            $education->client_street = $request->client_street;
-            $education->client_number = $request->client_number;
-            $education->client_delegation = $request->client_delegation;
-            $education->client_state = $request->client_state;
-            $education->client_sex = $request->client_sex;
-            $education->client_birth = $request->client_birth;
-            $education->client_plantel = $request->client_plantel;
-            $education->client_matricula = $request->client_matricula;
-            $education->date_cobranza = $date_cobranza;
-            
-            $education->save();
-
+            $info = [
+                'birth_certifcate' => $birth_certifcate,
+                'curp_certificate' => $curp_certificate,
+                'usuario_ocm' => $usuarioCierreVenta,
+                'ine_certifcate' => $ine_certifcate,
+                'inscripcion_certificate' => $inscripcion_certificate,
+                'domicilio_certifcate' => $domicilio_certifcate,
+                'estudio_certifcate' => $estudio_certifcate,
+                'cotizacion_certifcate' => $cotizacion_certifcate,
+                'pago_certifcate' => $pago_certifcate,
+                'campana' => $request->campana,
+                'codification' => $request->codification,
+                'client_name' => $request->client_name,
+                'client_landline' => $request->client_landline,
+                'client_celphone' => $request->client_celphone,
+                'client_modality' => $request->client_modality,
+                'client_program' => $request->client_program,
+                'client_specialty' => $request->client_specialty,
+                'client_street' => $request->client_street,
+                'client_number' => $request->client_number,
+                'client_delegation' => $request->client_delegation,
+                'client_state' => $request->client_state,
+                'client_sex' => $request->client_sex,
+                'client_birth' => $request->client_birth,
+                'client_plantel' => $request->client_plante,
+                'client_matricula' => $request->client_matricula,
+                'client_plantel' => $request->client_plantel,
+                'client_matricula' => $request->client_matricula,
+                'date_cobranza' => $date_cobranza
+            ];
+            // no se puede modificarf la fecha de cotización pero si los otros campos
+            Education::where('contact_id', $request->contact_id)
+            ->update($info);
             // $coti = Education::findOrFail($id)->first();
             return response()->json([
                 "code" => 200,
-                "message" => "Registro actualizado correctamente INFO"
+                "message" => "Registro actualizado correctamente",
+                "data" => $info
             ]);
         }else{
             // Se verifica si existe el usuario en ZEUS
@@ -205,16 +210,15 @@ class EducationController extends Controller
                 $education->schedule_date = $request->schedule_date;
                 $education->client_plantel = $request->client_plantel;
                 $education->client_matricula = $request->client_matricula;
-
-                if($request->codificacion == 'COBRADA'){
+                //$education->fill($request->all());
+                if($request->codification == 'COBRADA'){
                     $education->date_cobrada = Carbon::now()->toDateTimeString();
                 }
-
                 $education->save();
 
                 return response()->json([
                     "code" => 200,
-                    "message" => "Registro guardado correctamente USUARIO",
+                    "message" => "Registro guardado correctamente",
                     "data" => $education
                 ]);
             }else{
