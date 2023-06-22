@@ -176,7 +176,11 @@ class EducationController extends Controller
             Education::where('contact_id', $request->contact_id)
             ->update($info);
             // $coti = Education::findOrFail($id)->first();
-
+            return response()->json([
+                "code" => 200,
+                "message" => "Registro actualizado correctamente",
+                "data" => $info
+            ]);
         }else{
             // Se verifica si existe el usuario en ZEUS
             if($usuario){
