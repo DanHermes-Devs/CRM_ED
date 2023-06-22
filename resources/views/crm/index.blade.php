@@ -226,7 +226,7 @@
                                                 <div class="flex-grow-1">
                                                     @php
 
-                                                        if ($values->campana == 'UNI'){
+                                                        if ($values->campana == 'UNI' || !$values->campana){
                                                             $ventasFb = empty($ventas[0]['cobradasFB']) ? 0 : $ventas[0]['cobradasFB'];
                                                         } else {
                                                             $ventasFb = empty($preventas[0]['Total']) ? 0 : $preventas[0]['Total'];
