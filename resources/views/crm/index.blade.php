@@ -41,7 +41,6 @@
                 </div>
             </div>
         </div>
-        {{ now()->toRfc3339String(); }}
         <!-- end page title -->
         <div class="row">
             <div class="col-xl-12">
@@ -226,6 +225,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     @php
+
                                                         if ($values->campana == 'UNI'){
                                                             $ventasFb = empty($ventas[0]['cobradasFB']) ? 0 : $ventas[0]['cobradasFB'];
                                                         } else {
@@ -247,10 +247,12 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     @php
+
+
                                                         if ($values->campana == 'UNI'){
                                                             $ventasGl = empty($ventas[0]['cobradasGoogle']) ? 0 : $ventas[0]['cobradasGoogle'];
                                                         } else {
-                                                            $ventasFb = empty($preventas[1]['Total']) ? 0 : $preventas[1]['Total'];
+                                                            $ventasGl = empty($preventas[1]['Total']) ? 0 : $preventas[1]['Total'];
                                                         }
                                                         $leadsGl = $conteo[0]['leadsGoogle'];
 

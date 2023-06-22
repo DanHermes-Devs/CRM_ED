@@ -91,7 +91,7 @@ class HomeController extends Controller
         $table_GO = isset($campanas['tableGo']) ? $campanas['tableGo'] : NULL;
         $skill_Def_FB = isset($campanas['skillDefFb']) ? $campanas['skillDefFb'] : NULL;
         $skill_Def_GO = isset($campanas['skillDefGo']) ? $campanas['skillDefGo'] : NULL;
-        $tablaVenta = isset($campanas['tablaVenta']) ? $campanas['tablaVenta'] : NULL;
+        $tablaVenta = isset($campanas['tablaVenta']) ? $campanas['tablaVenta'] : 'education';
         $tipoVenta = isset($campanas['tipoVenta']) ? $campanas['tipoVenta'] : 'COTIZACION';
         $date_inicial = "CURDATE()";
         $date_final  = "CURDATE() + 1";
@@ -247,7 +247,7 @@ private function cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,
     return $this->followQuery($ventasPorCampana);
 }
 
-private function cobradasCRm($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final,$tipodeventa,$tablaVenta)
+private function cobradasCrm($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final,$tipodeventa,$tablaVenta)
 {
 
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
@@ -257,7 +257,8 @@ private function cobradasCRm($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_fi
             SUM(CASE  WHEN campana LIKE 'UI%' THEN 1 ELSE 0 END) AS cobradasGoogle
             FROM crm.".$tablaVenta."
             WHERE codification = 'COBRADA'
-            AND date_cobranza BETWEEN ".$date_inicial." AND ".$date_final.";";
+            AND date_cobranza BETWEEN CURDATE() AND CURDATE() + 1;";
+
 
     return $this->followQueryCrm($cobradasPorCampana);
 }
