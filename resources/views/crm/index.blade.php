@@ -395,12 +395,12 @@
                                 @foreach ($lYvAYc as $item)
                                     <tr>
                                         <td>{{ $item['nombre'] != '' ? $item['nombre'] : 'No disponible' }}</td>
-                                        <td>{{ $item['totalLlamadas'] != '' ? $item['totalLlamadas'] : 'No disponible' }}
+                                        <td>{{ $item['totalLlamadas'] != '' ? $item['totalLlamadas'] : '0' }}
                                         </td>
-                                        <td>{{ $item['primerContacto'] != '' ? $item['primerContacto'] : 'No disponible' }}
+                                        <td>{{ $item['primerContacto'] != '' ? $item['primerContacto'] : '0' }}
                                         </td>
-                                        <td>{{ $item['ventas'] != '' ? $item['ventas'] : 'No disponible' }}</td>
-                                        <td>{{ $item['Ratio'] != '' ? number_format($item['Ratio'], 2) : 'No disponible' }}
+                                        <td>{{ $item['ventas'] != '' ? $item['ventas'] : '0' }}</td>
+                                        <td>{{ $item['Ratio'] != '' ? number_format($item['Ratio'], 2) : '0' }}
                                             %
                                         </td>
                                     </tr>
