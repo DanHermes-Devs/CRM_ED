@@ -101,7 +101,7 @@ class HomeController extends Controller
         if($tipoVenta == 'COTIZACION'){
             $ventas = $this->cobradasCrm($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta,$tablaVenta);
         }
-        $lYvAYc = $this->LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
+        $lYvAYc = $this->LlamadasVentasPorAgenteDeOCM($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
         $tipificacion = $this->ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final);
 
         $values = (object)[
@@ -138,7 +138,7 @@ class HomeController extends Controller
         if($tipoVenta == 'COTIZACION'){
             $ventas = $this->cobradasCrm($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta,$tablaVenta);
         }
-        $lYvAYc = $this->LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
+        $lYvAYc = $this->LlamadasVentasPorAgenteDeOCM($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
         $tipificacion = $this->ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final);
         // END REFACTORY
 
@@ -188,8 +188,8 @@ private function llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_De
     $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
 
     $llamadasporCampana = "SELECT
-                        SUM(CASE sd.skilldata WHEN 'fb_uimotor' THEN sd.total ELSE 0 END) AS llamadasFb,
-                        SUM(CASE sd.skilldata WHEN 'uimotor' THEN sd.total ELSE 0 END) AS llamadasGoogle
+                        SUM(CASE sd.skilldata WHEN '".$skill_Def_FB."' THEN sd.total ELSE 0 END) AS llamadasFb,
+                        SUM(CASE sd.skilldata WHEN '".$skill_Def_GO."' THEN sd.total ELSE 0 END) AS llamadasGoogle
                         FROM (SELECT skilldata,COUNT(distinct(numbercall)) as TOTAL
                            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
                            FROM ocmdb.ocm_log_calls lc
@@ -263,7 +263,7 @@ private function cobradasCrm($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_fi
     return $this->followQueryCrm($cobradasPorCampana);
 }
 
-private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final,$tipodeventa)
+private function LlamadasVentasPorAgenteDeOCM($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final,$tipodeventa)
 {
 
     if(!isset($skill_Def_GO)){ $skill_Def_GO = ''; }
@@ -281,14 +281,14 @@ private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_
 			   FROM ocmdb.ocm_log_calls lc
                INNER JOIN (
 					SELECT d.number1
-					FROM ocmdb.skill_fb_uimotor_data d
-					INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
+					FROM ocmdb.".$table_FB." d
+					INNER JOIN ocmdb.".$table_FB."exten de ON d.id = de.id
 					INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
 					WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final."
 					AND de.id_lead <> ''
                     UNION
-						SELECT  d.number1 FROM ocmdb.skill_uimotor_data d
-						INNER JOIN ocmdb.skill_uimotor_dataexten de ON d.id = de.id
+						SELECT  d.number1 FROM ocmdb.".$table_GO." d
+						INNER JOIN ocmdb.".$table_GO."exten de ON d.id = de.id
 						INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
 						WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final."
                         AND de.id_lead <> '') As d
