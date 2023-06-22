@@ -178,7 +178,7 @@ class EducationController extends Controller
             // $coti = Education::findOrFail($id)->first();
             return response()->json([
                 "code" => 200,
-                "message" => "Registro actualizado correctamente",
+                "message" => "Registro actualizado correctamente INFO",
                 "data" => $info
             ]);
         }else{
@@ -218,7 +218,7 @@ class EducationController extends Controller
 
                 return response()->json([
                     "code" => 200,
-                    "message" => "Registro guardado correctamente",
+                    "message" => "Registro guardado correctamente USUARIO",
                     "data" => $education
                 ]);
             }else{
