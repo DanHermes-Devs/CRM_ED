@@ -53,6 +53,19 @@ class HomeController extends Controller
         if (!$this->connection) {
             die("Error al conectarse a la base de datos: " . mysqli_connect_error());
         }
+
+         // Conexion a la BD
+         $databaseNameCrm = 'crm';
+         $hostNameCrm = '45.58.126.11';
+         $userNameCrm = 'apiuser';
+         $passCodeCrm = 'ln&S1qm8M2!7';
+
+         $this->connectionCrm = mysqli_connect($hostNameCrm, $userNameCrm, $passCodeCrm, $databaseNameCrm);
+
+         if (!$this->connectionCrm) {
+             die("Error al conectarse a la base de datos: " . mysqli_connect_error());
+         }
+
     }
 
     /**
@@ -71,18 +84,23 @@ class HomeController extends Controller
         $id = Auth::user();
         $usuario = User::findOrFail($id->id);
         $campana = Campaign::where('id', $usuario->id_campana)->where('status', 1)->get();
+        $ventas = '';
         //Se envía la información de la campaña al día
         $campanas = $this->TraerCampana(NULL);
         $table_FB = isset($campanas['tableFb']) ? $campanas['tableFb'] : NULL;
         $table_GO = isset($campanas['tableGo']) ? $campanas['tableGo'] : NULL;
         $skill_Def_FB = isset($campanas['skillDefFb']) ? $campanas['skillDefFb'] : NULL;
         $skill_Def_GO = isset($campanas['skillDefGo']) ? $campanas['skillDefGo'] : NULL;
+        $tablaVenta = isset($campanas['tablaVenta']) ? $campanas['tablaVenta'] : NULL;
         $tipoVenta = isset($campanas['tipoVenta']) ? $campanas['tipoVenta'] : 'COTIZACION';
         $date_inicial = "CURDATE()";
         $date_final  = "CURDATE() + 1";
         $conteo = $this->conteoLeadsTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final);
         $llamadas = $this->llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final);
-        $ventas = $this->cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
+        $preventas = $this->cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
+        if($tipoVenta == 'COTIZACION'){
+            $ventas = $this->cobradasCrm($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta,$tablaVenta);
+        }
         $lYvAYc = $this->LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
         $tipificacion = $this->ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final);
 
@@ -94,7 +112,7 @@ class HomeController extends Controller
         $total = 0;
         foreach ($tipificacion as $item) { $total += $item['Total']; }
         // dd($total);
-        return view('crm.index', compact('conteo','llamadas','ventas','lYvAYc','tipificacion','values','total'));
+        return view('crm.index', compact('conteo','llamadas','preventas','ventas','lYvAYc','tipificacion','values','total'));
     }
 
 //======================================================================
@@ -102,18 +120,24 @@ class HomeController extends Controller
 //======================================================================
     public function filter(Request $request)
     {
+        $ventas = '';
         $campanas = $this->TraerCampana($request->campana);
         $table_FB = isset($campanas['tableFb']) ? $campanas['tableFb'] : NULL;
         $table_GO = isset($campanas['tableGo']) ? $campanas['tableGo'] : NULL;
         $skill_Def_FB = isset($campanas['skillDefFb']) ? $campanas['skillDefFb'] : NULL;
         $skill_Def_GO = isset($campanas['skillDefGo']) ? $campanas['skillDefGo'] : NULL;
+        $tablaVenta = isset($campanas['tablaVenta']) ? $campanas['tablaVenta'] : NULL;
         $tipoVenta = isset($campanas['tipoVenta']) ? $campanas['tipoVenta'] : 'COTIZACION';
         $date_inicial = isset($request->fecha_inicio) ? $request->fecha_inicio : "CURDATE()";
         $date_final  = isset($request->fecha_fin) ? $request->fecha_fin : "CURDATE() + 1";
+
         // REFACTORY
         $conteo = $this->conteoLeadsTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final);
         $llamadas = $this->llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final);
-        $ventas = $this->cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
+        $preventas = $this->cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
+        if($tipoVenta == 'COTIZACION'){
+            $ventas = $this->cobradasCrm($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta,$tablaVenta);
+        }
         $lYvAYc = $this->LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_inicial,$date_final,$tipoVenta);
         $tipificacion = $this->ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final);
         // END REFACTORY
@@ -121,7 +145,7 @@ class HomeController extends Controller
         $values = $request;
         $total = 0;
         foreach ($tipificacion as $item) { $total += $item['Total']; }
-        return view('crm.index', compact('conteo','llamadas','ventas','lYvAYc','tipificacion','values','total'));
+        return view('crm.index', compact('conteo','llamadas','preventas','ventas','lYvAYc','tipificacion','values','total'));
     }
 
 //======================================================================
@@ -154,6 +178,8 @@ private function conteoLeadsTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill
     }
     $conteoLeads .=") AS Leads";
     return  $this->followQuery($conteoLeads);
+
+
 }
 
 private function llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final)
@@ -161,21 +187,23 @@ private function llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_De
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
     $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
 
-    $llamadasporCampana = "SELECT skilldata,COUNT(distinct(numbercall)) as TOTAL
+    $llamadasporCampana = "SELECT
+                        SUM(CASE sd.skilldata WHEN 'fb_uimotor' THEN sd.total ELSE 0 END) AS llamadasFb,
+                        SUM(CASE sd.skilldata WHEN 'uimotor' THEN sd.total ELSE 0 END) AS llamadasGoogle
+                        FROM (SELECT skilldata,COUNT(distinct(numbercall)) as TOTAL
                            FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
                            FROM ocmdb.ocm_log_calls lc
                            INNER JOIN (
                             SELECT d.number1
                             FROM ocmdb.".$table_FB." d
                             INNER JOIN ocmdb.".$table_FB."exten de ON d.id = de.id
-                            INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+
                             WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final."
                             AND de.id_lead <> '' ";
     if(isset($skill_Def_GO)){
     $llamadasporCampana .= "UNION
                                 SELECT  d.number1 FROM ocmdb.".$table_GO." d
                                 INNER JOIN ocmdb.".$table_GO."exten de ON d.id = de.id
-                                INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
                                 WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final." AND de.id_lead <> ''";
     }
     $llamadasporCampana .= ") As d
@@ -188,7 +216,8 @@ private function llamadasPrimerContactoTrack4Leads($table_FB,$table_GO,$skill_De
                                ORDER BY fecha DESC) l
                                WHERE row_numb = 1
                                AND agent <> ''
-                               GROUP BY skilldata";
+                               GROUP BY skilldata) sd";
+
 
     return $this->followQuery($llamadasporCampana);
 }
@@ -208,17 +237,35 @@ private function cotizacionesPreventasPCTrack4Leads($skill_Def_FB,$skill_Def_GO,
             FROM ocmdb.ocm_log_calls
             WHERE skilldata IN ('".$skill_Def_FB."'
             ,'".$skill_Def_GO."'
-            ) AND fecha BETWEEN ".$date_inicial." AND ".$date_final."
+            )
+            AND fecha BETWEEN ".$date_inicial." AND ".$date_final."
             AND resultdesc = '".$tipodeventa."'
             GROUP BY skilldata
         ) AS log
         ON tipos.tipoLlamadas = log.tipoLlamadas;";
+
     return $this->followQuery($ventasPorCampana);
+}
+
+private function cobradasCRm($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final,$tipodeventa,$tablaVenta)
+{
+
+    $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
+    $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
+    $cobradasPorCampana = "SELECT
+            SUM(CASE  WHEN campana LIKE 'FB%' THEN 1 ELSE 0 END) AS cobradasFB,
+            SUM(CASE  WHEN campana LIKE 'UI%' THEN 1 ELSE 0 END) AS cobradasGoogle
+            FROM crm.".$tablaVenta."
+            WHERE codification = 'COBRADA'
+            AND date_cobranza BETWEEN ".$date_inicial." AND ".$date_final.";";
+
+    return $this->followQueryCrm($cobradasPorCampana);
 }
 
 private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_inicial, $date_final,$tipodeventa)
 {
-    if(isset($skill_Def_GO)){ $skill_Def_GO = ''; }
+
+    if(!isset($skill_Def_GO)){ $skill_Def_GO = ''; }
     $date_inicial = (($date_inicial != "CURDATE()")? $this->formatDateStart($date_inicial) : $date_inicial);
     $date_final = (($date_final != "CURDATE() + 1")? $this->formatDateEnd($date_final) : $date_final);
     $resultadosAgents ="SELECT lc.agent, a.nombre,
@@ -227,29 +274,42 @@ private function LlamadasVentasPorAgenteDeOCM($skill_Def_FB,$skill_Def_GO,$date_
     FROM ocmdb.ocm_log_calls lc
     INNER JOIN ocmdb.ocm_agent a
         ON lc.agent = a.user
-    INNER JOIN (
-        SELECT l.agent,COUNT(distinct(numbercall)) as primerContacto
-        FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
-                            FROM ocmdb.ocm_log_calls
-                            WHERE skilldata  IN ('".$skill_Def_FB."', '".$skill_Def_GO."')
-                    AND fecha BETWEEN ".$date_inicial." AND ".$date_final."
-                    AND attempt = 1
-                    -- AND timecall > 5
-                ORDER BY fecha DESC) l
-        WHERE row_numb = 1
-            AND agent <> ''
-        GROUP BY l.agent
+    LEFT JOIN (
+        SELECT agent,COUNT(distinct(numbercall)) as primerContacto
+		FROM ( SELECT *,ROW_NUMBER() OVER(PARTITION BY numbercall ORDER BY fecha) AS row_numb
+			   FROM ocmdb.ocm_log_calls lc
+               INNER JOIN (
+					SELECT d.number1
+					FROM ocmdb.skill_fb_uimotor_data d
+					INNER JOIN ocmdb.skill_fb_uimotor_dataexten de ON d.id = de.id
+					INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+					WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final."
+					AND de.id_lead <> ''
+                    UNION
+						SELECT  d.number1 FROM ocmdb.skill_uimotor_data d
+						INNER JOIN ocmdb.skill_uimotor_dataexten de ON d.id = de.id
+						INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+						WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final."
+                        AND de.id_lead <> '') As d
+				ON lc.numbercall = d.number1
+                AND skilldata  IN ('".$skill_Def_GO."', '".$skill_Def_FB."')
+                AND fecha BETWEEN ".$date_inicial." AND ".$date_final."
+                AND attempt = 1
+			    ORDER BY fecha DESC) l
+	   WHERE row_numb = 1
+	   AND agent <> ''
+	   GROUP BY agent
     ) AS cpg
     ON lc.agent = cpg.agent
     LEFT JOIN (
         SELECT agent,count(distinct(numbercall)) total
         FROM ocmdb.ocm_log_calls
-        WHERE skilldata  IN ('".$skill_Def_FB."', '".$skill_Def_GO."')
+        WHERE skilldata  IN ('".$skill_Def_GO."', '".$skill_Def_FB."')
         AND resultdesc = '".$tipodeventa."'
         AND fecha BETWEEN ".$date_inicial." AND ".$date_final."
         GROUP BY agent) As va
     ON lc.agent = va.agent
-    WHERE lc.skilldata  IN ('".$skill_Def_FB."', '".$skill_Def_GO."')
+    WHERE lc.skilldata  IN ('".$skill_Def_GO."', '".$skill_Def_FB."')
         AND lc.fecha BETWEEN ".$date_inicial." AND ".$date_final."
         AND lc.agent <> ''
         AND lc.timecall > 5
@@ -269,13 +329,13 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                             INNER JOIN (
                                 SELECT d.number1
                                 FROM ocmdb.".$table_FB." d INNER JOIN ocmdb.".$table_FB."exten de ON d.id = de.id
-                                INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+
                                 WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final." ";
                                 if(isset($skill_Def_GO)){
                                     $resultadosContacto .= "UNION
                                     SELECT  d.number1 FROM ocmdb.".$table_GO." d
                                     INNER JOIN ocmdb.".$table_GO."exten de ON d.id = de.id
-                                    INNER JOIN ocmdb.ocm_skill_loads l ON d.idload = l.idload
+
                                     WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final."";
                                 }
                                 $resultadosContacto .= ") As d
@@ -288,6 +348,7 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                                 ORDER BY fecha DESC) l
                                 WHERE row_numb = 1
                                 AND agent <> ''
+                                AND l.resultdesc <> 'Recall'
                                 GROUP BY l.resultdesc
                                 ORDER BY Total DESC";
     return $this->followQuery($resultadosContacto);
@@ -309,6 +370,21 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
             return $arrayResult;
         } else {
             echo "Error al ejecutar la consulta: " . mysqli_error($this->connection);
+        }
+    }
+
+    private function followQueryCrm($query)
+    {
+        $result = mysqli_query($this->connectionCrm, $query);
+        if ($result) {
+            $arrayResult = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $arrayResult[] = $row;
+            }
+
+            return $arrayResult;
+        } else {
+            echo "Error al ejecutar la consulta: " . mysqli_error($this->connectionCrm);
         }
     }
     //SE CREA FUNCION PARA FORMATEAR FECHA DE INICIO Y-m-d H:i:s
@@ -340,33 +416,38 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                 'tableGo' => 'skill_uimotor_data',
                 'skillDefFb' => 'fb_uimotor',
                 'skillDefGo' => 'uimotor',
-                'tipoVenta' => 'COTIZACION'
+                'tipoVenta' => 'COTIZACION',
+                'tablaVenta' => 'education'
             ),
             'QUA' => array(
                 'tableFb' => 'skill_fb_qualitasmotor_data',
                 'tableGo' => 'skill_onl_qualitasmotor_data',
                 'skillDefFb' => 'fb_qualitasmotor',
                 'skillDefGo' => 'ONL_QUALITASMotor',
-                'tipoVenta' => 'VENTA'
+                'tipoVenta' => 'VENTA',
+                'tablaVenta' => 'ventas'
             ),
             'AXA' => array(
                 'tableFb' => 'skill_fb_axamr_data',
                 'tableGo' => 'skill_onl_axamr_data',
                 'skillDefFb' => 'fb_axamr',
                 'skillDefGo' => 'onl_axamr',
-                'tipoVenta' => 'PREVENTA'
+                'tipoVenta' => 'PREVENTA',
+                'tablaVenta' => 'ventas'
             ),
             'PRA' => array(
                 'tableFb' => 'skill_fb_practicummotor_data',
                 'tableGo' => 'skill_uimotor_data',
                 'skillDefFb' => 'FB_PRACTICUMMotor',
-                'tipoVenta' => 'PREVENTA'
+                'tipoVenta' => 'PREVENTA',
+                'tablaVenta' => 'educacion'
             )
         );
 
         if (isset($campanas[$campana])) {
             return $campanas[$campana];
         } else {
+
             return array(
                 'tableFb' => 'skill_fb_uimotor_data',
                 'tableGo' => 'skill_uimotor_data',
