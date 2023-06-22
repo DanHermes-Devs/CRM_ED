@@ -55,7 +55,7 @@ class AttendancesCronJob extends Command
 
         $query = "SELECT agent, fecha AS timestamp, estado
             FROM ocm_log_agentstatus
-            WHERE DATE(fecha) BETWEEN '2023-06-01' AND '2023-06-16'
+            WHERE DATE(fecha) = '$fecha_actual'
             AND (estado = 'LOGIN' OR estado = 'LOGOUT')
             ORDER BY agent, fecha;
         ";

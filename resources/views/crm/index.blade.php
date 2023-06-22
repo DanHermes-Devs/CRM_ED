@@ -41,6 +41,7 @@
                 </div>
             </div>
         </div>
+        {{ now()->toRfc3339String(); }}
         <!-- end page title -->
         <div class="row">
             <div class="col-xl-12">

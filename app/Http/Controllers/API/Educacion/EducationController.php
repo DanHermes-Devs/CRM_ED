@@ -212,7 +212,7 @@ class EducationController extends Controller
                 $education->client_matricula = $request->client_matricula;
                 //$education->fill($request->all());
                 if($request->codification == 'COBRADA'){
-                    $education->date_cobrada = Carbon::now()->toDateTimeString();
+                    $education->date_cobranza = Carbon::now()->toDateTimeString();
                 }
                 $education->save();
 

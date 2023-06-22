@@ -10,6 +10,8 @@ use App\Models\Venta;
 use App\Models\Receipt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReciclajeBDMailable;
 
 class checkForRecycling extends Command
 {
@@ -53,9 +55,9 @@ class checkForRecycling extends Command
             ->whereNull('ocmdaytosend')
             ->whereNull('OCMSent_motor_c')
             ->whereNull('ocmdaytosend_motor_c')
-            ->take(10)
             ->get();
 
+        $processedRecordsLog = [];
 
         foreach ($records as $record) {
             $skilldata = '';
@@ -103,10 +105,23 @@ class checkForRecycling extends Command
                     $record->save();
 
                     $fecha_hoy = Carbon::now()->format('Y-m-d');
-                    
+
+                    $processedRecordsLog[] = [
+                        'nPoliza' => $record->nPoliza,
+                        'nueva_poliza' => $record->nueva_poliza,
+                        'skilldata' => $skilldata,
+                        'ocmdaytosend' => $fecha_hoy
+                    ];
+
                     Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                 }
             }
+        }
+
+        // Si hay registros procesados, envíalos por correo
+        if (!empty($processedRecordsLog)) {
+            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx'])
+                ->send(new ReciclajeBDMailable($processedRecordsLog));
         }
     }
 

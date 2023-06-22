@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class PolizasEnviadasMailable extends Mailable
+class ReciclajeBDMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,7 +20,7 @@ class PolizasEnviadasMailable extends Mailable
 
     public function build()
     {
-        return $this->markdown('emails.polizas_enviadas')
+        return $this->markdown('emails.reciclaje_bd')
                     ->subject('Pólizas Enviadas');
     }
 }
