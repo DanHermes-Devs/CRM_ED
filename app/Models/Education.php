@@ -49,7 +49,6 @@ class Education extends Model
         'client_matricula', // LA MATRICULA SI ES QUE SE TIENE
         'date_cobranza', // FECHA TIPIFICADA COMO COBRADA
         'date_confirmada' // FECHA EN LA QUE FUE CAMBIADA EN BACKOFFICE COMO CONFIRMADA
-
     ];
 
     // Relacion con el usuario
