@@ -249,7 +249,7 @@
                                                     @php
 
 
-                                                        if ($values->campana == 'UNI'){
+                                                        if ($values->campana == 'UNI' || !$values->campana){
                                                             $ventasGl = empty($ventas[0]['cobradasGoogle']) ? 0 : $ventas[0]['cobradasGoogle'];
                                                         } else {
                                                             $ventasGl = empty($preventas[1]['Total']) ? 0 : $preventas[1]['Total'];
