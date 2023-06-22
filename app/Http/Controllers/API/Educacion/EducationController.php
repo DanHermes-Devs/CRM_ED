@@ -138,7 +138,7 @@ class EducationController extends Controller
                 $estudio_certifcate  ='NO';
                 $cotizacion_certifcate  ='NO';
                 $pago_certifcate  ='NO';
-                $date_cobranza = Carbon::now()->toDateTimeString();
+                $date_cobranza = NULL;
                 $usuarioCierreVenta = $request->agent_OCM;
             }
 
@@ -170,11 +170,14 @@ class EducationController extends Controller
                 'client_matricula' => $request->client_matricula,
                 'client_plantel' => $request->client_plantel,
                 'client_matricula' => $request->client_matricula,
-                'date_cobranza' => Carbon::now()->toDateTimeString()
+                'date_cobranza' => $date_cobranza
             ];
             // no se puede modificarf la fecha de cotización pero si los otros campos
             Education::where('contact_id', $request->contact_id)
             ->update($info);
+
+
+
             // $coti = Education::findOrFail($id)->first();
             return response()->json([
                 "code" => 200,
