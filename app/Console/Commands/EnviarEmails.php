@@ -40,8 +40,16 @@ class EnviarEmails extends Command
      */
     public function handle()
     {
-        $testContent = "Este es un correo de prueba enviado desde Laravel.";
+        // $testContent = [
+        //     [
+        //         'nPoliza' => '1234567890',
+        //         'nueva_poliza' => '0987654321',
+        //         'skilldata' => 'FB_UIManual',
+        //         'contactId' => '1234567890',
+        //         'ocmdaytosend' => '2021-08-31',
+        //     ]
+        // ];
 
-        Mail::to(['dreyes@exponentedigital.mx'])->send(new PolizasEnviadasMailable($testContent));
+        // Mail::to(['dreyes@exponentedigital.mx'])->send(new PolizasEnviadasMailable($testContent));
     }
 }

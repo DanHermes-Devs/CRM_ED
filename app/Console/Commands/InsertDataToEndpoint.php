@@ -75,7 +75,7 @@ class InsertDataToEndpoint extends Command
             }
             // Si el Aseguradora del registro es 'QUALITAS' o 'AXA', ajusta daysBack a 15
             elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
-                $daysBack = 16;
+                $daysBack = 15;
             }
 
             // Calcula la fecha a enviar a OCM, sumando los días al día actual
@@ -107,7 +107,12 @@ class InsertDataToEndpoint extends Command
 
                         $fecha_hoy = Carbon::now()->format('Y-m-d');
 
-                        $processedRecordsLog[] = "Pólizas Enviadas (nPoliza): " . $record->nPoliza . " Pólizas Enviadas (nueva_poliza)" . $record->nueva_poliza . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy;
+                        $processedRecordsLog[] = [
+                            'nPoliza' => $record->nPoliza,
+                            'nueva_poliza' => $record->nueva_poliza,
+                            'skilldata' => $skilldata,
+                            'ocmdaytosend' => $fecha_hoy
+                        ];
 
                         Log::channel('insertDataToEndPoint')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                     }
@@ -117,7 +122,7 @@ class InsertDataToEndpoint extends Command
 
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
-            Mail::to(['dreyes@exponentedigital.mx', 'danhermes2019@outlook.com'])
+            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx'])
                 ->send(new PolizasEnviadasMailable($processedRecordsLog));
         }
     }
