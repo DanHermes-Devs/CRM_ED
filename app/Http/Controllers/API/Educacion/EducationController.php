@@ -24,7 +24,7 @@ class EducationController extends Controller
         $query = Education::query();
 
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
-            $query->whereBetween('fp_venta', [$request->fecha_inicio, $request->fecha_fin]);
+            $query->whereBetween('fp_venta', [$request->fecha_inicio.' 00:00:00', $request->fecha_fin.' 23:59:59']);
         }
 
         if ($request->filled(['client_name'])) {
