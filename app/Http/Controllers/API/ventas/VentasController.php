@@ -166,7 +166,7 @@ class VentasController extends Controller
                     $fpreventa = Carbon::parse($ventaExistente->Fpreventa);
                     $diasDiferencia = $fpreventa->diffInDays($hoy, false);
 
-                    if($ventaExistente->UGestion != 'PROMESA DE PAGO')
+                    if($ventaExistente->UGestion != 'PREVENTA')
                     {
                         // Aplica las reglas de validación de duplicidad de ventas según la diferencia en días
                         if ($diasDiferencia <= 30) {
@@ -291,7 +291,7 @@ class VentasController extends Controller
                             ]);
                         }
                     }else{
-                        // ACTUALIZAMOS LA PROMESA DE PAGO CON LA NUEVA INFORMACION
+                        // ACTUALIZAMOS LA PREVENTA CON LA NUEVA INFORMACION
                         $ventaExistente->contactId = $request->contactId;
                         $ventaExistente->fill($request->all());
                         $ventaExistente->UGestion = $request->UGestion;
@@ -423,17 +423,17 @@ class VentasController extends Controller
             // BUSCAMOS SI EXISTE UNA VENTA CON EL MISMO NUMERO DE CONTACTID
             $venta = Venta::where('contactId', $request->contactId)->latest('created_at')->first();
 
-            // VALIDAMOS SI EXISTE UNA VENTA CON EL MISMO CONTACTID Y APARTE UGESTION ES PROMESA DE PAGO
+            // VALIDAMOS SI EXISTE UNA VENTA CON EL MISMO CONTACTID Y APARTE UGESTION ES PREVENTA
             if($venta)
             {
-                if($venta->UGestion === 'PROMESA DE PAGO' || $venta->UGestion === 'VENTA')
+                if($venta->UGestion === 'PREVENTA' || $venta->UGestion === 'VENTA')
                 {
                     return response()->json([
                         'code' => 400,
-                        'message' => 'Éste registro ya es una promesa de pago o venta, no se actualizó el registro',
+                        'message' => 'Éste registro ya es una PREVENTA o venta, no se actualizó el registro',
                     ]);
                 }else{
-                    // ACTUALIZAMOS LA PROMESA DE PAGO CON LA NUEVA INFORMACION
+                    // ACTUALIZAMOS LA PREVENTA CON LA NUEVA INFORMACION
                     $venta->fill($request->all());
                     $venta->UGestion = $request->UGestion;
                     $venta->Fpreventa = Carbon::now();
