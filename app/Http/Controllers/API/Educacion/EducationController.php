@@ -127,6 +127,7 @@ class EducationController extends Controller
                 $cotizacion_certifcate  ='SI';
                 $pago_certifcate  ='SI';
                 $date_cobranza = Carbon::now()->toDateTimeString();
+                $schedule_date = null;
                 // se ocupa el usuario_ocm para saber quien fue el que cerro la venta
                 $usuarioCierreVenta = $request->agent_OCM;
             }else{
