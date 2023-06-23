@@ -140,6 +140,7 @@ class EducationController extends Controller
                 $pago_certifcate  ='NO';
                 $date_cobranza = NULL;
                 $usuarioCierreVenta = $request->agent_OCM;
+                $schedule_date = $request->schedule_date;
             }
 
             $info = [
@@ -166,11 +167,12 @@ class EducationController extends Controller
                 'client_state' => $request->client_state,
                 'client_sex' => $request->client_sex,
                 'client_birth' => $request->client_birth,
-                'client_plantel' => $request->client_plante,
+                'client_plantel' => $request->client_plantel,
                 'client_matricula' => $request->client_matricula,
                 'client_plantel' => $request->client_plantel,
                 'client_matricula' => $request->client_matricula,
-                'date_cobranza' => $date_cobranza
+                'date_cobranza' => $date_cobranza,
+                'schedule_date' => $schedule_date
             ];
             // no se puede modificarf la fecha de cotización pero si los otros campos
             Education::where('contact_id', $request->contact_id)
