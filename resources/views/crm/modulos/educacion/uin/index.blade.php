@@ -106,6 +106,9 @@
                                             @if (auth()->user()->hasAnyRole(['Agente de Ventas','Administrador', 'Coordinador']))
                                                 <option value="COTIZACION">COTIZACIÓN</option>
                                             @endif
+                                            @if (auth()->user()->hasAnyRole(['Agente de Ventas','Administrador', 'Coordinador']))
+                                            <option value="AGENDA">AGENDA</option>
+                                            @endif
                                             @if (auth()->user()->hasAnyRole(['Agente Renovaciones','Administrador', 'Coordinador']))
                                                 <option value="COBRADA">COBRADA</option>
                                             @endif
