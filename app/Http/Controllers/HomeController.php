@@ -332,6 +332,7 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                                 FROM ocmdb.".$table_FB." d INNER JOIN ocmdb.".$table_FB."exten de ON d.id = de.id
 
                                 WHERE d.dateinsert BETWEEN ".$date_inicial." AND ".$date_final." ";
+
                                 if(isset($skill_Def_GO)){
                                     $resultadosContacto .= "UNION
                                     SELECT  d.number1 FROM ocmdb.".$table_GO." d
@@ -438,7 +439,7 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
             ),
             'PRA' => array(
                 'tableFb' => 'skill_fb_practicummotor_data',
-                'tableGo' => '',
+                'tableGo' => 'skill_practicummotor_data',
                 'skillDefFb' => 'FB_PRACTICUMMotor',
                 'tipoVenta' => 'PREVENTA',
                 'tablaVenta' => 'educacion'
