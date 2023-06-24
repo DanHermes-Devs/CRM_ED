@@ -425,7 +425,7 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                 'tableGo' => 'skill_onl_qualitasmotor_data',
                 'skillDefFb' => 'fb_qualitasmotor',
                 'skillDefGo' => 'ONL_QUALITASMotor',
-                'tipoVenta' => 'VENTA',
+                'tipoVenta' => 'PREVENTA',
                 'tablaVenta' => 'ventas'
             ),
             'AXA' => array(
@@ -438,7 +438,7 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
             ),
             'PRA' => array(
                 'tableFb' => 'skill_fb_practicummotor_data',
-                'tableGo' => 'skill_uimotor_data',
+                'tableGo' => '',
                 'skillDefFb' => 'FB_PRACTICUMMotor',
                 'tipoVenta' => 'PREVENTA',
                 'tablaVenta' => 'educacion'
