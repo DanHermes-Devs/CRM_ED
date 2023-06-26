@@ -55,7 +55,9 @@ class VentasController extends Controller
 
         // Búsqueda por fecha de inicio y fin
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
-            $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
+            $fechaInicio = Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
+            $query->whereBetween('Fpreventa', [$fechaInicio, $fechaFin]);
         }
 
         // Búsquedas exactas
@@ -601,8 +603,11 @@ class VentasController extends Controller
 
         // Búsqueda por fecha de inicio y fin
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
-            $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
+            $fechaInicio = Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
+            $query->whereBetween('Fpreventa', [$fechaInicio, $fechaFin]);
         }
+
 
         // Búsquedas exactas
         $camposExactos = [
