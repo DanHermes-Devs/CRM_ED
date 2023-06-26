@@ -25,7 +25,9 @@ class ADTController extends Controller
         $query = Adt::query();
 
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
-            $query->whereBetween('fecha_venta', [$request->fecha_inicio, $request->fecha_fin]);
+            $fechaInicio = Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
+            $query->whereBetween('fecha_venta', [$fechaInicio, $fechaFin]);
         }
 
         if ($request->filled(['cliente_nombre'])) {
@@ -54,12 +56,15 @@ class ADTController extends Controller
             }
         }
 
+        // Filtramos por agente
+        $usuario = User::find($request->user);
+
         $resultados = $query->get();
         // Filtros por perfil de usuario
         $rol = $request->rol;
 
         if ($rol == 'Agente de Ventas' ) {
-            $resultados = $resultados->where('agente_intra', $usuario);
+            $resultados = $resultados->where('agente_intra', $usuario->usuario);
         } elseif ($rol == 'Supervisor' || $rol == 'Coordinador') {
             // No aplicar filtros adicionales para supervisores y coordinadores
         } else {
