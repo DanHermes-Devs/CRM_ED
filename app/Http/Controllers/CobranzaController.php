@@ -97,10 +97,10 @@ class CobranzaController extends Controller
 
         // Aplica el filtro de fecha_pago solo si se proporciona
         if (!empty($start_date) && !empty($end_date)) {
-            $query->whereBetween('fecha_pago_real', [$start_date, $end_date]);
+            $query->whereBetween('fecha_proximo_pago', [$start_date, $end_date]);
         }
 
-        $query->orderBy('fecha_pago_real', 'asc');
+        $query->orderBy('fecha_proximo_pago', 'asc');
 
         if ($tipoRecibos === 'MIS_RECIBOS') {
             $agente_cob_id = Auth::user()->id;
