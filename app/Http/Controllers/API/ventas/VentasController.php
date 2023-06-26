@@ -570,7 +570,7 @@ class VentasController extends Controller
                         'prima_neta_cobrada' => $venta->PncTotal,
                         'agente_cob_id' => $i == 1 ? $venta->agent->id ?? null : null,
                         'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                        'estado_pago' => $i == 1 && $frecuenciaPago != 'ANUAL' && !$primerReciboAnualAsignado ? 'PAGADO' : 'PENDIENTE',
+                        'estado_pago' => $frecuenciaPago == 'ANUAL' ? 'LIQUIDADO' : 'PENDIENTE',
                         'contactId' => $venta->contactId,
                     ]);
 
