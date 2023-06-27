@@ -294,6 +294,11 @@ class RenovacionesController extends Controller
                 } else {
                     $contactid->UGestion = $request->UGestion;
                     $contactid->fecha_ultima_gestion = Carbon::now();
+                
+                    $contactid->LoginOcm = $request->LoginOcm;
+                    $contactid->LoginIntranet = $request->LoginIntranet;
+                    $contactid->NombreAgente = $request->NombreAgente;
+                    $contactid->Codificacion = $request->Codificacion;
 
                     $contactid->save();
 
