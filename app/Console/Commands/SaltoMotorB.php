@@ -2,25 +2,23 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
-
+use App\Mail\PolizasEnviadasMotorBMailable;
 use Carbon\Carbon;
 use App\Models\Venta;
-use App\Models\Receipt;
+use Illuminate\Console\Command;
+use App\Mail\ReciclajeBDMailable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ReciclajeBDMailable;
 
-class checkForRecycling extends Command
+class SaltoMotorB extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:checkForRecycling';
+    protected $signature = 'command:name';
 
     /**
      * The console command description.
@@ -48,7 +46,7 @@ class checkForRecycling extends Command
     {
         $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
-        $records = Venta::where('ocmdaytosend_moto_b', '=', Carbon::now()->subDays(8)->startOfDay()->format('Y-m-d'))
+        $records = Venta::where('ocmdaytosend', '=', Carbon::now()->subDays(8)->startOfDay()->format('Y-m-d'))
             ->where('tVenta', 'RENOVACION')
             ->where(function($query) {
                 $query->whereNull('UGestion')
@@ -57,8 +55,7 @@ class checkForRecycling extends Command
             })
             ->whereNotNull('OCMSent')
             ->whereNotNull('ocmdaytosend')
-            ->whereNotNull('OCMSetn_motor_b')
-            ->whereNotNull('ocmdaytosend_moto_b')
+            ->take(5)
             ->get();
 
         $processedRecordsLog = [];
@@ -68,16 +65,16 @@ class checkForRecycling extends Command
             $idload = '';
 
             if ($record->Aseguradora === 'MAPFRE') {
-                if ($record->campana === 'RENOVACIONES_B_MOTOR') {
-                    $skilldata = 'RENOVACIONES_C_MOTOR';
-                    $idload = 144;
+                if ($record->campana === 'RENOVACIONES_A_MOTOR') {
+                    $skilldata = 'RENOVACIONES_B_MOTOR';
+                    $idload = 134;
                 } elseif ($record->campana === 'RENOVACIONES_C_MOTOR') {
                     // Si ya pertenece a MOTOR C, no hagas nada o realiza alguna otra acción
                 }
             } elseif ($record->Aseguradora === 'QUALITAS' || $record->Aseguradora === 'AXA') {
-                if ($record->campana === 'REN_QUALITAS_B_MOTOR') {
-                    $skilldata = 'REN_QUALITAS_C_MOTOR';
-                    $idload = 139;
+                if ($record->campana === 'REN_QUALITASMotor') {
+                    $skilldata = 'REN_QUALITAS_B_MOTOR';
+                    $idload = 138;
                 } elseif ($record->campana === 'REN_QUALITAS_C_MOTOR') {
                     // Si ya pertenece a MOTOR C, no hagas nada o realiza alguna otra acción
                 }
@@ -90,10 +87,10 @@ class checkForRecycling extends Command
                 if($response['result'] == 'error'){
                     Log::info("Error: " . $response['description']);
                 }else{
-                    if($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'REN_QUALITAS_C_MOTOR'){
+                    if ($skilldata === 'RENOVACIONES_B_MOTOR' || $skilldata === 'REN_QUALITAS_B_MOTOR') {
                         $record->campana = $skilldata;
-                        $record->OCMSent_motor_c = true;
-                        $record->ocmdaytosend_motor_c = Carbon::now();
+                        $record->OCMSetn_motor_b = true;
+                        $record->ocmdaytosend_moto_b = Carbon::now();
                     }
 
                     $record->save();
@@ -115,7 +112,7 @@ class checkForRecycling extends Command
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
             Mail::to(['dreyes@exponentedigital.mx'])
-                ->send(new ReciclajeBDMailable($processedRecordsLog));
+                ->send(new PolizasEnviadasMotorBMailable($processedRecordsLog));
         }
     }
 

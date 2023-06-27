@@ -96,7 +96,7 @@ class InsertDataToEndpoint extends Command
                 // Si la respuesta de la API es exitosa
                 if ($response->successful()) {
                     if($response['result'] == 'error'){
-                        Log::info("Error: " . $response['description']);
+                        Log::channel('insertDataToEndPoint')->info("Error: " . $response['description']);
                     }else{
                         // Asignamos el skilldata a la campana de la venta
                         $record->campana = $skilldata;
@@ -127,7 +127,7 @@ class InsertDataToEndpoint extends Command
 
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
-            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx'])
+            Mail::to(['dreyes@exponentedigital.mx'])
                 ->send(new PolizasEnviadasMailable($processedRecordsLog));
         }
     }
