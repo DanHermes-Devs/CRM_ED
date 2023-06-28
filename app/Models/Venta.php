@@ -79,7 +79,11 @@ class Venta extends Model
         'OCMSent',
         'ocmdaytosend',
         'fecha_ultima_gestion',
-        'aseguradora_vendida'
+        'aseguradora_vendida',
+        'OCMSetn_motor_b',
+        'ocmdaytosend_moto_b',
+        'OCMSent_motor_c',
+        'ocmdaytosend_motor_c',
     ];
 
     protected $dates = [

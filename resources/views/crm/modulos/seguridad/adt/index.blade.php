@@ -54,11 +54,6 @@
                             <input type="hidden" name="rol" value="{{ auth()->user()->roles->first()->name }}">
                             {{-- Capturamos el usuario autenticado --}}
                             <input type="hidden" name="user" id="user" value="{{ auth()->user()->id }}">
-
-                            <a class="btn btn-info d-flex align-items-center justify-content-center gap-1 fs-5" data-bs-toggle="collapse" href="#filterCollapse" role="button" aria-expanded="false" aria-controls="filterCollapse">
-                                <i class="ri-filter-3-line"></i>
-                                Filtros
-                            </a>
                         </div>
 
                         <div id="alert" class="alert alert-info d-none" role="alert">
@@ -67,35 +62,6 @@
                                     <span class="visually-hidden">Cargando...</span>
                                 </div>
                                 El proceso de exportacion puede demorar unos minutos. Por favor, espera.
-                            </div>
-                        </div>
-
-                        <div class="collapse show" id="filterCollapse">
-                            <div class="row">
-                                <div class="col-12 col-md-3">
-                                    <div class="mb-3">
-                                        <label for="contact_id">Lead:</label>
-                                        <input type="text" name="contact_id" id="contact_id" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-3">
-                                    <div class="mb-3">
-                                        <label for="cliente_nombre">Nombre de cliente:</label>
-                                        <input type="text" name="cliente_nombre" id="cliente_nombre" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-3">
-                                    <div class="mb-3">
-                                        <label for="cliente_telefono">Teléfono Fijo:</label>
-                                        <input type="text" name="cliente_telefono" id="cliente_telefono" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-3">
-                                    <div class="mb-3">
-                                        <label for="cliente_celular">Teléfono Celular:</label>
-                                        <input type="text" name="cliente_celular" id="cliente_celular" class="form-control">
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </form>
@@ -303,17 +269,6 @@
                     },
                     {
                         target: 8,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 9,
                         render: function(data, type, row) {
                             // Hacemos un foreach a row.roles para obtener el nombre de cada rol
                             if(data == 'null' || data == 'NULL' || data == '' || data == null){

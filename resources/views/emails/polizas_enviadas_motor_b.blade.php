@@ -1,5 +1,5 @@
 @component('mail::message')
-# Pólizas Enviadas - Volcado a Motor C
+# Pólizas Enviadas - Volcado a Motor B
 
 <table style="width: 900px; margin-bottom: 2rem; border-collapse: collapse;">
     <thead>

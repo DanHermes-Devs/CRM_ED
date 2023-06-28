@@ -54,7 +54,12 @@ class InsertDataToEndpoint extends Command
         $motor_c = $this->argument('motor_c');
 
         // Obtenemos todas las ventas que correspondan a la aseguradora
-        $records = Venta::where('Aseguradora', $aseguradora)->get();
+        $records = Venta::where('Aseguradora', $aseguradora)
+                        ->where(function($query) {
+                            $query->whereNull('UGestion')
+                                  ->orWhere('UGestion', '');
+                        })
+                        ->get();
 
         // Si no hay registros, finaliza la ejecución
         if ($records->isEmpty()) {
@@ -122,7 +127,7 @@ class InsertDataToEndpoint extends Command
 
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
-            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx'])
+            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx', 'seguros@exponentedigital.mx', 'calidad@exponentedigital.mx', 'avelasco@exponentedigital.mx'])
                 ->send(new PolizasEnviadasMailable($processedRecordsLog));
         }
     }
@@ -186,7 +191,9 @@ class InsertDataToEndpoint extends Command
                 'primaCobrada' => $record->PrimaNetaCobrada,
                 'primaTotal' => $record->PncTotal,
                 'id_lead' => $record->contactId,
-                'aseguradoraVigente' => $record->Aseguradora
+                'aseguradoraVigente' => $record->Aseguradora,
+                'mesbd' => $record->MesBdd,
+                'aniobd' => $record->AnioBdd,
             ],
         ];
     }

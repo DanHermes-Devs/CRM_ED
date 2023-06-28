@@ -156,7 +156,7 @@
 
                                 <div class="col-12 col-md-3">
                                     <div class="mb-3">
-                                        <label for="group_id" class="form-label">Grupo Asignado:</label>
+                                        <label for="group_id" class="form-label">Segmento:</label>
                                         <select class="form-select @error('group_id') is-invalid @enderror" id="group_id" name="group_id">
                                             <option value="">Selecciona una opción</option>
                                             @foreach($grupos as $grupo)

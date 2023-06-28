@@ -55,7 +55,9 @@ class VentasController extends Controller
 
         // Búsqueda por fecha de inicio y fin
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
-            $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
+            $fechaInicio = Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
+            $query->whereBetween('Fpreventa', [$fechaInicio, $fechaFin]);
         }
 
         // Búsquedas exactas
@@ -570,7 +572,7 @@ class VentasController extends Controller
                         'prima_neta_cobrada' => $venta->PncTotal,
                         'agente_cob_id' => $i == 1 ? $venta->agent->id ?? null : null,
                         'tipo_pago' => $i == $numRecibos ? 'LIQUIDADO' : 'PAGO PARCIAL',
-                        'estado_pago' => $i == 1 && $frecuenciaPago != 'ANUAL' && !$primerReciboAnualAsignado ? 'PAGADO' : 'PENDIENTE',
+                        'estado_pago' => $frecuenciaPago == 'ANUAL' ? 'LIQUIDADO' : 'PENDIENTE',
                         'contactId' => $venta->contactId,
                     ]);
 
@@ -601,8 +603,11 @@ class VentasController extends Controller
 
         // Búsqueda por fecha de inicio y fin
         if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
-            $query->whereBetween('Fpreventa', [$request->fecha_inicio, $request->fecha_fin]);
+            $fechaInicio = Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
+            $query->whereBetween('Fpreventa', [$fechaInicio, $fechaFin]);
         }
+
 
         // Búsquedas exactas
         $camposExactos = [

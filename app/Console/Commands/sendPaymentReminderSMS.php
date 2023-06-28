@@ -56,6 +56,9 @@ class sendPaymentReminderSMS extends Command
 
             $smsText = "{$receipt->venta->Aseguradora}: Te recordamos que el pago de tu poliza #{$receipt->venta->nPoliza} se debe realizar el día {$fecha_formateada} si quieres pagarlo hoy llama al 5593445265. Conduce con precaución";
 
+            $fecha_hoy = Carbon::now()->format('Y-m-d');
+            Log::channel('sendPaymentReminderSMS')->info($smsText . ' Fecha de inserción en OCM: ' . $fecha_hoy);
+
             // <tem:Telefonos>'.$receipt->venta->TelCelular.'</tem:Telefonos>
             $xml_post_string = '
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
@@ -110,9 +113,6 @@ class sendPaymentReminderSMS extends Command
 
             // Parseamos la respuesta
             $parser = simplexml_load_string($response2);
-            $fecha_hoy = Carbon::now()->format('Y-m-d');
-            Log::channel('sendPaymentReminderSMS')->info($smsText . ' Fecha de inserción en OCM: ' . $fecha_hoy);
-            return $parser;
         }
     }
 }

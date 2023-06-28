@@ -339,7 +339,7 @@
                                                 <a href="{{ route('proyectos.index') }}" class="nav-link" data-key="t-list-js">Proyectos</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="{{ route('grupos.index') }}" class="nav-link" data-key="t-list-js">Grupos</a>
+                                                <a href="{{ route('grupos.index') }}" class="nav-link" data-key="t-list-js">Segmento</a>
                                             </li>
                                         </ul>
                                     </div>
