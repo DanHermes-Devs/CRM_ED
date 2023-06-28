@@ -11,23 +11,17 @@ class RphEducacion extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $processedData;
+
+    public function __construct($processedData)
     {
-        //
+        $this->processedData = $processedData;
+
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        return $this->markdown('emails.rph_educacion');
+        return $this->markdown('emails.rph_educacion')
+                    ->subject('RPH | UIN');
     }
 }

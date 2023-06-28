@@ -79,15 +79,21 @@ class RPH extends Command
         $preventas = $this->calculoPreventas($datosReporte);
         $ventas = $this->calculoVentas($datosReporte);
 
+        $processedData = [
+            'leads'=>$leads[0],
+            'llamadas'=>$llamadas[0],
+            'preventas'=>$preventas[0],
+            'ventas'=>$ventas[0],
+            'keys'=>array_keys($leads[0])
+        ];
 
-        //dd($leads);
-        if (!empty($leads)) {
+        //dd($processedData);
+        if (!empty($processedData)) {
             Mail::to(['tecnologia@exponentedigital.mx'])
-                ->send(new RphEducacion($leads,$llamadas,$preventas,$ventas));
+                ->send(new RphEducacion($processedData));
         }
 
-       // return $this->info(print_r($conteoVentas, true));
-        //return $this->info('mocos');
+
 
 
     }
