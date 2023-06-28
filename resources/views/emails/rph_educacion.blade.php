@@ -20,9 +20,17 @@
                     <td style="padding: .75rem;">{{$processedData['keys'][$i]}}</td>
                     <td style="padding: .75rem;">{{$processedData['leads'][$processedData['keys'][$i]]}}</td>
                     <td style="padding: .75rem;">{{$processedData['llamadas'][$processedData['keys'][$i]]}}</td>
-                    <td style="padding: .75rem;">{{number_format(($processedData['llamadas'][$processedData['keys'][$i]]/$processedData['leads'][$processedData['keys'][$i]])*100,0).'%'}}</td>
+                    @if $processedData['leads'][$processedData['keys'][$i]] > 0
+                        <td style="padding: .75rem;">{{number_format(($processedData['llamadas'][$processedData['keys'][$i]]/$processedData['leads'][$processedData['keys'][$i]])*100,0).'%'}}</td>
+                    @else
+                        <td style="padding: .75rem;">{{'0%'}}</td>
+                    @endif
                     <td style="padding: .75rem;">{{$processedData['preventas'][$processedData['keys'][$i]]}}</td>
-                    <td style="padding: .75rem;">{{number_format(($processedData['preventas'][$processedData['keys'][$i]]/$processedData['leads'][$processedData['keys'][$i]])*100,1).'%'}}</td>
+                    @if $processedData['leads'][$processedData['keys'][$i]] > 0
+                        <td style="padding: .75rem;">{{number_format(($processedData['preventas'][$processedData['keys'][$i]]/$processedData['leads'][$processedData['keys'][$i]])*100,1).'%'}}</td>
+                    @else
+                        <td style="padding: .75rem;">{{'0%'}}</td
+                    @endif
                     <td style="padding: .75rem;">{{$processedData['ventas'][$processedData['keys'][$i]]}}</td>
                 </tr>
             @endfor
