@@ -57,20 +57,6 @@
                         </div>
                     @endif
 
-                    @php
-                        use Carbon\Carbon;
-                        use App\Models\Venta;
-                        $venta = Venta::whereDate('FinVigencia', '=', Carbon::today()->subDays(2)->startOfDay()->format('Y-m-d'))
-                                                ->where('tVenta', 'RENOVACION')
-                                                ->where(function($query) {
-                                                    $query->whereNull('campana')
-                                                        ->orWhere('campana', '');
-                                                })
-                                                ->get();
-
-                        dump($venta);
-                    @endphp
-
                     <form method="GET">
                         {{-- Si el usuario es agente de ventas nueva no se deben mostrar los campos de fecha inicio, fecha fin, mes_bdd y anio_bdd--}}
                         <div class="d-grid mb-3 grid-search">
