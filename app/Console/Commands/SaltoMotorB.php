@@ -18,7 +18,7 @@ class SaltoMotorB extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'command:salto_motor_b';
 
     /**
      * The console command description.
@@ -46,7 +46,7 @@ class SaltoMotorB extends Command
     {
         $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
-        $records = Venta::where('ocmdaytosend', '=', Carbon::now()->subDays(8)->startOfDay()->format('Y-m-d'))
+        $records = Venta::whereDate('ocmdaytosend', '=', Carbon::today()->subDays(8)->startOfDay()->format('Y-m-d'))
             ->where('tVenta', 'RENOVACION')
             ->where(function($query) {
                 $query->whereNull('UGestion')
@@ -55,7 +55,6 @@ class SaltoMotorB extends Command
             })
             ->whereNotNull('OCMSent')
             ->whereNotNull('ocmdaytosend')
-            ->take(5)
             ->get();
 
         $processedRecordsLog = [];
@@ -85,7 +84,7 @@ class SaltoMotorB extends Command
 
             if ($response->successful()) {
                 if($response['result'] == 'error'){
-                    Log::info("Error: " . $response['description']);
+                    Log::channel('salto_motor_b')->info("Error: " . $response['description']);
                 }else{
                     if ($skilldata === 'RENOVACIONES_B_MOTOR' || $skilldata === 'REN_QUALITAS_B_MOTOR') {
                         $record->campana = $skilldata;
@@ -104,14 +103,14 @@ class SaltoMotorB extends Command
                         'ocmdaytosend' => $fecha_hoy
                     ];
 
-                    Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
+                    Log::channel('salto_motor_b')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                 }
             }
         }
 
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
-            Mail::to(['dreyes@exponentedigital.mx'])
+            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx', 'seguros@exponentedigital.mx', 'calidad@exponentedigital.mx', 'avelasco@exponentedigital.mx'])
                 ->send(new PolizasEnviadasMotorBMailable($processedRecordsLog));
         }
     }

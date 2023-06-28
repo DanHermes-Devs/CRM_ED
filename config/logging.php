@@ -54,9 +54,9 @@ return [
             'level' => 'info',
         ],
 
-        'checkForRecycling' => [
+        'salto_motor_c' => [
             'driver' => 'single',
-            'path' => storage_path('logs/checkForRecycling.log'),
+            'path' => storage_path('logs/salto_motor_c.log'),
             'level' => 'info',
         ],
 
@@ -75,6 +75,12 @@ return [
         'insertDataToEndPoint' => [
             'driver' => 'single',
             'path' => storage_path('logs/insertDataToEndPoint.log'),
+            'level' => 'info',
+        ],
+
+        'salto_motor_b' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/salto_motor_b.log'),
             'level' => 'info',
         ],
 

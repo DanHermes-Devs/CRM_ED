@@ -48,7 +48,7 @@ class checkForRecycling extends Command
     {
         $url_ocm = 'http://172.93.111.251:8070/OCMAPI/AddReg';
 
-        $records = Venta::where('ocmdaytosend_moto_b', '=', Carbon::now()->subDays(8)->startOfDay()->format('Y-m-d'))
+        $records = Venta::whereDate('ocmdaytosend_moto_b', '=', Carbon::today()->subDays(8)->startOfDay()->format('Y-m-d'))
             ->where('tVenta', 'RENOVACION')
             ->where(function($query) {
                 $query->whereNull('UGestion')
@@ -59,7 +59,8 @@ class checkForRecycling extends Command
             ->whereNotNull('ocmdaytosend')
             ->whereNotNull('OCMSetn_motor_b')
             ->whereNotNull('ocmdaytosend_moto_b')
-            ->get();
+            ->count();
+
 
         $processedRecordsLog = [];
 
@@ -88,7 +89,7 @@ class checkForRecycling extends Command
 
             if ($response->successful()) {
                 if($response['result'] == 'error'){
-                    Log::info("Error: " . $response['description']);
+                    Log::channel('salto_motor_b')->info("Error: " . $response['description']);
                 }else{
                     if($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'REN_QUALITAS_C_MOTOR'){
                         $record->campana = $skilldata;
@@ -107,14 +108,14 @@ class checkForRecycling extends Command
                         'ocmdaytosend' => $fecha_hoy
                     ];
 
-                    Log::channel('checkForRecycling')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
+                    Log::channel('salto_motor_c')->info("Success (ID Lead): " . $response['idlead'] . ' Skilldata: ' . $skilldata . ' Contact ID: ' . $record->contactId  . ' Fecha de inserción en OCM: ' . $fecha_hoy);
                 }
             }
         }
 
         // Si hay registros procesados, envíalos por correo
         if (!empty($processedRecordsLog)) {
-            Mail::to(['dreyes@exponentedigital.mx'])
+            Mail::to(['dreyes@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'scamano@exponentedigital.mx', 'seguros@exponentedigital.mx', 'calidad@exponentedigital.mx', 'avelasco@exponentedigital.mx'])
                 ->send(new ReciclajeBDMailable($processedRecordsLog));
         }
     }
