@@ -75,6 +75,8 @@ class RPH extends Command
         //Obtengo datos de la campaña para saber qué tablas consultar, horarios, etc
         $datosReporte = $this->obtenerOrigenDatos('uin');
 
+
+
         //Defino horarios
         $fechaActual = Carbon::now();
         $horaActual = $fechaActual->format('H');
@@ -110,8 +112,11 @@ class RPH extends Command
         $fechaFin = $fechaActual.' 23:59:59';
         $horaInicial = $datosProyecto['horaInicio'];
         $horaFinal = $datosProyecto['horaFin'];
-        $conteoLeads = "SELECT IFNULL(SUM(CASE WHEN dateinsert BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." ".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
+        $conteoLeads = "SELECT IFNULL(SUM(CASE WHEN dateinsert BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
         while ($horaInicial <= $horaFinal) {
+            if($horaInicial < 10){
+                $horaInicial = '0'.$horaInicial;
+            }
             $conteoLeads.= ",IFNULL(SUM(CASE WHEN dateinsert BETWEEN '".$fechaActual." ".$horaInicial.":00:00' AND '".$fechaActual." ".$horaInicial.":59:59' THEN 1 ELSE 0 END),0) '".$horaInicial."'";
             $horaInicial  = $horaInicial + 1;
         }
@@ -149,8 +154,11 @@ class RPH extends Command
         $horaFinal = $datosProyecto['horaFin'];
 
 
-        $llamadasporCampana = "SELECT IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." ".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
+        $llamadasporCampana = "SELECT IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
         while ($horaInicial <= $horaFinal) {
+            if($horaInicial < 10){
+                $horaInicial = '0'.$horaInicial;
+            }
             $llamadasporCampana.= ",IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." ".$horaInicial.":00:00' AND '".$fechaActual." ".$horaInicial.":59:59' THEN 1 ELSE 0 END),0) '".$horaInicial."'";
             $horaInicial  = $horaInicial + 1;
         }
@@ -194,8 +202,11 @@ class RPH extends Command
         $horaFinal = $datosProyecto['horaFin'];
         $calificacionPreventa = $datosProyecto['calificacionPreventa'];
 
-        $conteoPreventas = "SELECT IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." ".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
+        $conteoPreventas = "SELECT IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
         while ($horaInicial <= $horaFinal) {
+            if($horaInicial < 10){
+                $horaInicial = '0'.$horaInicial;
+            }
             $conteoPreventas.= ",IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." ".$horaInicial.":00:00' AND '".$fechaActual." ".$horaInicial.":59:59' THEN 1 ELSE 0 END),0) '".$horaInicial."'";
             $horaInicial  = $horaInicial + 1;
         }
@@ -222,8 +233,11 @@ class RPH extends Command
         $horaInicial = $datosProyecto['horaInicio'];
         $horaFinal = $datosProyecto['horaFin'];
 
-        $conteoVentas = "SELECT IFNULL(SUM(CASE WHEN date_cobranza BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." ".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
+        $conteoVentas = "SELECT IFNULL(SUM(CASE WHEN date_cobranza BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
         while ($horaInicial <= $horaFinal) {
+            if($horaInicial < 10){
+                $horaInicial = '0'.$horaInicial;
+            }
             $conteoVentas.= ",IFNULL(SUM(CASE WHEN date_cobranza BETWEEN '".$fechaActual." ".$horaInicial.":00:00' AND '".$fechaActual." ".$horaInicial.":59:59' THEN 1 ELSE 0 END),0) '".$horaInicial."'";
             $horaInicial  = $horaInicial + 1;
         }
@@ -231,6 +245,7 @@ class RPH extends Command
         $conteoVentas.= " FROM crm.".$datosProyecto['tablaVentasCrm']."
                         WHERE codification = 'COBRADA'
                         AND date_cobranza BETWEEN '".$fechaInicio."' AND '".$fechaFin."'";
+
 
         return  $this->followQueryCrm($conteoVentas);
 
