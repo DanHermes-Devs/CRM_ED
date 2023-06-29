@@ -72,30 +72,34 @@ class RPH extends Command
     public function handle()
     {
 
-
+        //Obtengo datos de la campaña para saber qué tablas consultar, horarios, etc
         $datosReporte = $this->obtenerOrigenDatos('uin');
-        $leads = $this->calculoLead($datosReporte);
-        $llamadas = $this->calculoLlamadas($datosReporte);
-        $preventas = $this->calculoPreventas($datosReporte);
-        $ventas = $this->calculoVentas($datosReporte);
 
-        $processedData = [
-            'leads'=>$leads[0],
-            'llamadas'=>$llamadas[0],
-            'preventas'=>$preventas[0],
-            'ventas'=>$ventas[0],
-            'keys'=>array_keys($leads[0])
-        ];
+        //Defino horarios
+        $fechaActual = Carbon::now();
+        $horaActual = $currentDateTime->format('H:i:s');
+        $horaInicial = $datosReporte['horaInicio'];
+        $horaFinal = $datosReporte['horaFin'];
 
-        //dd($processedData);
-        if (!empty($processedData)) {
-            Mail::to(['scamano@exponentedigital.mx', 'operaciones@exponentedigital.mx', 'comercial@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'calidad@exponentedigital.mx', 'sperez@exponentedigital.mx', 'dreyes@exponentedigital.mx', 'marketing@exponentedigital.mx'])
-                ->send(new RphEducacion($processedData));
+        //Valido si el reporte está en horario de ejecución
+        if($horaActual >= $horaInicial && $horaActual <= $horaFinal){
+            $leads = $this->calculoLead($datosReporte);
+            $llamadas = $this->calculoLlamadas($datosReporte);
+            $preventas = $this->calculoPreventas($datosReporte);
+            $ventas = $this->calculoVentas($datosReporte);
+            $processedData = [
+                'leads'=>$leads[0],
+                'llamadas'=>$llamadas[0],
+                'preventas'=>$preventas[0],
+                'ventas'=>$ventas[0],
+                'keys'=>array_keys($leads[0])
+            ];
+
+            if (!empty($processedData)) {
+                Mail::to(['scamano@exponentedigital.mx', 'operaciones@exponentedigital.mx', 'comercial@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'calidad@exponentedigital.mx', 'sperez@exponentedigital.mx', 'dreyes@exponentedigital.mx', 'marketing@exponentedigital.mx'])
+                    ->send(new RphEducacion($processedData));
+            }
         }
-
-
-
-
     }
     //Función para obtener número de leads por hora
     private function calculoLead($datosProyecto)
