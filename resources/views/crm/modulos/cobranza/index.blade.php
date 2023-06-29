@@ -266,25 +266,45 @@
                         {
                             data: 'venta.nPoliza',
                             render: function(data, type, row) {
-                                return `${data}`;
+                                // SI no tiene una poliza anterior retornamos un badge con la leyenda "Sin póliza anterior"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin póliza anterior</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
                             }
                         },
                         {
                             data: 'venta.nueva_poliza',
                             render: function(data, type, row) {
-                                return `${data}`;
+                                // Si no tiene una nueva poliza, retornamos un badge con la leyenda "Sin nueva póliza"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin nueva póliza</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
                             }
                         },
                         {
                             data: 'venta.TelCelular',
                             render: function(data, type, row) {
-                                return `${data}`;
+                                // Si no tiene un teléfono celular, retornamos un badge con la leyenda "Sin teléfono Celular"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin teléfono Celular</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
                             }
                         },
                         {
                             data: 'venta.TelFijo',
                             render: function(data, type, row) {
-                                return `${data}`;
+                                // Si no tiene un teléfono fijo, retornamos un badge con la leyenda "Sin teléfono Fijo"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin teléfono Fijo</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
                             }
                         },
                         {
