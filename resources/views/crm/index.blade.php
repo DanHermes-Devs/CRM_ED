@@ -131,7 +131,7 @@
                                 </div><!-- end col -->
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-4 px-3">
-                                        <h5 class="text-muted text-uppercase fs-13">LLAMADAS <!--<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>-->
+                                        <h5 class="text-muted text-uppercase fs-13">LLAMADASz <!--<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>-->
                                         </h5>
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="d-flex align-items-center gap-1">
@@ -309,7 +309,7 @@
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h2 class="mb-0"><span class="counter-value"
-                                                    data-target="{{ !empty($llamadas[0]['TOTAL']) ? $llamadas[0]['TOTAL'] : '' }}">0</span>
+                                                    data-target="{{ !empty($llamadas[0]['llamadasFb']) ? $llamadas[0]['llamadasFb'] : '' }}">0</span>
                                             </h2>
                                         </div>
                                     </div>
