@@ -205,11 +205,13 @@
                                                 </a>
                                                 <div class="menu-dropdown collapse" id="modulo_seguros" style="">
                                                     <ul class="nav nav-sm flex-column">
+                                                        @if (Auth::user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones', 'BI', 'Administrador', 'Supervisor', 'Coordinador']))
                                                         <li class="nav-item">
                                                             <a href="{{ route('ventas.index') }}" class="nav-link" data-key="t-analytics">
                                                                 Ventas
                                                             </a>
                                                         </li>
+                                                        @endif
                                                         @if (Auth::user()->hasAnyRole(['Agente de Cobranza', 'Administrador', 'Supervisor', 'Coordinador']))
                                                             <li class="nav-item">
                                                                 <a href="{{ route('cobranza.index') }}" class="nav-link" data-key="t-analytics">
@@ -220,6 +222,7 @@
                                                     </ul>
                                                 </div>
                                             </li>
+                                            @if (Auth::user()->hasAnyRole(['Agente de Ventas', 'Agente Renovaciones', 'BI', 'Administrador', 'Supervisor', 'Coordinador']))
                                             <li class="nav-item">
                                                 <a href="#modulo_education" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
                                                     aria-controls="modulo_education" data-key="t-level-1.2">
@@ -267,6 +270,7 @@
                                                     </ul>
                                                 </div>
                                             </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li>
@@ -319,13 +323,14 @@
                             @endif
 
                             {{-- Solo lo puede ver administrador este bloque html --}}
-                            @if (Auth::user()->hasRole('Administrador'))
+                            @if (Auth::user()->hasAnyRole(['Administrador', 'RH']))
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="#sidebarTables" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="sidebarTables">
                                         <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Catálogos</span>
                                     </a>
                                     <div class="menu-dropdown collapse" id="sidebarTables" style="">
                                         <ul class="nav nav-sm flex-column">
+                                            @if (Auth::user()->hasAnyRole(['Administrador']))
                                             <li class="nav-item">
                                                 <a href="{{ route('paises.index') }}" class="nav-link" data-key="t-basic-tables">Paises</a>
                                             </li>
@@ -333,22 +338,27 @@
                                                 <a href="{{ route('aseguradoras.index') }}" class="nav-link" data-key="t-grid-js">Aseguradoras</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="{{ route('campaigns.index') }}" class="nav-link" data-key="t-list-js">Campañas</a>
-                                            </li>
-                                            <li class="nav-item">
                                                 <a href="{{ route('proyectos.index') }}" class="nav-link" data-key="t-list-js">Proyectos</a>
+                                            </li>
+                                            @endif
+                                            @if (Auth::user()->hasAnyRole(['Administrador', 'RH']))
+                                            <li class="nav-item">
+                                                <a href="{{ route('campaigns.index') }}" class="nav-link" data-key="t-list-js">Campañas</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="{{ route('grupos.index') }}" class="nav-link" data-key="t-list-js">Segmento</a>
                                             </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li>
+                                @if (Auth::user()->hasAnyRole(['Administrador']))
                                 <li class="nav-item">
                                     <a class="nav-link menu-link" href="{{ route('cronjobs.index') }}">
                                         <i class="ri-settings-6-line"></i> <span data-key="t-dashboards">Tareas Automáticas</span>
                                     </a>
                                 </li>
+                                @endif
                             @endif
                         </ul>
                     </div>

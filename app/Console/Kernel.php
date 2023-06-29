@@ -34,13 +34,15 @@ class Kernel extends ConsoleKernel
         //             ->withoutOverlapping();
         // }
 
-        $schedule->command('insert:data-to-endpoint RENOVACIONES_A_MOTOR 136 MAPFRE')->dailyAt('5:59')->timezone('America/Mexico_City');
-        $schedule->command('insert:data-to-endpoint REN_QUALITASMotor 137 QUALITAS')->dailyAt('5:59')->timezone('America/Mexico_City');
-        $schedule->command('insert:data-to-endpoint REN_QUALITASMotor 137 AXA')->dailyAt('5:59')->timezone('America/Mexico_City');
-        $schedule->command('command:sendPaymentReminderSMS')->dailyAt('5:59')->timezone('America/Mexico_City');
-        $schedule->command('command:sendPaymentPendingRecordsToOCM')->dailyAt('5:59')->timezone('America/Mexico_City');
-        $schedule->command('command:checkForRecycling')->dailyAt('5:59')->timezone('America/Mexico_City');
-        $schedule->command('attendance:cronjob')->dailyAt('5:59');
+        $schedule->command('insert:data-to-endpoint RENOVACIONES_A_MOTOR 136 MAPFRE')->dailyAt('5:00')->timezone('America/Mexico_City'); // Motor a MAPFRE
+        $schedule->command('insert:data-to-endpoint REN_QUALITASMotor 137 QUALITAS')->dailyAt('15:00')->timezone('America/Mexico_City'); // Motor a QUALITAS
+        $schedule->command('insert:data-to-endpoint REN_QUALITASMotor 137 AXA')->dailyAt('15:00')->timezone('America/Mexico_City'); // Motor a AXA
+        $schedule->command('command:salto_motor_b')->dailyAt('5:00')->timezone('America/Mexico_City'); // Salto a Motor B
+        $schedule->command('command:checkForRecycling')->dailyAt('5:00')->timezone('America/Mexico_City'); // Salto a Motor C
+        $schedule->command('command:sendPaymentReminderSMS')->dailyAt('9:00')->timezone('America/Mexico_City'); // Envio de SMS
+        $schedule->command('command:sendPaymentPendingRecordsToOCM')->dailyAt('5:00')->timezone('America/Mexico_City'); // Envio de datos a cobranza
+        $schedule->command('attendance:cronjob')->dailyAt('23:00')->timezone('America/Mexico_City');
+        $schedule->command('command:rph')->hourly()->timezone('America/Mexico_City');
     }
 
 

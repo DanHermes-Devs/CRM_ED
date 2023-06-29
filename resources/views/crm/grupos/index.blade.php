@@ -11,12 +11,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">GRUPOS</h4>
+                    <h4 class="mb-sm-0">SEGMENTOS</h4>
 
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">DASHBOARD</a></li>
-                            <li class="breadcrumb-item active">GRUPOS</li>
+                            <li class="breadcrumb-item active">SEGMENTOS</li>
                         </ol>
                     </div>
 
@@ -37,18 +37,16 @@
                             </div>
                         @endif
                         <div class="d-flex flex-column align-items-end justify-content-center">
-                            @can('crear-pais')
-                                <a href="{{ route('grupos.create') }}" class="btn btn-primary waves-effect waves-light mb-3 d-flex align-items-center gap-1">
-                                    <i class="ri-add-circle-line"></i>
-                                    Agregar grupo
-                                </a>
-                            @endcan
+                            <a href="{{ route('grupos.create') }}" class="btn btn-primary waves-effect waves-light mb-3 d-flex align-items-center gap-1">
+                                <i class="ri-add-circle-line"></i>
+                                Agregar segmento
+                            </a>
                             <!-- Tables Without Borders -->
                             <table class="table table-middle table-nowrap mb-0" id="tabla_grupos">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Grupo</th>
+                                        <th scope="col">Segmento</th>
                                         <th scope="col">Descripción</th>
                                         <th scope="col">Estatus</th>
                                         <th scope="col">Acciones</th>
@@ -67,7 +65,7 @@
 
     <script>
         $(document).ready(function() {
-            
+
             $('#tabla_grupos').DataTable({
                 processing: true,
                 serverSide: true,
@@ -99,7 +97,7 @@
                 ],
                 language: idiomaDataTable
             });
-            
+
         });
     </script>
 @endsection

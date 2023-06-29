@@ -92,8 +92,10 @@
                                 <tr>
                                     <th>Lead</th>
                                     <th>Nombre Cliente</th>
-                                    <th>Poliza</th>
-                                    <th>TelCelular</th>
+                                    <th>Póliza</th>
+                                    <th>Nueva Póliza</th>
+                                    <th>Teléfono Celular</th>
+                                    <th>Teléfono Fijo</th>
                                     <th>#Recibo</th>
                                     <th>Fecha Próximo Pago</th>
                                     <th>Estado de Pago</th>
@@ -208,7 +210,7 @@
 
             $('#fecha_pago_1').daterangepicker({
                 maxSpan: {
-                    days: 7
+                    days: 31
                 },
                 locale: {
                     format: 'DD/MM/YYYY',
@@ -264,13 +266,45 @@
                         {
                             data: 'venta.nPoliza',
                             render: function(data, type, row) {
-                                return `${data}`;
+                                // SI no tiene una poliza anterior retornamos un badge con la leyenda "Sin póliza anterior"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin póliza anterior</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
+                            }
+                        },
+                        {
+                            data: 'venta.nueva_poliza',
+                            render: function(data, type, row) {
+                                // Si no tiene una nueva poliza, retornamos un badge con la leyenda "Sin nueva póliza"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin nueva póliza</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
                             }
                         },
                         {
                             data: 'venta.TelCelular',
                             render: function(data, type, row) {
-                                return `${data}`;
+                                // Si no tiene un teléfono celular, retornamos un badge con la leyenda "Sin teléfono Celular"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin teléfono Celular</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
+                            }
+                        },
+                        {
+                            data: 'venta.TelFijo',
+                            render: function(data, type, row) {
+                                // Si no tiene un teléfono fijo, retornamos un badge con la leyenda "Sin teléfono Fijo"
+                                if (data === null) {
+                                    return `<span class="badge rounded-pill badge-soft-danger badge-border">Sin teléfono Fijo</span>`;
+                                } else {
+                                    return `${data}`;
+                                }
                             }
                         },
                         {

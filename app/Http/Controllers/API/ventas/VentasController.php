@@ -140,7 +140,7 @@ class VentasController extends Controller
     // Metodo para mostrar el formulario de ventas
     public function store(Request $request)
     {
-        if($request->Codificacion === 'VENTA')
+        if($request->Codificacion === 'PREVENTA')
         {
             // BUSCAMOS SI EXISTE UNA VENTA CON EL MISMO NUMERO DE CONTACTID
             $venta = Venta::where('contactId', $request->contactId)
@@ -718,15 +718,15 @@ class VentasController extends Controller
         return redirect()->route('ventas.formImportVentas')->with('success', 'Ventas/Renovaciones importadas correctamente');
     }
 
-    // public function actualizarEstadoRecibosYPago($venta_id, $num_pago)
-    // {
-    //     // Actualizar los recibos de pago
-    //     Receipt::where('venta_id', $venta_id)
-    //         ->where('num_pago', '>', $num_pago)
-    //         ->update(['estado_pago' => 'CANCELADO']);
+    public function actualizarEstadoRecibosYPago($venta_id, $num_pago)
+    {
+        // Actualizar los recibos de pago
+        Receipt::where('venta_id', $venta_id)
+            ->where('num_pago', '>', $num_pago)
+            ->update(['estado_pago' => 'CANCELADO']);
 
-    //     // Actualizar el estado de la venta
-    //     Venta::where('id', $venta_id)
-    //         ->update(['EstadoDePago' => 'CANCELADO PAGO']);
-    // }
+        // Actualizar el estado de la venta
+        Venta::where('id', $venta_id)
+            ->update(['EstadoDePago' => 'CANCELADO PAGO']);
+    }
 }
