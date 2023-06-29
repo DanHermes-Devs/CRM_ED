@@ -89,7 +89,7 @@ class RPH extends Command
 
         //dd($processedData);
         if (!empty($processedData)) {
-            Mail::to(['scamano@exponentedigital.mx','operaciones@exponentedigital.mx','comercial@exponentedigital.mx','tecnologia@exponentedigital.mx','calidad@exponentedigital.mx','sperez@exponentedigital.mx'])
+            Mail::to(['scamano@exponentedigital.mx', 'operaciones@exponentedigital.mx', 'comercial@exponentedigital.mx', 'tecnologia@exponentedigital.mx', 'calidad@exponentedigital.mx', 'sperez@exponentedigital.mx', 'dreyes@exponentedigital.mx'])
                 ->send(new RphEducacion($processedData));
         }
 
