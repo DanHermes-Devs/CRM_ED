@@ -77,7 +77,7 @@ class RPH extends Command
 
         //Defino horarios
         $fechaActual = Carbon::now();
-        $horaActual = $currentDateTime->format('H:i:s');
+        $horaActual = $fechaActual->format('H:i:s');
         $horaInicial = $datosReporte['horaInicio'];
         $horaFinal = $datosReporte['horaFin'];
 
