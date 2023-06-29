@@ -92,8 +92,10 @@
                                 <tr>
                                     <th>Lead</th>
                                     <th>Nombre Cliente</th>
-                                    <th>Poliza</th>
-                                    <th>TelCelular</th>
+                                    <th>Póliza</th>
+                                    <th>Nueva Póliza</th>
+                                    <th>Teléfono Celular</th>
+                                    <th>Teléfono Fijo</th>
                                     <th>#Recibo</th>
                                     <th>Fecha Próximo Pago</th>
                                     <th>Estado de Pago</th>
@@ -268,7 +270,19 @@
                             }
                         },
                         {
+                            data: 'venta.nueva_poliza',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
                             data: 'venta.TelCelular',
+                            render: function(data, type, row) {
+                                return `${data}`;
+                            }
+                        },
+                        {
+                            data: 'venta.TelFijo',
                             render: function(data, type, row) {
                                 return `${data}`;
                             }
