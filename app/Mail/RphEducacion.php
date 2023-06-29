@@ -21,7 +21,9 @@ class RphEducacion extends Mailable
 
     public function build()
     {
+        $fechaActual = Carbon::now();
+        $horaActual = $currentDateTime->format('H:i');
         return $this->markdown('emails.rph_educacion')
-                    ->subject('RPH | UIN');
+                    ->subject('RPH | Universidad Insurgentes: '.$horaActual );
     }
 }
