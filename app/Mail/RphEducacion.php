@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Carbon\Carbon;
 
 class RphEducacion extends Mailable
 {
@@ -22,8 +23,8 @@ class RphEducacion extends Mailable
     public function build()
     {
         $fechaActual = Carbon::now();
-        $horaActual = $currentDateTime->format('H:i');
+        $horaActual = $fechaActual->format('H:i');
         return $this->markdown('emails.rph_educacion')
-                    ->subject('RPH | Universidad Insurgentes: '.$horaActual );
+                    ->subject('RPH | Universidad Insurgentes '.$horaActual );
     }
 }

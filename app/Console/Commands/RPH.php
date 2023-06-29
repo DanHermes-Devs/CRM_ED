@@ -77,11 +77,10 @@ class RPH extends Command
 
         //Defino horarios
         $fechaActual = Carbon::now();
-        $horaActual = $fechaActual->format('H:i:s');
+        $horaActual = $fechaActual->format('H');
         $horaInicial = $datosReporte['horaInicio'];
         $horaFinal = $datosReporte['horaFin'];
-
-        //Valido si el reporte está en horario de ejecución
+          //Valido si el reporte está en horario de ejecución
         if($horaActual >= $horaInicial && $horaActual <= $horaFinal){
             $leads = $this->calculoLead($datosReporte);
             $llamadas = $this->calculoLlamadas($datosReporte);
@@ -333,4 +332,5 @@ class RPH extends Command
             echo "Error al ejecutar la consulta: " . mysqli_error($this->connectionCrm);
         }
     }
+
 }
