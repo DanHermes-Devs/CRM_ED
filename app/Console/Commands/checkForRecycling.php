@@ -59,7 +59,7 @@ class checkForRecycling extends Command
             ->whereNotNull('ocmdaytosend')
             ->whereNotNull('OCMSetn_motor_b')
             ->whereNotNull('ocmdaytosend_moto_b')
-            ->count();
+            ->get();
 
 
         $processedRecordsLog = [];
@@ -89,7 +89,7 @@ class checkForRecycling extends Command
 
             if ($response->successful()) {
                 if($response['result'] == 'error'){
-                    Log::channel('salto_motor_b')->info("Error: " . $response['description']);
+                    Log::channel('salto_motor_c')->info("Error: " . $response['description']);
                 }else{
                     if($skilldata === 'RENOVACIONES_C_MOTOR' || $skilldata === 'REN_QUALITAS_C_MOTOR'){
                         $record->campana = $skilldata;

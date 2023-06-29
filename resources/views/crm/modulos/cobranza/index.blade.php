@@ -208,7 +208,7 @@
 
             $('#fecha_pago_1').daterangepicker({
                 maxSpan: {
-                    days: 7
+                    days: 31
                 },
                 locale: {
                     format: 'DD/MM/YYYY',

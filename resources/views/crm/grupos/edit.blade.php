@@ -7,12 +7,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">NUEVO GRUPO</h4>
+                    <h4 class="mb-sm-0">NUEVO SEGMENTO</h4>
 
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="javascript: void(0);">DASHBOARD</a></li>
-                            <li class="breadcrumb-item active">NUEVO GRUPO</li>
+                            <li class="breadcrumb-item active">NUEVO SEGMENTO</li>
                         </ol>
                     </div>
 
@@ -25,9 +25,9 @@
             <div class="col-xl-12">
                 <div class="card crm-widget py-4 px-3">
                     <div class="card-body">
-                        
+
                         <div class="d-flex justify-content-between">
-                            <h4 class="text-left mb-3">AGREGAR NUEVO GRUPO</h4>
+                            <h4 class="text-left mb-3">AGREGAR NUEVO SEGMENTO</h4>
                             <a href="{{ route('grupos.index') }}" class="btn btn-info mb-3">
                                 <div class="d-flex align-items-center gap-1">
                                     <i class="ri-arrow-left-line"></i>
@@ -42,9 +42,9 @@
                             @method('PUT')
                             <div class="row">
                                 <div class="col-12 col-md-6 mb-3">
-                                    <label for="nombre_grupo" class="form-label">Nombre del Grupo:</label>
+                                    <label for="nombre_grupo" class="form-label">Nombre del Segmento:</label>
                                     <input type="text" class="form-control @error('nombre_grupo') is-invalid @enderror" id="nombre_grupo" name="nombre_grupo" placeholder="Nombre del grupo" value="{{ $grupo->nombre_grupo }}">
-                                    
+
                                     @error('nombre_grupo')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
@@ -60,7 +60,7 @@
                                         <option value="2" {{ $grupo->turno == 2 ? 'selected' : '' }}>Vespertino</option>
                                         <option value="3" {{ $grupo->turno == 3 ? 'selected' : '' }}>Nocturno</option>
                                     </select>
-                                    
+
                                     @error('turno')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
@@ -78,7 +78,7 @@
                                             <option value="{{ $campana->id }}" {{ $grupo->campaign_id == $campana->id ? 'selected' : '' }}>{{ $campana->nombre_campana }}</option>
                                         @endforeach
                                     </select>
-                                    
+
                                     @error('campaign_id')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
@@ -94,7 +94,7 @@
                                             <option value="{{ $pais->id }}" {{ $grupo->pais_id == $pais->id ? 'selected' : '' }}>{{ $pais->pais }}</option>
                                         @endforeach
                                     </select>
-                                    
+
                                     @error('pais_id')
                                         <span class="invalid-feedback d-block" role="alert">
                                             <strong>{{ $message }} </strong>
@@ -110,7 +110,7 @@
                                         <option value="">Seleccione una opción</option>
                                         <option value="1" {{ $grupo->estatus == 1 ? 'selected' : '' }}>Activo</option>
                                         <option value="0" {{ $grupo->estatus == 0 ? 'selected' : '' }}>Inactivo</option>
-                                    </select>                                    
+                                    </select>
 
                                     @error('estatus')
                                         <span class="invalid-feedback d-block" role="alert">
@@ -124,9 +124,9 @@
                                     <select class="form-select @error('supervisor') is-invalid @enderror" id="supervisor" name="supervisor">
                                         <option value="">Seleccione una opción</option>
                                         @foreach ($supervisores as $supervisor)
-                                            <option value="{{ $supervisor->id }}" {{ $grupo->supervisor == $supervisor->id ? 'selected' : '' }}>{{ $supervisor->name }}</option>
+                                            <option class="text-uppercase" value="{{ $supervisor->id }}" {{ $grupo->supervisor == $supervisor->id ? 'selected' : '' }}>{{ $supervisor->name }}</option>
                                         @endforeach
-                                    </select>                                    
+                                    </select>
 
                                     @error('supervisor')
                                         <span class="invalid-feedback d-block" role="alert">
@@ -135,7 +135,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <div>
                                 <div class="mb-3">
                                     <label for="descripcion" class="form-label">Descripción:</label>
@@ -148,7 +148,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary waves-effect waves-light mb-3">Guardar grupo</button>
+                            <button type="submit" class="btn btn-primary waves-effect waves-light mb-3">Guardar segmento</button>
                         </form>
                     </div><!-- end card body -->
                 </div><!-- end card -->
