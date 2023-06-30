@@ -83,7 +83,13 @@ class AttendanceController extends Controller
         $supervisores = User::role('Supervisor')->get();
 
         // Retornamos a los agentes con rol Agente de Ventas
-        $agentes = User::role('Agente de Ventas')->where('estatus', '=', 1)->get();
+        $agentes = User::whereHas('roles', function ($query) {
+            $query->where('name', 'Agente de Ventas')
+                ->orWhere('name', 'Agente Renovaciones')
+                ->orWhere('name', 'Agente de Cobranza');
+        })
+        ->where('estatus', '=', 1)
+        ->get();
 
         return view('crm.modulo_usuarios.asistencias.asistencias', compact('campanas', 'supervisores', 'usuarios', 'asistencias', 'asistenciasPorFecha', 'fechas', 'agentes'));
     }
@@ -98,7 +104,7 @@ class AttendanceController extends Controller
         foreach ($grupos as $grupo) {
             // TRAEMOS EL SUPERVISOR DEL GRUPO CON LA TABLA PIVOTE GROUP_SUPERVISORS
             $group_supervisor = GroupSupervisor::where('group_id', $grupo->id)->first();
-            
+
             // Si el group_supervisor no es null, buscar el supervisor correspondiente
             if ($group_supervisor) {
                 // TRAEMOS AL SUPERVISOR DE ESA CAMPAÑA

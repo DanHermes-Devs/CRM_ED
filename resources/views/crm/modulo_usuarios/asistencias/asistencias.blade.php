@@ -158,7 +158,9 @@
                                     <tbody>
                                         @foreach ($usuarios as $usuario)
                                             <tr>
-                                                <td>{{ $usuario->apellido_paterno }} {{ $usuario->apellido_materno }} {{ $usuario->name }}</td>
+                                                <td class="text-uppercase">
+                                                    <a href="">{{ $usuario->apellido_paterno }} {{ $usuario->apellido_materno }} {{ $usuario->name }}</a>
+                                                </td>
                                                 <td>{{ $usuario->usuario }}</td>
                                                 <td class="text-center">
                                                     @if ($usuario->total_asistencias == 0)
