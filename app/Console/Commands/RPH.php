@@ -75,8 +75,6 @@ class RPH extends Command
         //Obtengo datos de la campaña para saber qué tablas consultar, horarios, etc
         $datosReporte = $this->obtenerOrigenDatos('uin');
 
-
-
         //Defino horarios
         $fechaActual = Carbon::now();
         $horaActual = $fechaActual->format('H');
@@ -113,7 +111,7 @@ class RPH extends Command
         $horaInicial = $datosProyecto['horaInicio'];
         $horaFinal = $datosProyecto['horaFin'];
         $conteoLeads = "SELECT IFNULL(SUM(CASE WHEN dateinsert BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
-        while ($horaInicial <= $horaFinal) {
+        while ($horaInicial < $horaFinal) {
             if($horaInicial < 10){
                 $horaInicial = '0'.$horaInicial;
             }
@@ -155,7 +153,7 @@ class RPH extends Command
 
 
         $llamadasporCampana = "SELECT IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
-        while ($horaInicial <= $horaFinal) {
+        while ($horaInicial < $horaFinal) {
             if($horaInicial < 10){
                 $horaInicial = '0'.$horaInicial;
             }
@@ -203,7 +201,7 @@ class RPH extends Command
         $calificacionPreventa = $datosProyecto['calificacionPreventa'];
 
         $conteoPreventas = "SELECT IFNULL(SUM(CASE WHEN fecha BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
-        while ($horaInicial <= $horaFinal) {
+        while ($horaInicial < $horaFinal) {
             if($horaInicial < 10){
                 $horaInicial = '0'.$horaInicial;
             }
@@ -234,7 +232,7 @@ class RPH extends Command
         $horaFinal = $datosProyecto['horaFin'];
 
         $conteoVentas = "SELECT IFNULL(SUM(CASE WHEN date_cobranza BETWEEN '".$fechaActual." 00:00:00' AND '".$fechaActual." 0".($horaInicial-1).":59:59' THEN 1 ELSE 0 END),0) 'FH'";
-        while ($horaInicial <= $horaFinal) {
+        while ($horaInicial < $horaFinal) {
             if($horaInicial < 10){
                 $horaInicial = '0'.$horaInicial;
             }
