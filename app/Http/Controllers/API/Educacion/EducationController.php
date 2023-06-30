@@ -108,11 +108,11 @@ class EducationController extends Controller
         // busco la cuenta por contact_id
         $cuentaRegistrada = Education::where('contact_id', $request->contact_id)->first();
 
-        // Se verifica que la cuenta este registrada y que la codificación sea igual, si es manda un error al log
-        if($cuentaRegistrada && ($cuentaRegistrada->codification == $request->codification )){
+        // Se verifica que la cuenta este registrada y que la codificación sea igual, o que previamente haya sido calificada como cobrada, si es manda un error al log
+        if($cuentaRegistrada && ($cuentaRegistrada->codification == $request->codification || $cuentaRegistrada->codification == 'COBRADA'  )){
             return response()->json([
                 "code" => 200,
-                "message" => "La cuenta ya esta registrada con la misma codificación",
+                "message" => "La cuenta ya esta registrada con la misma codificación: ".$request->codification.", o ya fue calificada como COBRADA",
             ]);
         // Si la cuenta esta registrada pero la codificacion es diferente se manda a actualizar la información
         }else if($cuentaRegistrada && ($cuentaRegistrada->codification != $request->codification )){
