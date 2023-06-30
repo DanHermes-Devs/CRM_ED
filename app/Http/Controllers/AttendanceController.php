@@ -45,7 +45,6 @@ class AttendanceController extends Controller
         $usuarios = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['Administrador', 'Coordinador', 'Supervisor', 'Director']);
         })
-        ->where('estatus', '=', 1)
         ->whereNotNull('hora_entrada')
         ->whereNotNull('hora_salida')
         ->whereHas('attendances')
@@ -115,6 +114,21 @@ class AttendanceController extends Controller
         }
 
         return response()->json($supervisores);
+    }
+
+    public function bajaUsuario(Request $request, $id)
+    {
+        $usuario = User::find($id);
+        $usuario->fecha_baja = $request->fecha_baja;
+        $usuario->fecha_ingreso = $request->fecha_ingreso;
+        $usuario->motivo_baja = $request->motivo_baja;
+        $usuario->estatus = $request->estatus;
+        $usuario->save();
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Se actualizó el estatus del usuario correctamente'
+        ]);
     }
 
 

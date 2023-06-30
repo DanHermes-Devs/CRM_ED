@@ -57,9 +57,10 @@ class AttendancesCronJob extends Command
             die("Error al conectarse a la base de datos: " . mysqli_connect_error());
         }
 
-        // Define el rango de fechas para el que se procesarán los datos
-        $fechaInicio = new DateTime('2023-06-01');
-        $fechaFin = new DateTime('2023-06-23');
+        /// Toma el día actual como la fecha de inicio y fin
+        $fechaActual = new DateTime();
+        $fechaInicio = clone $fechaActual;
+        $fechaFin = clone $fechaActual;
 
         // Define un intervalo de un día y crea un periodo que incluye cada día en el rango de fechas
         $intervalo = new DateInterval('P1D');
