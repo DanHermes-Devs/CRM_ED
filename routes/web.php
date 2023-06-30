@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use App\Mail\PolizasEnviadasMailable;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\Artisan;
@@ -19,9 +20,9 @@ use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PersonalFileController;
+use App\Http\Controllers\API\Seguridad\ADTController;
 use App\Http\Controllers\API\ventas\VentasController;
 use App\Http\Controllers\API\Educacion\EducationController;
-use App\Http\Controllers\API\Seguridad\ADTController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/actualizar-asistencia', [AttendanceController::class, 'actualizarAsistencia'])->name('actualizar-asistencia');
     Route::get('get-supervisores/{campaign_id}', [AttendanceController::class, 'getSupervisores'])->name('get-supervisores');
     Route::get('get-agentes/{supervisor_id}/{group_id}', [AttendanceController::class, 'getAgentes'])->name('get-agentes');
+    Route::post('/baja-usuario/{id}', [AttendanceController::class, 'bajaUsuario'])->name('baja-usuario');
 
     Route::resource('/roles', RoleController::class);
     Route::resource('/paises', PaisController::class);
@@ -136,3 +138,13 @@ Route::group(['middleware' => ['auth']], function () {
 
 // Formulario de prueba para insercion de datos
 Route::get('/form', [VentasController::class, 'form'])->name('ventas.form');
+Route::get('/mailable', function () {
+    $testContent = [
+        'nPoliza' => '1234567890',
+        'nueva_poliza' => '0987654321',
+        'skilldata' => 'FB_UIManual',
+        'contactId' => '1234567890',
+        'ocmdaytosend' => '2021-08-31',
+    ];
+    return (new PolizasEnviadasMailable($testContent))->render();
+});

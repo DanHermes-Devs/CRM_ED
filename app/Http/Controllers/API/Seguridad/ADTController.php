@@ -29,33 +29,7 @@ class ADTController extends Controller
             $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
             $query->whereBetween('fecha_venta', [$fechaInicio, $fechaFin]);
         }
-
-        if ($request->filled(['cliente_nombre'])) {
-            $query->where('client_name', [$request->client_name]);
-        }
-
-        if ($request->filled(['cliente_telefono'])) {
-            $query->where('cliente_telefono', [$request->cliente_telefono]);
-        }
-        if ($request->filled(['cliente_celular'])) {
-            $query->where('cliente_celular', [$request->cliente_celular]);
-        }
-
-        // Búsquedas exactas
-        $camposExactos = [
-            'contact_id' => 'contact_id',
-            'cliente_nombre' => 'cliente_nombre',
-            'cliente_telefono' => 'cliente_telefono',
-            'cliente_celular' => 'cliente_celular',
-        ];
-
-        foreach ($camposExactos as $campoDb => $campoReq) {
-
-            if ($request->filled($campoReq)) {
-                    $query->where($campoDb, $request->$campoReq);
-            }
-        }
-
+        
         // Filtramos por agente
         $usuario = User::find($request->user);
 

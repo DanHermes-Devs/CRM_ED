@@ -158,7 +158,21 @@
                                     <tbody>
                                         @foreach ($usuarios as $usuario)
                                             <tr>
-                                                <td>{{ $usuario->apellido_paterno }} {{ $usuario->apellido_materno }} {{ $usuario->name }}</td>
+                                                <td class="text-uppercase">
+                                                    @if ($usuario->estatus == 0)
+                                                        <span class="badge rounded-pill badge-soft-danger badge-border text-danger">
+                                                            BAJA
+                                                        </span>
+                                                    @else
+                                                        <span class="badge rounded-pill badge-soft-success badge-border text-success">
+                                                            ACTIVO
+                                                        </span>
+                                                    @endif
+                                                    
+                                                    <a href="#" class="text-blue modal_baja_usuario" data-id="{{ $usuario->id }}">
+                                                        {{ $usuario->apellido_paterno }} {{ $usuario->apellido_materno }} {{ $usuario->name }}
+                                                    </a>
+                                                </td>
                                                 <td>{{ $usuario->usuario }}</td>
                                                 <td class="text-center">
                                                     @if ($usuario->total_asistencias == 0)
@@ -325,6 +339,46 @@
         </div>
     </div>
 
+    {{-- Modal modal_baja_agente --}}
+    <div class="modal fade" id="modal_baja_usuario" tabindex="-1" aria-labelledby="modal_baja_usuarioLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal_baja_usuarioLabel">Baja de Usuario</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="id_user">
+                        <div class="mb-3">
+                            <label for="fecha_ingreso" class="form-label">Fecha de Reingreso</label>
+                            <input type="date" name="fecha_ingreso" id="fecha_ingreso" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_baja" class="form-label">Fecha de Baja</label>
+                            <input type="date" name="fecha_baja" id="fecha_baja" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estatus" class="form-label">Estatus</label>
+                            <select name="estatus" id="estatus" class="form-select">
+                                <option value="">-- Selecciona una opción --</option>
+                                <option value="0">BAJA</option>
+                                <option value="1">REINGRESO</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="motivo_baja" class="form-label">Motivo de Baja</label>
+                            <textarea name="motivo_baja" id="motivo_baja" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <input type="submit" value="Guardar" class="btn btn-primary btn_baja_user">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             $('#campana').change(function() {
@@ -368,6 +422,56 @@
                         }
                     });
                 }
+            });
+
+            $('body').on('click', '.modal_baja_usuario', function(e) {
+                e.preventDefault();
+                $('#modal_baja_usuario').modal('show');
+                var id_user = $(this).data('id');
+
+                $('#id_user').val(id_user);
+            });
+
+            $('body').on('click', '.btn_baja_user', function(e){
+                e.preventDefault();
+                var fecha_baja = $('#fecha_baja').val();
+                var estatus = $('#estatus').val();
+                var motivo_baja = $('#motivo_baja').val();
+                var fecha_ingreso = $('#fecha_ingreso').val();
+                var id_usuario = $('#id_user').val();
+
+                // Creamos la url para enviarla al controlador
+                var url = "{{ route('baja-usuario', ':id') }}";
+                url = url.replace(':id', id_usuario);
+
+                // Creamos el ajax para consultar al controlador
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        id_usuario: id_usuario,
+                        fecha_baja: fecha_baja,
+                        estatus: estatus,
+                        motivo_baja: motivo_baja,
+                        fecha_ingreso: fecha_ingreso,
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        if(response.code == 200){
+                            Swal.fire({
+                                title: response.message,
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                });
             });
 
             // AL DAR CLIC EN EL BOTON EDITAR QUE TIENE UN data-id, SE ABRE UN SWEETALERT CON UN FORMULARIO PARA EDITAR EL REGISTRO
