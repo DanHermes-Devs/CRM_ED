@@ -270,6 +270,31 @@
                                                     </ul>
                                                 </div>
                                             </li>
+                                            <li class="nav-item">
+                                                <a href="#modulo_telecomunicaciones" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                    aria-controls="modulo_telecomunicaciones" data-key="t-level-1.2">
+                                                    Módulo Telecom
+                                                </a>
+                                                <div class="menu-dropdown collapse" id="modulo_telecomunicaciones" style="">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        <li class="nav-item">
+                                                            <a href="#modulo_izi" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="true"
+                                                                aria-controls="modulo_izi" data-key="t-level-1.2">
+                                                                Telecom
+                                                            </a>
+                                                            <div class="menu-dropdown collapse" id="modulo_izi" style="">
+                                                                <ul class="nav nav-sm flex-column">
+                                                                    <li class="nav-item">
+                                                                        <a href="{{ route('izzi.index') }}" class="nav-link" data-key="t-analytics">
+                                                                            Ventas
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
                                             @endif
                                         </ul>
                                     </div>

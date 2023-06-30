@@ -23,6 +23,7 @@ use App\Http\Controllers\PersonalFileController;
 use App\Http\Controllers\API\Seguridad\ADTController;
 use App\Http\Controllers\API\ventas\VentasController;
 use App\Http\Controllers\API\Educacion\EducationController;
+use App\Http\Controllers\API\Telecomunicaciones\IzziController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,6 +135,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Rutas Campañas
     Route::resource('/campaigns', CampaignController::class);
+
+    // Rutas para Izzi
+    Route::resource('/izzi', IzziController::class);
 });
 
 // Formulario de prueba para insercion de datos

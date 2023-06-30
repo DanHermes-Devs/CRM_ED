@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Seguridad\ADTController;
 use App\Http\Controllers\API\ventas\VentasController;
 use App\Http\Controllers\API\Educacion\EducationController;
+use App\Http\Controllers\API\Telecomunicaciones\IzziController;
 use App\Http\Controllers\API\renovaciones\RenovacionesController;
-use App\Http\Controllers\API\Seguridad\ADTController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,4 @@ Route::post('/ventas-nuevas', [VentasController::class, 'store']);
 Route::post('/renovaciones', [RenovacionesController::class, 'store']);
 Route::post('/ventas-educacion', [EducationController::class, 'store']);
 Route::post('/ventas-adt', [ADTController::class, 'store']);
+Route::post('/ventas-izzi', [IzziController::class, 'store']);
