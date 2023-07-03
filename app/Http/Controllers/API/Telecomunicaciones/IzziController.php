@@ -29,27 +29,144 @@ class IzziController extends Controller
 
         //Identifico si el usuario pertenece a ZEUS
         $usuario = User::where('usuario', $request->agent_OCM)->first();
+
         //Valido si existe el registro
         $cuentaRegistrada = Telecomunicaciones::where('contact_id', $request->contact_id)->first();
 
         //Si existe
         if($cuentaRegistrada){
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Actualiza nombre, apellido paterno, materno, telefono, celuar, mail, rfc, fecha de nacimiento, cliente izzi,
-        // ClaveDistribuidor,ClaveElector,Calle,NumExterior,NumExterior,NumInterior,Colonia,CP,DelegacionMunicipio,EstadoDireccion,EntreCalle1,EntreCalle2,Segmento,TipoLinea,Producto
-        // Plazo,tipoproducto,complemento,paqueteadicional,Adicional,Adicional2,Adicional3,Tarjeta,VMes,VAno,CVV,NumVentaMovil,NumVentaMovil,NumPorta,FechaInstalacion
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////////////////////////////////7
-        // If Codificacion.ToUpper = "VENTA MODIFICADA" Then
-        //     SQL = SQL & "EstadoIZZI='RECHAZO CORREGIDO',"
-        //     SQL = SQL & " rutaDocumento = '" & urlDocumentos & "', "
-        // ElseIf Codificacion.ToUpper = "RE-VENTA" Then
-        //     SQL = SQL & "EstadoIZZI='RE-VENTA',"
-        //     SQL = SQL & "login='" & login & "',agente='" & agente & "',logininconcert='" & logininconcert & "',idgrupo='" & idgrupo & "',grupo='" & grupo & "',coordinador='" & coordinador & "',"
-        //     SQL = SQL & "FechaReventa= case when FechaReventa is null then '" & objFunciones.HoraLocal().ToString("yyyy-MM-dd HH:mm:ss") & "' else FechaReventa end,"
-        //     SQL = SQL & " rutaDocumento = '" & urlDocumentos & "', "
-        // End If
+
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Actualiza nombre, apellido paterno, materno, telefono, celuar, mail, rfc, fecha de nacimiento, cliente izzi,
+            // ClaveDistribuidor,ClaveElector,Calle,NumExterior,NumExterior,NumInterior,Colonia,CP,DelegacionMunicipio,EstadoDireccion,EntreCalle1,EntreCalle2
+            //,Segmento,TipoLinea,Producto
+            // Plazo,tipoproducto,complemento,paqueteadicional,Adicional,Adicional2,Adicional3,Tarjeta,VMes,VAno,CVV
+
+            //,NumVentaMovil,NumVentaMovil,NumPorta,FechaInstalacion
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //Defino campos a actualizar
+            $datosVenta = [
+                //Datos personales
+                'nombre' => $request->nombre,
+                'apellidoPaterno' => $request->apellidoPaterno,
+                'apellidoMaterno' => $request->apellidoMaterno,
+                'telefonoFijo' => $request->telefonoFijo,
+                'celular' => $request->celular,
+                'correo' => $request->correo,
+                'rfc' => $request->rfc,
+                'fechaNacimiento' => $request->fechaNacimiento,
+                'cuenta' => $request->cuenta,
+                'claveElector' =>  $request->claveElector,
+                'claveDistribuidor' => $request->claveDistribuidor,
+                //Datos domicilio
+                'calle' => $request->calle,
+                'numInterior' => $request->numInterior,
+                'numExterior' => $request->numExterior,
+                'colonia' => $request->colonia,
+                'cp' => $request->cp,
+                'municipio' => $request->municipio,
+                'estado' =>  $request->estado,
+                'entreCalle1' => $request->entreCalle1,
+                'entreCalle2' => $request->entreCalle2,
+                //Datos paquete
+                'tipoSegmento' => $request->tipoSegmento,
+                'tipoLinea' => $request->tipoLinea,
+                'tipoPaquete' => $request->tipoPaquete,
+                'paquete' => $request->paquete,
+                'plazoForzoso' => $request->plazoForzoso,
+                'precio' => $request->precio,
+
+
+                //Datos adicionales
+                'chkPremium' => $request->chkPremium,
+                'chkHbo' => $request->chkHbo,
+                'chkGolden' => $request->chkGolden,
+                'chkFox' => $request->chkFox,
+                'chkInternacional' => $request->chkInternacional,
+                'chkIzziHd' => $request->$chkIzziHd,
+                'chkNoggin' => $request->chkNoggin,
+                'chkHotPack' => $request->chkHotPack,
+                'chkAfizzionados' => $request->chkAfizzionados,
+                'chkParamount' => $request->chkParamount,
+                'chkDog' => $request->chkDog,
+                'chkBlim' => $request->chkBlim,
+                'chkAcorn' => $request->chkAcorn,
+                'chkStarz' => $request->chkStarz,
+                'chkDisney' => $request->chkDisney,
+                'chkNetEst' => $request->chkNetEst,
+                'chkNetPre' => $request->chkNetPre,
+                'extensionesTv' => $request->extensionesTv,
+                'extensionesTel' => $request->extensionesTel,
+                'lineaAdicional' => $request->lineaAdicional,
+                'extGraba' => $request->extGraba,
+
+                //Datos Móvil
+                'tipoSegmentoMovil' => $request->tipoSegmentoMovil,
+                'paqueteMovil' => $request->paqueteMovil,
+                'portabilidad' => $request->portabilidad,
+                'imei' => $request->imei,
+                'lineaMovilAdicional' => $request->lineaMovilAdicional,
+                'pedido' => $request->pedido,
+                'costo' => $request->costo,
+
+                //Datos segmento
+                'giro'=>$giro,
+                'fechaNacRepLegal'=>$fechaNacRepLegal,
+                'representante'=>$representante,
+                'rfcRepresentante'=>$rfcRepresentante,
+                'tipoTarjeta'=>$tipoTarjeta,
+
+                //Datos de tarjeta
+                'numTarjeta'=>$numTarjeta,
+                'vencimiento'=>$vencimiento,
+                'cvv'=>$cvv,
+
+                //'documentos'=>$documentos,
+
+
+                //'generar'=>$generar,
+                //Datos Whatsapp
+                'btnWsp'=>$btnWsp,
+
+                'numeroPortarMovil'=>$numeroPortarMovil,
+                'referencia'=>$referencia,
+                'numeroPortar'=>$numeroPortar,
+
+                // 'adicionales'=>$adicionales
+                //'observaciones'=>$observaciones,
+            ];
+
+
+            //Valido si la codificación es VENTA MODIFICADA
+            if($request->codification == 'VENTA MODIFICADA'){
+                // SQL = SQL & "EstadoIZZI='RECHAZO CORREGIDO',"
+                // SQL = SQL & " rutaDocumento = '" & urlDocumentos & "', "
+            } else if ($request->codification == 'RE-VENTA'){
+            //     SQL = SQL & "EstadoIZZI='RE-VENTA',"
+            //     SQL = SQL & "login='" & login & "',agente='" & agente & "',logininconcert='" & logininconcert & "',idgrupo='" & idgrupo & "',grupo='" & grupo & "',coordinador='" & coordinador & "',"
+            //     SQL = SQL & "FechaReventa= case when FechaReventa is null then '" & objFunciones.HoraLocal().ToString("yyyy-MM-dd HH:mm:ss") & "' else FechaReventa end,"
+            //     SQL = SQL & " rutaDocumento = '" & urlDocumentos & "', "
+            } else {
+
+            }
+
+
+
+
+
+            // SQL = SQL & "Rango='" & Rango & "',Observaciones='" & Observaciones & "'," &
+            // "RecibeDatos='" & RecibeDatos & "',VCC='" & VCC.ToUpper & "',fechaultimoestado='" & objFunciones.HoraLocal().ToString("yyyy-MM-dd HH:mm:ss") & "'," &
+            // "Campañainconcertultima='" & Campañainconcert & "', " &
+            // "PagoAnticipado='" & PagoAnticipado & "',PATipoTarjeta='" & PATipoTarjeta & "',DomiciliacionTJ='" & DomiciliacionTJ & "',Domiciliacion='" & Domiciliacion & "', " &
+            // "SegmentoMovil='" & SegmentoMovil & "', PaqueteMovil='" & PaqueteMovil & "', AdicionalMovil='" & AdicionalMovil & "', NumPortaMovil='" & NumPortaMovil & "', IMEI='" & IMEI & "', NumeroPedidoIzziMovil='" & Pedido & "'"
+
+            // If Codificacion = "VENTA IZZI" Or Codificacion = "VENTA MOVIL" Or Codificacion = "VENTA COMPLEMENTO" Then
+            //     SQL = SQL & ", CODIFICACION='" & Codificacion & "'"
+            // End If
 
 
 
