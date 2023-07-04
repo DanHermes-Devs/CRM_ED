@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\API\Telecomunicaciones;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -36,198 +35,217 @@ class IzziController extends Controller
         //Si existe
         if($cuentaRegistrada){
 
-
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Actualiza nombre, apellido paterno, materno, telefono, celuar, mail, rfc, fecha de nacimiento, cliente izzi,
-            // ClaveDistribuidor,ClaveElector,Calle,NumExterior,NumExterior,NumInterior,Colonia,CP,DelegacionMunicipio,EstadoDireccion,EntreCalle1,EntreCalle2
-            //,Segmento,TipoLinea,Producto
-            // Plazo,tipoproducto,complemento,paqueteadicional,Adicional,Adicional2,Adicional3,Tarjeta,VMes,VAno,CVV
-
-            //,NumVentaMovil,NumVentaMovil,NumPorta,FechaInstalacion
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             //Defino campos a actualizar
             $datosVenta = [
                 //Datos personales
-                'nombre' => $request->nombre,
-                'apellidoPaterno' => $request->apellidoPaterno,
-                'apellidoMaterno' => $request->apellidoMaterno,
-                'telefonoFijo' => $request->telefonoFijo,
-                'celular' => $request->celular,
-                'correo' => $request->correo,
-                'rfc' => $request->rfc,
-                'fechaNacimiento' => $request->fechaNacimiento,
-                'cuenta' => $request->cuenta,
-                'claveElector' =>  $request->claveElector,
-                'claveDistribuidor' => $request->claveDistribuidor,
+                'nombre'=>$request->nombre,
+                'apellidoPaterno'=>$request->apellidoPaterno,
+                'apellidoMaterno'=>$request->apellidoMaterno,
+                'telefonoFijo'=>$request->telefonoFijo,
+                'celular'=>$request->celular,
+                'correo'=>$request->correo,
+                'rfc'=>$request->rfc,
+                'fechaNacimiento'=>$request->fechaNacimiento,
+                'cuenta'=>$request->cuenta,
+                'claveElector'=> $request->claveElector,
+                'claveDistribuidor'=>$request->claveDistribuidor,
                 //Datos domicilio
-                'calle' => $request->calle,
-                'numInterior' => $request->numInterior,
-                'numExterior' => $request->numExterior,
-                'colonia' => $request->colonia,
-                'cp' => $request->cp,
-                'municipio' => $request->municipio,
-                'estado' =>  $request->estado,
-                'entreCalle1' => $request->entreCalle1,
-                'entreCalle2' => $request->entreCalle2,
+                'calle'=>$request->calle,
+                'numInterior'=>$request->numInterior,
+                'numExterior'=>$request->numExterior,
+                'colonia'=>$request->colonia,
+                'cp'=>$request->cp,
+                'municipio'=>$request->municipio,
+                'estado'=> $request->estado,
+                'entreCalle1'=>$request->entreCalle1,
+                'entreCalle2'=>$request->entreCalle2,
                 //Datos paquete
-                'tipoSegmento' => $request->tipoSegmento,
-                'tipoLinea' => $request->tipoLinea,
-                'tipoPaquete' => $request->tipoPaquete,
-                'paquete' => $request->paquete,
-                'plazoForzoso' => $request->plazoForzoso,
-                'precio' => $request->precio,
-
-
+                'tipoSegmento'=>$request->tipoSegmento,
+                'tipoLinea'=>$request->tipoLinea,
+                'tipoPaquete'=>$request->tipoPaquete,
+                'paquete'=>$request->paquete,
+                'plazoForzoso'=>$request->plazoForzoso,
+                'precio'=>$request->precio,
+                'numeroPortar'=>$request->numeroPortar,
                 //Datos adicionales
-                'chkPremium' => $request->chkPremium,
-                'chkHbo' => $request->chkHbo,
-                'chkGolden' => $request->chkGolden,
-                'chkFox' => $request->chkFox,
-                'chkInternacional' => $request->chkInternacional,
-                'chkIzziHd' => $request->$chkIzziHd,
-                'chkNoggin' => $request->chkNoggin,
-                'chkHotPack' => $request->chkHotPack,
-                'chkAfizzionados' => $request->chkAfizzionados,
-                'chkParamount' => $request->chkParamount,
-                'chkDog' => $request->chkDog,
-                'chkBlim' => $request->chkBlim,
-                'chkAcorn' => $request->chkAcorn,
-                'chkStarz' => $request->chkStarz,
-                'chkDisney' => $request->chkDisney,
-                'chkNetEst' => $request->chkNetEst,
-                'chkNetPre' => $request->chkNetPre,
-                'extensionesTv' => $request->extensionesTv,
-                'extensionesTel' => $request->extensionesTel,
-                'lineaAdicional' => $request->lineaAdicional,
-                'extGraba' => $request->extGraba,
-
+                'chkPremium'=>$request->chkPremium,
+                'chkHbo'=>$request->chkHbo,
+                'chkGolden'=>$request->chkGolden,
+                'chkFox'=>$request->chkFox,
+                'chkInternacional'=>$request->chkInternacional,
+                'chkIzziHd'=>$request->$chkIzziHd,
+                'chkNoggin'=>$request->chkNoggin,
+                'chkHotPack'=>$request->chkHotPack,
+                'chkAfizzionados'=>$request->chkAfizzionados,
+                'chkParamount'=>$request->chkParamount,
+                'chkDog'=>$request->chkDog,
+                'chkBlim'=>$request->chkBlim,
+                'chkAcorn'=>$request->chkAcorn,
+                'chkStarz'=>$request->chkStarz,
+                'chkDisney'=>$request->chkDisney,
+                'chkNetEst'=>$request->chkNetEst,
+                'chkNetPre'=>$request->chkNetPre,
+                'extensionesTv'=>$request->extensionesTv,
+                'extensionesTel'=>$request->extensionesTel,
+                'lineaAdicional'=>$request->lineaAdicional,
+                'extGraba'=>$request->extGraba,
                 //Datos Móvil
-                'tipoSegmentoMovil' => $request->tipoSegmentoMovil,
-                'paqueteMovil' => $request->paqueteMovil,
-                'portabilidad' => $request->portabilidad,
-                'imei' => $request->imei,
-                'lineaMovilAdicional' => $request->lineaMovilAdicional,
-                'pedido' => $request->pedido,
-                'costo' => $request->costo,
-
-                //Datos segmento
-                'giro'=>$giro,
-                'fechaNacRepLegal'=>$fechaNacRepLegal,
-                'representante'=>$representante,
-                'rfcRepresentante'=>$rfcRepresentante,
-                'tipoTarjeta'=>$tipoTarjeta,
-
+                'tipoSegmentoMovil'=>$request->tipoSegmentoMovil,
+                'paqueteMovil'=>$request->paqueteMovil,
+                'portabilidad'=>$request->portabilidad,
+                'imei'=>$request->imei,
+                'lineaMovilAdicional'=>$request->lineaMovilAdicional,
+                'pedido'=>$request->pedido,
+                'costo'=>$request->costo,
+                'numeroPortarMovil'=>$request->numeroPortarMovil,
+                //Datos Segmento
+                'giro'=>$request->giro,
+                'fechaNacRepLegal'=>$request->fechaNacRepLegal,
+                'representante'=>$request->representante,
+                'rfcRepresentante'=>$request->rfcRepresentante,
+                'tipoTarjeta'=>$request->tipoTarjeta,
                 //Datos de tarjeta
-                'numTarjeta'=>$numTarjeta,
-                'vencimiento'=>$vencimiento,
-                'cvv'=>$cvv,
-
-                //'documentos'=>$documentos,
-
-
-                //'generar'=>$generar,
+                'numTarjeta'=>$request->numTarjeta,
+                'vencimiento'=>$request->vencimiento,
+                'cvv'=>$request->cvv,
                 //Datos Whatsapp
-                'btnWsp'=>$btnWsp,
-
-                'numeroPortarMovil'=>$numeroPortarMovil,
-                'referencia'=>$referencia,
-                'numeroPortar'=>$numeroPortar,
-
+                'btnWsp'=>$request->btnWsp,
+                'observaciones'=>$request->observaciones,
+                'fUltimaGestion'=>Carbon::now(),
+                'ultimaCampana'=>$request->campana,
+                //'referencia'=>$request->referencia,
                 // 'adicionales'=>$adicionales
                 //'observaciones'=>$observaciones,
+                //'documentos'=>$documentos,
+                //'generar'=>$generar,
             ];
 
 
-            //Valido si la codificación es VENTA MODIFICADA
+            //Valido si la codificación es VENTA MODIFICADA o RE-VENTA
             if($request->codification == 'VENTA MODIFICADA'){
-                // SQL = SQL & "EstadoIZZI='RECHAZO CORREGIDO',"
-                // SQL = SQL & " rutaDocumento = '" & urlDocumentos & "', "
+                $datosVentaModificada = ['estadoIzzi'=>'RECHAZO CORREGIDO'];
+                array_push($datosVenta,$datosVentaModificada);
             } else if ($request->codification == 'RE-VENTA'){
-            //     SQL = SQL & "EstadoIZZI='RE-VENTA',"
-            //     SQL = SQL & "login='" & login & "',agente='" & agente & "',logininconcert='" & logininconcert & "',idgrupo='" & idgrupo & "',grupo='" & grupo & "',coordinador='" & coordinador & "',"
-            //     SQL = SQL & "FechaReventa= case when FechaReventa is null then '" & objFunciones.HoraLocal().ToString("yyyy-MM-dd HH:mm:ss") & "' else FechaReventa end,"
-            //     SQL = SQL & " rutaDocumento = '" & urlDocumentos & "', "
-            } else {
+                $datosReventa = [
+                                'estadoIzzi'=>'RE-VENTA',
+                                'campana'=>$request->campana,
+                                'loginOcm'=>$request->loginOcm,
+                                'loginIntranet'=>$request->loginIntranet,
+                                'mombreAgente'=>$request->mombreAgente,
+                                'fechaReventa'=>Carbon::now()
+                                ];
+                array_push($datosVenta,$datosReventa);
 
             }
 
+            if ($request->codification == 'VENTA IZZI' || $request->codification == 'VENTA MOVIL' || $request->codification == 'VENTA COMPLEMENTO' ) {
+                $datosFinalVenta = ['uGestion'=>$request->codification];
+                array_push($datosVenta,$datosFinalVenta);
+            }
 
+            Telecomunicaciones::where('contact_id', $request->contact_id)->update($datosVenta);
 
+             return response()->json([
+                 "code"=>200,
+                 "message"=>"Cuenta actualizada con éxito: ".$request->codification,
+             ]);
 
-
-            // SQL = SQL & "Rango='" & Rango & "',Observaciones='" & Observaciones & "'," &
-            // "RecibeDatos='" & RecibeDatos & "',VCC='" & VCC.ToUpper & "',fechaultimoestado='" & objFunciones.HoraLocal().ToString("yyyy-MM-dd HH:mm:ss") & "'," &
-            // "Campañainconcertultima='" & Campañainconcert & "', " &
-            // "PagoAnticipado='" & PagoAnticipado & "',PATipoTarjeta='" & PATipoTarjeta & "',DomiciliacionTJ='" & DomiciliacionTJ & "',Domiciliacion='" & Domiciliacion & "', " &
-            // "SegmentoMovil='" & SegmentoMovil & "', PaqueteMovil='" & PaqueteMovil & "', AdicionalMovil='" & AdicionalMovil & "', NumPortaMovil='" & NumPortaMovil & "', IMEI='" & IMEI & "', NumeroPedidoIzziMovil='" & Pedido & "'"
-
-            // If Codificacion = "VENTA IZZI" Or Codificacion = "VENTA MOVIL" Or Codificacion = "VENTA COMPLEMENTO" Then
-            //     SQL = SQL & ", CODIFICACION='" & Codificacion & "'"
-            // End If
-
-
-
-            //  return response()->json([
-            //      "code" => 200,
-            //      "message" => "La cuenta ya esta registrada con la misma codificación: ".$request->codification,
-            //  ]);
-         // Si la cuenta esta registrada pero la codificacion es diferente se manda a actualizar la información
          }else{
              // Se verifica si existe el usuario en ZEUS e inserto la información de la venta y guardo en el histórico
              if($usuario){
+                $telecom = new Telecomunicaciones;
+                $estadoIzzi = 'INGRESADA';
+                $telecom->nombre=$request->nombre;
+                $telecom->apellidoPaterno = $request->apellidoPaterno;
+                $telecom->apellidoMaterno = $request->apellidoMaterno;
+                $telecom->telefonoFijo = $request->telefonoFijo;
+                $telecom->celular = $request->celular;
+                $telecom->correo = $request->correo;
+                $telecom->rfc = $request->rfc;
+                $telecom->fechaNacimiento = $request->fechaNacimiento;
+                $telecom->cuenta = $request->cuenta;
+                $telecom->EstadoIZZI = $estadoIzzi;
+                $telecom->claveElector =  $request->claveElector;
+                $telecom->claveDistribuidor = $request->claveDistribuidor;
+                //Datos domicilio
+                $telecom->calle = $request->calle;
+                $telecom->numInterior = $request->numInterior;
+                $telecom->numExterior = $request->numExterior;
+                $telecom->colonia = $request->colonia;
+                $telecom->cp = $request->cp;
+                $telecom->municipio = $request->municipio;
+                $telecom->estado =  $request->estado;
+                $telecom->entreCalle1 = $request->entreCalle1;
+                $telecom->entreCalle2 = $request->entreCalle2;
+                //Datos paquete
+                $telecom->tipoSegmento = $request->tipoSegmento;
+                $telecom->tipoLinea = $request->tipoLinea;
+                $telecom->tipoPaquete = $request->tipoPaquete;
+                $telecom->paquete = $request->paquete;
+                $telecom->plazoForzoso = $request->plazoForzoso;
+                $telecom->precio = $request->precio;
+                $telecom->numeroPortar = $request->numeroPortar;
+                //Datos adicionales
+                $telecom->chkPremium = $request->chkPremium;
+                $telecom->chkHbo = $request->chkHbo;
+                $telecom->chkGolden = $request->chkGolden;
+                $telecom->chkFox = $request->chkFox;
+                $telecom->chkInternacional = $request->chkInternacional;
+                $telecom->chkIzziHd = $request->$chkIzziHd;
+                $telecom->chkNoggin = $request->chkNoggin;
+                $telecom->chkHotPack = $request->chkHotPack;
+                $telecom->chkAfizzionados = $request->chkAfizzionados;
+                $telecom->chkParamount = $request->chkParamount;
+                $telecom->chkDog = $request->chkDog;
+                $telecom->chkBlim = $request->chkBlim;
+                $telecom->chkAcorn = $request->chkAcorn;
+                $telecom->chkStarz = $request->chkStarz;
+                $telecom->chkDisney = $request->chkDisney;
+                $telecom->chkNetEst = $request->chkNetEst;
+                $telecom->chkNetPre = $request->chkNetPre;
+                $telecom->extensionesTv = $request->extensionesTv;
+                $telecom->extensionesTel = $request->extensionesTel;
+                $telecom->lineaAdicional = $request->lineaAdicional;
+                $telecom->extGraba = $request->extGraba;
+                //Datos Móvil
+                $telecom->tipoSegmentoMovil = $request->tipoSegmentoMovil;
+                $telecom->paqueteMovil = $request->paqueteMovil;
+                $telecom->portabilidad = $request->portabilidad;
+                $telecom->imei = $request->imei;
+                $telecom->lineaMovilAdicional = $request->lineaMovilAdicional;
+                $telecom->pedido = $request->pedido;
+                $telecom->costo = $request->costo;
+                $telecom->numeroPortarMovil = $request->numeroPortarMovil;
+                //Datos segmento
+                $telecom->giro = $request->giro;
+                $telecom->fechaNacRepLegal = $request->fechaNacRepLegal;
+                $telecom->representante = $request->representante;
+                $telecom->rfcRepresentante = $request->rfcRepresentante;
+                $telecom->tipoTarjeta = $request->tipoTarjeta;
+                //Datos de tarjeta
+                $telecom->numTarjeta = $request->numTarjeta;
+                $telecom->vencimiento = $request->vencimiento;
+                $telecom->cvv = $request->cvv;
+                //Datos Whatsapp
+                $telecom->btnWsp = $request->btnWsp;
+                //Datos Otros
+                $telecom->observaciones = $request->observaciones;
+                $telecom->fUltimaGestion = Carbon::now();
+                $telecom->ultimaCampana = $request->campana;
+                $telecom->fill($request->all());
+                $telecom->save();
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////7
-                //// Agregar campos de telecomunicaciones y guardar venta
+                $historical = $this->addHistory($telecom,'INGRESO DE VENTA');
 
-                //  $education = new Education;
-                //  $education->contact_id = $request->contact_id;
-                //  $education->usuario_ocm = $request->agent_OCM;
-                //  $education->usuario_crm = $request->agent_OCM;
-                //  $education->nombre_universidad = 'UIN';
-                //  $education->fp_venta = Carbon::now();
-                //  $education->campana = $request->campana;
-                //  $education->agent_OCM = $request->agent_OCM;
-                //  $education->agent_intra = $usuario->id;
-                //  $education->supervisor = $usuario->id_superior;
-                //  $education->codification = $request->codification;
-                //  $education->client_name = $request->client_name;
-                //  $education->client_landline = $request->client_landline;
-                //  $education->client_celphone = $request->client_celphone;
-                //  $education->client_modality = $request->client_modality;
-                //  $education->client_program = $request->client_program;
-                //  $education->client_specialty = $request->client_specialty;
-                //  $education->client_street = $request->client_street;
-                //  $education->client_number = $request->client_number;
-                //  $education->client_delegation = $request->client_delegation;
-                //  $education->client_state = $request->client_state;
-                //  $education->client_sex = $request->client_sex;
-                //  $education->client_birth = $request->client_birth;
-                //  $education->schedule_date = $request->schedule_date;
-                //  $education->client_plantel = $request->client_plantel;
-                //  $education->client_matricula = $request->client_matricula;
-                 //$education->fill($request->all());
-
-                // $education->save();
-
-
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //// Insertar registro en histórico
-                // Dim SQL As String = "insert into historicoventasIzzi (idventa,lead,usuario,fecha,estado,descripcion) values('" & idventa & "','" & lead & "'" &
-                // ",'" & usuario & "','" & fecha & "','" & estado & "','" & descripcion & "') "
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                 return response()->json([
-                     "code" => 200,
-                     "message" => "Registro guardado correctamente",
-                     "data" => $education
-                 ]);
+                return response()->json([
+                    "code"=>200,
+                    "message"=>"Registro guardado correctamente",
+                    "data"=>$telecom
+                ]);
              }else{
                  return response()->json([
-                     "code" => 200,
-                     "message" => "No se encontró tu usuario en ZEUS, Por favor, solicita el alta de tu usuario a tu supervisor.",
+                     "code"=>200,
+                     "message"=>"No se encontró tu usuario en ZEUS, Por favor, solicita el alta de tu usuario a tu supervisor.",
                  ]);
              }
          }
@@ -265,5 +283,25 @@ class IzziController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function addHistory($datosVenta,$descripcion)
+    {
+        //Inserto histórico, PONERLO EN FUNCIÓN
+        $historico = new Telecomunicaciones_historicals;
+        $historico->idVenta = $datosVenta->id;
+        $historico->contact_id = $datosVenta->contact_id;
+        $historico->loginOcm = $datosVenta->loginOcm;
+        $historico->loginIntranet = $datosVenta->loginIntranet;
+        $historico->estado = $datosVenta->estadoIzzi;
+        $historico->descripcion = $descripcion;
+        $historico->fill($datosVenta);
+        $historico->save();
+
+        return response()->json([
+            "code"=>200,
+            "message"=>"Registro guardado correctamente",
+            "data"=>$historico
+        ]);
     }
 }

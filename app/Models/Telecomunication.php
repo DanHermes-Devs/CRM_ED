@@ -12,6 +12,16 @@ class Telecomunication extends Model
     protected $table = 'telecomunications';
 
     protected $fillable = [
+        'fPreventa',
+        'fUltimaGestion',
+        'uGestion',
+        'contact_id',
+        'campana',
+        'ultimaCampana',
+        'loginOcm',
+        'loginIntranet',
+        'nombreAgente',
+        'supervisor',
         'tipoVenta',
         'nombre',
         'apellidoPaterno',
@@ -29,7 +39,7 @@ class Telecomunication extends Model
         'precio',
         'tipoPaquete',
         'paquete',
-        'adicionales',
+        //'adicionales',
         'extensionesTv',
         'extensionesTel',
         'lineaAdicional',
@@ -83,7 +93,10 @@ class Telecomunication extends Model
         'chkNetPre',
         'numeroPortarMovil',
         'cp',
-        'referencia'
+        'estadoIzzi',
+        'fechaReventa'
+        //'referencia',
+
     ];
 
     // Relacion uno a muchos izziMovi_id
