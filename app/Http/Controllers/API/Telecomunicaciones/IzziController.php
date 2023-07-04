@@ -28,6 +28,10 @@ class IzziController extends Controller
      */
     public function store(Request $request)
     {
+        return response()->json([
+            "code" => 200,
+            "message" => $request->all(),
+        ]);
         // Logica para guardar un registro en la tabla telecomunications
 
         //Identifico si el usuario pertenece a ZEUS
