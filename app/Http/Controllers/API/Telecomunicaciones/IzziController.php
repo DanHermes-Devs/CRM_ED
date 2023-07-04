@@ -140,7 +140,6 @@ class IzziController extends Controller
         $historico->loginIntranet = $datosVenta->loginIntranet;
         $historico->estado = $datosVenta->estadoIzzi;
         $historico->descripcion = $descripcion;
-        $historico->fill($datosVenta);
         $historico->save();
 
         return response()->json([
