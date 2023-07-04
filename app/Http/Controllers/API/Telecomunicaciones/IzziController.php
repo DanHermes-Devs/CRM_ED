@@ -31,7 +31,7 @@ class IzziController extends Controller
         // Logica para guardar un registro en la tabla telecomunications
 
         //Identifico si el usuario pertenece a ZEUS
-        $usuario = User::where('usuario', $request->agent_OCM)->first();
+        $usuario = User::where('usuario', $request->loginOcm)->first();
 
         //Valido si existe el registro
         $cuentaRegistrada = Telecomunication::where('contact_id', $request->contact_id)->first();
