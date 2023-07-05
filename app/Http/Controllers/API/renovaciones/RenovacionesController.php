@@ -70,6 +70,8 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->Aseguradora = $request->Aseguradora;
                         $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
+                        $ventaRenovacion->MesBdd = $ventaRenovacion->MesBdd;
+                        $ventaRenovacion->AnioBdd = $ventaRenovacion->AnioBdd;
 
                         $ventaRenovacion->save();
 
@@ -121,6 +123,8 @@ class RenovacionesController extends Controller
                         $venta->Aseguradora = $request->Aseguradora;
                         $venta->aseguradora_vendida = $request->aseguradora_vendida;
                         $venta->tVenta = 'RENOVACION';
+                        $venta->MesBdd = $venta->MesBdd;
+                        $venta->AnioBdd = $venta->AnioBdd;
 
                         $venta->save();
 
@@ -160,6 +164,8 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->Aseguradora = $request->Aseguradora;
                         $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
+                        $ventaRenovacion->MesBdd = $ventaRenovacion->MesBdd;
+                        $ventaRenovacion->AnioBdd = $ventaRenovacion->AnioBdd;
 
                         $ventaRenovacion->save();
 
@@ -210,6 +216,8 @@ class RenovacionesController extends Controller
                     $venta->Aseguradora = $request->Aseguradora;
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
+                    $venta->MesBdd = $venta->MesBdd;
+                    $venta->AnioBdd = $venta->AnioBdd;
 
                     $venta->save();
 
@@ -281,6 +289,9 @@ class RenovacionesController extends Controller
                         $contactid->LoginIntranet = $request->LoginOcm;
                     }
 
+                    $contactid->MesBdd = $contactid->MesBdd;
+                    $contactid->AnioBdd = $contactid->AnioBdd;
+
                     $contactid->save();
 
                     $frecuenciaPago = $request->input('FrePago');
@@ -341,6 +352,8 @@ class RenovacionesController extends Controller
                     $venta->Aseguradora = $request->Aseguradora;
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
+                    $venta->MesBdd = $venta->MesBdd;
+                    $venta->AnioBdd = $venta->AnioBdd;
 
                     if ($request->LoginOcm !== $venta->LoginIntranet) {
                         $venta->LoginIntranet = $request->LoginOcm;
@@ -376,6 +389,8 @@ class RenovacionesController extends Controller
                     $venta->Aseguradora = $request->Aseguradora;
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
+                    $venta->MesBdd = $venta->MesBdd;
+                    $venta->AnioBdd = $venta->AnioBdd;
 
                     $venta->save();
 
