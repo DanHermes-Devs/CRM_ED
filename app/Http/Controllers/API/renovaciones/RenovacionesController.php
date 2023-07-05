@@ -78,6 +78,9 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
 
+                        $ventaRenovacion->MesBdd = $ventaRenovacion->getOriginal('MesBdd');
+                        $ventaRenovacion->AnioBdd = $ventaRenovacion->getOriginal('AnioBdd');
+
                         $ventaRenovacion->save();
 
                         // BUSACMOS LOS RECIBOS QUE PERTENEZCAN A LA VENTA
@@ -136,6 +139,9 @@ class RenovacionesController extends Controller
                         $venta->aseguradora_vendida = $request->aseguradora_vendida;
                         $venta->tVenta = 'RENOVACION';
 
+                        $venta->MesBdd = $venta->getOriginal('MesBdd');
+                        $venta->AnioBdd = $venta->getOriginal('AnioBdd');
+
                         $venta->save();
 
                         return response()->json([
@@ -181,6 +187,9 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->Aseguradora = $request->Aseguradora;
                         $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
+
+                        $ventaRenovacion->MesBdd = $ventaRenovacion->getOriginal('MesBdd');
+                        $ventaRenovacion->AnioBdd = $ventaRenovacion->getOriginal('AnioBdd');
 
                         $ventaRenovacion->save();
 
@@ -238,6 +247,9 @@ class RenovacionesController extends Controller
                     $venta->Aseguradora = $request->Aseguradora;
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
+
+                    $venta->MesBdd = $venta->getOriginal('MesBdd');
+                    $venta->AnioBdd = $venta->getOriginal('AnioBdd');
 
                     $venta->save();
 
@@ -316,6 +328,9 @@ class RenovacionesController extends Controller
                         $contactid->LoginIntranet = $request->LoginOcm;
                     }
 
+                    $contactid->MesBdd = $contactid->getOriginal('MesBdd');
+                    $contactid->AnioBdd = $contactid->getOriginal('AnioBdd');
+
                     $contactid->save();
 
                     $frecuenciaPago = $request->input('FrePago');
@@ -384,6 +399,9 @@ class RenovacionesController extends Controller
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
 
+                    $venta->MesBdd = $venta->getOriginal('MesBdd');
+                    $venta->AnioBdd = $venta->getOriginal('AnioBdd');
+
                     if ($request->LoginOcm !== $venta->LoginIntranet) {
                         $venta->LoginIntranet = $request->LoginOcm;
                     }
@@ -425,6 +443,9 @@ class RenovacionesController extends Controller
                     $venta->Aseguradora = $request->Aseguradora;
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
+
+                    $venta->MesBdd = $venta->getOriginal('MesBdd');
+                    $venta->AnioBdd = $venta->getOriginal('AnioBdd');
 
                     $venta->save();
 
