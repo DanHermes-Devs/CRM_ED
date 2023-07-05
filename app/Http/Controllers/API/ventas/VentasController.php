@@ -86,7 +86,7 @@ class VentasController extends Controller
 
         // Búsqueda por tipo de venta
         if ($request->filled('tipo_venta')) {
-            $query->where('tVenta', $request->tipo_venta);
+            $query->where('UGestion', $request->tipo_venta);
         }
 
         // Búsqueda por mes y año de BDD de renovaciones
