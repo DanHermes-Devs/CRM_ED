@@ -449,7 +449,7 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                 'tableGo' => 'skill_onl_adt_motor_data',
                 'skillDefFb' => 'FB_ADT_MOTOR',
                 'skillDefGo' => 'ONL_ADT_MOTOR',
-                'tipoVenta' => 'PREVENTA',
+                'tipoVenta' => 'VENTA',
                 'tablaVenta' => 'security'
             )
         );
