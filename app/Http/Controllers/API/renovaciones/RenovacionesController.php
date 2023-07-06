@@ -41,6 +41,13 @@ class RenovacionesController extends Controller
                     if ($ventaRenovacion->UGestion != 'PROMESA DE PAGO' && $ventaRenovacion->UGestion != 'RENOVACION') {
                         $ventaRenovacion->contactId = $request->contactId;
                         $ventaRenovacion->Fpreventa = Carbon::now();
+                        if (!$request->has('MesBdd')) {
+                            $request->request->add(['MesBdd' => $ventaRenovacion->MesBdd]);
+                        }
+                        
+                        if (!$request->has('AnioBdd')) {
+                            $request->request->add(['AnioBdd' => $ventaRenovacion->AnioBdd]);
+                        }
                         $ventaRenovacion->fill($request->all());
                         $ventaRenovacion->nPoliza = ltrim($request->nPoliza, '0');
                         $ventaRenovacion->nueva_poliza = ltrim($request->nueva_poliza, '0');
@@ -71,6 +78,9 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
 
+                        $ventaRenovacion->MesBdd = $ventaRenovacion->getOriginal('MesBdd');
+                        $ventaRenovacion->AnioBdd = $ventaRenovacion->getOriginal('AnioBdd');
+
                         $ventaRenovacion->save();
 
                         // BUSACMOS LOS RECIBOS QUE PERTENEZCAN A LA VENTA
@@ -93,6 +103,13 @@ class RenovacionesController extends Controller
                         $venta = new Venta;
                         $venta->contactId = $request->contactId;
                         $venta->Fpreventa = Carbon::now();
+                        if (!$request->has('MesBdd')) {
+                            $request->request->add(['MesBdd' => $venta->MesBdd]);
+                        }
+                        
+                        if (!$request->has('AnioBdd')) {
+                            $request->request->add(['AnioBdd' => $venta->AnioBdd]);
+                        }
                         $venta->fill($request->all());
                         $venta->nPoliza = ltrim($request->nPoliza, '0');
                         $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
@@ -122,6 +139,9 @@ class RenovacionesController extends Controller
                         $venta->aseguradora_vendida = $request->aseguradora_vendida;
                         $venta->tVenta = 'RENOVACION';
 
+                        $venta->MesBdd = $venta->getOriginal('MesBdd');
+                        $venta->AnioBdd = $venta->getOriginal('AnioBdd');
+
                         $venta->save();
 
                         return response()->json([
@@ -132,6 +152,13 @@ class RenovacionesController extends Controller
                     } elseif ($ventaRenovacion->UGestion == 'PROMESA DE PAGO'){
                         $ventaRenovacion->contactId = $request->contactId;
                         $ventaRenovacion->Fpreventa = Carbon::now();
+                        if (!$request->has('MesBdd')) {
+                            $request->request->add(['MesBdd' => $ventaRenovacion->MesBdd]);
+                        }
+                        
+                        if (!$request->has('AnioBdd')) {
+                            $request->request->add(['AnioBdd' => $ventaRenovacion->AnioBdd]);
+                        }
                         $ventaRenovacion->fill($request->all());
                         $ventaRenovacion->nPoliza = ltrim($request->nPoliza, '0');
                         $ventaRenovacion->nueva_poliza = ltrim($request->nueva_poliza, '0');
@@ -161,6 +188,9 @@ class RenovacionesController extends Controller
                         $ventaRenovacion->aseguradora_vendida = $request->aseguradora_vendida;
                         $ventaRenovacion->tVenta = 'RENOVACION';
 
+                        $ventaRenovacion->MesBdd = $ventaRenovacion->getOriginal('MesBdd');
+                        $ventaRenovacion->AnioBdd = $ventaRenovacion->getOriginal('AnioBdd');
+
                         $ventaRenovacion->save();
 
                         // BUSACMOS LOS RECIBOS QUE PERTENEZCAN A LA VENTA
@@ -182,6 +212,13 @@ class RenovacionesController extends Controller
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
                     $venta->Fpreventa = Carbon::now();
+                    if (!$request->has('MesBdd')) {
+                        $request->request->add(['MesBdd' => $venta->MesBdd]);
+                    }
+                    
+                    if (!$request->has('AnioBdd')) {
+                        $request->request->add(['AnioBdd' => $venta->AnioBdd]);
+                    }
                     $venta->fill($request->all());
                     $venta->UGestion = $request->UGestion;
                     $venta->nPoliza = ltrim($request->nPoliza, '0');
@@ -211,6 +248,9 @@ class RenovacionesController extends Controller
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
 
+                    $venta->MesBdd = $venta->getOriginal('MesBdd');
+                    $venta->AnioBdd = $venta->getOriginal('AnioBdd');
+
                     $venta->save();
 
                     $frecuenciaPago = $request->input('FrePago');
@@ -239,6 +279,13 @@ class RenovacionesController extends Controller
                     $contactid->contactId = $request->contactId;
                     $contactid->Fpreventa = Carbon::now();
                     $contactid->UGestion = $request->UGestion;
+                    if (!$request->has('MesBdd')) {
+                        $request->request->add(['MesBdd' => $contactid->MesBdd]);
+                    }
+                    
+                    if (!$request->has('AnioBdd')) {
+                        $request->request->add(['AnioBdd' => $contactid->AnioBdd]);
+                    }
                     $contactid->fill($request->all());
                     if ($request->Aseguradora) {
                         if (!$contactid->Aseguradora) {
@@ -281,6 +328,9 @@ class RenovacionesController extends Controller
                         $contactid->LoginIntranet = $request->LoginOcm;
                     }
 
+                    $contactid->MesBdd = $contactid->getOriginal('MesBdd');
+                    $contactid->AnioBdd = $contactid->getOriginal('AnioBdd');
+
                     $contactid->save();
 
                     $frecuenciaPago = $request->input('FrePago');
@@ -315,6 +365,13 @@ class RenovacionesController extends Controller
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
                     $venta->UGestion = $request->UGestion;
+                    if (!$request->has('MesBdd')) {
+                        $request->request->add(['MesBdd' => $venta->MesBdd]);
+                    }
+                    
+                    if (!$request->has('AnioBdd')) {
+                        $request->request->add(['AnioBdd' => $venta->AnioBdd]);
+                    }
                     $venta->fill($request->all());
                     $venta->nPoliza = ltrim($request->nPoliza, '0');
                     $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
@@ -342,6 +399,9 @@ class RenovacionesController extends Controller
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
 
+                    $venta->MesBdd = $venta->getOriginal('MesBdd');
+                    $venta->AnioBdd = $venta->getOriginal('AnioBdd');
+
                     if ($request->LoginOcm !== $venta->LoginIntranet) {
                         $venta->LoginIntranet = $request->LoginOcm;
                     }
@@ -360,6 +420,13 @@ class RenovacionesController extends Controller
                     $venta = new Venta;
                     $venta->contactId = $request->contactId;
                     $venta->UGestion = $request->UGestion;
+                    if (!$request->has('MesBdd')) {
+                        $request->request->add(['MesBdd' => $venta->MesBdd]);
+                    }
+                    
+                    if (!$request->has('AnioBdd')) {
+                        $request->request->add(['AnioBdd' => $venta->AnioBdd]);
+                    }
                     $venta->fill($request->all());
                     $venta->nPoliza = ltrim($request->nPoliza, '0');
                     $venta->nueva_poliza = ltrim($request->nueva_poliza, '0');
@@ -376,6 +443,9 @@ class RenovacionesController extends Controller
                     $venta->Aseguradora = $request->Aseguradora;
                     $venta->aseguradora_vendida = $request->aseguradora_vendida;
                     $venta->tVenta = 'RENOVACION';
+
+                    $venta->MesBdd = $venta->getOriginal('MesBdd');
+                    $venta->AnioBdd = $venta->getOriginal('AnioBdd');
 
                     $venta->save();
 
