@@ -443,6 +443,14 @@ private function ResultadosDeContactoEnLlamadas($table_FB,$table_GO,$skill_Def_F
                 'skillDefFb' => 'FB_PRACTICUMMotor',
                 'tipoVenta' => 'PREVENTA',
                 'tablaVenta' => 'educacion'
+            ),
+            'ADT' => array(
+                'tableFb' => 'skill_fb_adt_motor_data',
+                'tableGo' => 'skill_onl_adt_motor_data',
+                'skillDefFb' => 'FB_ADT_MOTOR',
+                'skillDefGo' => 'ONL_ADT_MOTOR',
+                'tipoVenta' => 'PREVENTA',
+                'tablaVenta' => 'security'
             )
         );
 
