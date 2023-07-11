@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API\Telecomunicaciones;
+
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,14 +11,62 @@ use App\Models\Telecomunications_historical;
 
 class IzziController extends Controller
 {
+
+    // function __construct()
+    // {
+    //     $this->middleware('permission:ver-ventas|crear-ventas|editar-ventas|borrar-ventas|ver-campos', ['only' => ['index', 'show']]);
+    //     $this->middleware('permission:editar-ventas', ['only' => ['edit', 'update']]);
+    //     $this->middleware('permission:borrar-ventas', ['only' => ['destroy']]);
+
+    //     $this->middleware('auth')->except('store');
+    // }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('crm.telecomunicaciones.izzi.index');
+
+        $query = Telecomunication::query();
+
+        // Búsqueda por fecha de inicio y fin
+        if ($request->filled(['fecha_inicio', 'fecha_fin'])) {
+            $fechaInicio = Carbon::parse($request->fecha_inicio)->startOfDay();
+            $fechaFin = Carbon::parse($request->fecha_fin)->endOfDay();
+            $query->whereBetween('Fpreventa', [$fechaInicio, $fechaFin]);
+        }
+
+        $resultados = $query->get();
+
+        // Recuperamos todos los usuarios con rol supervisor y lo mandamos a la vista
+        $supervisores = User::role('Supervisor')->get();
+
+        // Recuperamos todos los usuario con rol Agente de Ventas y lo mandmos a la vista
+        $agentes = User::role('Agente de Ventas')->get();
+
+        //////////////////////////////ENVIARLOS A DB////////////////////////////
+        ///////////////////////////////////////////////////////////////////////
+
+        $campanas = ['ONL_IZZI_IN','FB_IZZI_IN','RL_IZZI_IN','ONL_MOVIL_IN','FB_MOVIL_IN','RL_MOVIL_IN','ONL_IZZIUPS_IN','ONL_IZZIINS_IN'];
+        $tipos_venta = ['IZZI','WIZZ','NEGOCIOS','MOVIL','MOVIL OUT','OUTBOUND'];
+        $tipos_linea = ['ALTA','PORTABILIDAD','UPSELL','IZZI MOVIL ALTA','IZZIMOVIL PORTABILIDAD','IZZI MOVIL UPSELL','IZZ MOVIL'];
+        $estados_siebel = ['ABIERTA','CANCELADO','COMPLETA','PENDIENTE'];
+        $subestados_siebel = ['CLIENTE CANCELA','CLIENTE NO CONTACTADO','CLIENTE NO DESEA SERVICIO','DATOS INCORRECTOS','DOMICILIO CON ADEUDO',
+                              'FALTAN DATOS','FUERA DE COBERTURA','IMPOSIBILIDAD TECNICA','ORDEN MAL GENERADA','SIN COBERTURA','SOLICITUD DEL CLIENTE',
+                              'VENTA DUPLICADA'];
+        $estados_tramitacionM = ['INGRESADA','TRAMITADA','ACTIVADA','CANCELADA','PENDIENTE CAPTURA ','IMEI INVALIDO','PEDIDO INVALIDO','RECHAZO CORREGIDO ',
+                                 'CANCELAR PEDIDO','VENTA DUPLICADA','CONCILIACION ','CONCILIACION SOLICITADA'];
+        $estados_tramitacionF = ['CANCELADA','CANCELADA EN INSTALACION','CONCILIACION','CONCILIACION SOLICITADA','INGRESADA','INSTALADA','PENDIENTE VALIDACION','VENTA MODIFICADA',
+                                 'RE-VENTA','CASO DE NEGOCIO','TRAMITADA/CONFIRMADA','2 CUENTAS ACTIVAS','ADEUDO','CLIENTE CANCELA','CLIENTE NO LOCALIZADO','CONTRATO INDEPENDIENTE',
+                                 'CORREO','DOMICILIO','IDENTIFICACION OFICIAL','INGRESA OTRO CANAL','NOMBRE DEL CLIENTE','NUMEROS DE CONTACTO','OFERTA COMERCIAL','SIN COBERTURA',
+                                 'SIN PAGO ANTICIPADO','VENTA CARRUSEL','DUPLICADA','FORZADA'];
+        $estados_velocity = ['ABIERTA','CANCELADA','COMPLETADA','ENVIADA'];
+        $subestados_velocity = ['CANCELADA','CANCELADA POR CLIENTE','ENTREGA FALLIDA','ESPERA ACTIVACIÒN','ESPERA SURTIDO','SERVICIO ACTIVO','SIM INACTIVO'];
+
+        return view('crm.telecomunicaciones.izzi.index',compact('resultados', 'supervisores', 'agentes','campanas','tipos_linea','tipos_venta','estados_siebel','subestados_siebel','estados_tramitacionM','estados_tramitacionF','estados_velocity','subestados_velocity'));
+
     }
 
     /**

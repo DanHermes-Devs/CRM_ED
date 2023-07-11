@@ -95,7 +95,13 @@ class Telecomunication extends Model
         'cp',
         'estadoIzzi',
         'fechaReventa'
-        //'referencia',
+        /////////////Hacer migración para integrar estos campos
+        //'estadoSiebel',
+        //'estadoMovil',
+        //'orden',
+        //'estadoOrden',
+        //'tramitador',
+        //'confirmador',
 
     ];
 
