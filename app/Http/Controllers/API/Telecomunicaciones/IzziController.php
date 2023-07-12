@@ -38,6 +38,12 @@ class IzziController extends Controller
             $query->whereBetween('Fpreventa', [$fechaInicio, $fechaFin]);
         }
 
+        // Búsquedas exactas
+        $camposExactos = [
+            'contact_id' => 'lead',
+            'campana' => 'campana',
+        ];
+
         $resultados = $query->get();
 
         // Recuperamos todos los usuarios con rol supervisor y lo mandamos a la vista

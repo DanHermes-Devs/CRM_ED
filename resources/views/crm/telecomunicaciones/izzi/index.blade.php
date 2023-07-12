@@ -284,16 +284,12 @@
                                 <th>Estado Móvil</th>
                                 <th>Orden</th>
                                 <th>Estado Orden</th>
-                                <th>Cliente</th>
-                                {{-- Validar perfil que podrá ver estos datos --}}
                                 <th>Teléfono</th>
                                 <th>Celular</th>
                                 <th>Correo</th>
-                                {{----------------------------------------------}}
                                 <th>Tipo Linea</th>
                                 <th>Campaña</th>
                                 <th>Agente</th>
-                                <th>Supervisor</th>
                                 <th>Tramitador</th>
                                 <th>Confirmador</th>
                             </tr>
@@ -315,17 +311,6 @@
             $(this).attr('disabled', true);
         });
 
-        // $('#tipo_venta').on('change', function() {
-        //     var selectedValue = $(this).val();
-
-        //     if (selectedValue === 'RENOVACION') {
-        //         $('#mes_bdd').prop('disabled', false);
-        //         $('#anio_bdd').prop('disabled', false);
-        //     } else {
-        //         $('#mes_bdd').prop('disabled', true);
-        //         $('#anio_bdd').prop('disabled', true);
-        //     }
-        // });
         // Buscamos mediante los filtros
         $('body').on('click', '#buscarDatos', function(e){
             e.preventDefault();
@@ -366,7 +351,6 @@
                     url: "{{ route('izzi.index') }}",
                     type: "GET",
                     data: {
-                        rol: rol,
                         fecha_inicio: fecha_inicio,
                         fecha_fin: fecha_fin,
                         lead: lead,
@@ -389,187 +373,21 @@
                 },
                 columns: [
                     {data: 'contact_id', name: 'contact_id'},
+                    {data: 'fPreventa', name: 'fPreventa'},
                     {data: 'fechaReventa', name: 'fechaReventa'},
                     {data: 'estadoIzzi', name: 'estadoIzzi'},
-                    {data: 'cuenta', name: 'cuenta'},
-                    ////////// Agregar en migración///////////
-                    // {data: 'estadoSiebel', name: 'estadoSiebel'},
-                    // {data: 'estadoMovil', name: 'estadoMovil'},
-                    // {data: 'orden', name: 'orden'},
-                    // {data: 'estadoOrden', name: 'estadoOrden'},
-                    {data: 'nombre', name: 'nombre'},
-                    {data: 'apellidoPaterno', name: 'apellidoPaterno'},
-                    {data: 'apellidoMaterno', name: 'apellidoMaterno'},
+                    {data: 'estadoSiebel', name: 'estadoSiebel'},
+                    {data: 'estadoMovil', name: 'estadoMovil'},
+                    {data: 'orden', name: 'orden'},
+                    {data: 'estadoOrden', name: 'estadoOrden'},
                     {data: 'telefonoFijo', name: 'telefonoFijo'},
                     {data: 'celular', name: 'celular'},
                     {data: 'correo', name: 'correo'},
                     {data: 'tipoLinea', name: 'tipoLinea'},
                     {data: 'campana', name: 'campana'},
                     {data: 'loginIntranet', name: 'loginIntranet'},
-                    {data: 'campana', name: 'campana'},
-                    {data: 'loginOcm', name: 'loginOcm'},
-                    {data: 'supervisor', name: 'supervisor'},
-                    ////////// Agregar en migración///////////
-                    // {data: 'tramitador', name: 'tramitador'},
-                    // {data: 'confirmador', name: 'confirmador'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                ],
-                columnDefs: [
-                    {
-                        target: 0,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 1,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 2,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 3,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 4,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 5,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 6,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `$${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 7,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 8,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 9,
-                        render: function(data, type, row) {
-                            var fecha = `${data}`;
-                            var fechaFormateada = new Date(fecha);
-                            var anio = fechaFormateada.getFullYear();
-                            var mes = ("0" + (fechaFormateada.getMonth() + 1)).slice(-2);
-                            var dia = ("0" + fechaFormateada.getDate()).slice(-2);
-                            var FPreventaFormat = anio + "-" + mes + "-" + dia;
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${FPreventaFormat}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 10,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 11,
-                        render: function(data, type, row) {
-                            // Hacemos un foreach a row.roles para obtener el nombre de cada rol
-                            if(data == 'null' || data == 'NULL' || data == '' || data == null){
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            }else {
-                                return `${data}`;
-                            }
-                        }
-                    },
-                    {
-                        target: 12,
-                        render: function(data, type, row) {
-                            var fecha = `${data}`;
-                            if (!fecha || fecha === 'null' || fecha === 'NULL' || fecha === '') {
-                                return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Sin dato</span>`;
-                            } else {
-                                var fechaObj = new Date(fecha);
-                                if (isNaN(fechaObj.getTime())) {
-                                    return `<span class="badge rounded-pill badge-soft-primary badge-border text-primary">Fecha inválida</span>`;
-                                } else {
-                                    var fechaFormateada = fechaObj.toISOString().split("T")[0];
-                                    return `${fechaFormateada}`;
-                                }
-                            }
-                        }
-                    }
+                    {data: 'tramitador', name: 'tramitador'},
+                    {data: 'confirmador', name: 'confirmador'},
                 ],
                 language: idiomaDataTable
             });
