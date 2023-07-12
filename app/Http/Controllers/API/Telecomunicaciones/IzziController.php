@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Telecomunication;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\Telecomunications_historical;
 
 class IzziController extends Controller
@@ -70,6 +71,14 @@ class IzziController extends Controller
                                  'SIN PAGO ANTICIPADO','VENTA CARRUSEL','DUPLICADA','FORZADA'];
         $estados_velocity = ['ABIERTA','CANCELADA','COMPLETADA','ENVIADA'];
         $subestados_velocity = ['CANCELADA','CANCELADA POR CLIENTE','ENTREGA FALLIDA','ESPERA ACTIVACIÒN','ESPERA SURTIDO','SERVICIO ACTIVO','SIM INACTIVO'];
+
+        if (request()->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('action', 'crm.modulos.ventas.actions')
+                ->rawColumns(['action'])
+                ->escapeColumns([])
+                ->toJson();
+        }
 
         return view('crm.telecomunicaciones.izzi.index',compact('resultados', 'supervisores', 'agentes','campanas','tipos_linea','tipos_venta','estados_siebel','subestados_siebel','estados_tramitacionM','estados_tramitacionF','estados_velocity','subestados_velocity'));
 
