@@ -99,8 +99,8 @@ class IzziController extends Controller
             $cuentaRegistrada->rfc = $request->rfc;
             $cuentaRegistrada->fechaNacimiento = $request->fechaNacimiento;
             $cuentaRegistrada->cuenta = $request->cuenta;
-            $cuentaRegistrada->claveElector = $request->claveElector;
-            $cuentaRegistrada->claveDistribuidor = $request->claveDistribuidor;
+            $cuentaRegistrada->tipoIdentificacion = $request->tipoIdentificacion;
+            $cuentaRegistrada->claveIdentificacion = $request->claveIdentificacion;
             //Datos domicilio
             $cuentaRegistrada->calle = $request->calle;
             $cuentaRegistrada->numInterior = $request->numInterior;
@@ -111,6 +111,10 @@ class IzziController extends Controller
             $cuentaRegistrada->estado = $request->estado;
             $cuentaRegistrada->entreCalle1 = $request->entreCalle1;
             $cuentaRegistrada->entreCalle2 = $request->entreCalle2;
+            $cuentaRegistrada->referencia = $request->referencia;
+            $cuentaRegistrada->dirCompleta = $request->dirCompleta;
+            $cuentaRegistrada->lat = $request->lat;
+            $cuentaRegistrada->lng = $request->lng;
             //Datos paquete
             $cuentaRegistrada->tipoSegmento = $request->tipoSegmento;
             $cuentaRegistrada->tipoLinea = $request->tipoLinea;
@@ -120,43 +124,40 @@ class IzziController extends Controller
             $cuentaRegistrada->precio = $request->precio;
             $cuentaRegistrada->numeroPortar = $request->numeroPortar;
             //Datos adicionales
-            $cuentaRegistrada->chkPremium = $request->chkPremium;
+            $cuentaRegistrada->chkHdPlus = $request->chkHdPlus;
             $cuentaRegistrada->chkHbo = $request->chkHbo;
-            $cuentaRegistrada->chkGolden = $request->chkGolden;
-            $cuentaRegistrada->chkFox = $request->chkFox;
             $cuentaRegistrada->chkInternacional = $request->chkInternacional;
-            $cuentaRegistrada->chkIzziHd = $request->chkIzziHd;
-            $cuentaRegistrada->chkNoggin = $request->chkNoggin;
             $cuentaRegistrada->chkHotPack = $request->chkHotPack;
+            $cuentaRegistrada->chkComboPlus = $request->chkComboPlus;
             $cuentaRegistrada->chkAfizzionados = $request->chkAfizzionados;
             $cuentaRegistrada->chkParamount = $request->chkParamount;
-            $cuentaRegistrada->chkDog = $request->chkDog;
-            $cuentaRegistrada->chkBlim = $request->chkBlim;
-            $cuentaRegistrada->chkAcorn = $request->chkAcorn;
-            $cuentaRegistrada->chkStarz = $request->chkStarz;
+            $cuentaRegistrada->chkUniPlus = $request->chkUniPlus;
+            $cuentaRegistrada->ckhStarPlus = $request->ckhStarPlus;
             $cuentaRegistrada->chkDisney = $request->chkDisney;
-            $cuentaRegistrada->chkNetEst = $request->chkNetEst;
-            $cuentaRegistrada->chkNetPre = $request->chkNetPre;
+            $cuentaRegistrada->chkVixPlus = $request->chkVixPlus;
+            $cuentaRegistrada->chkGolden = $request->chkGolden;
+            $cuentaRegistrada->chkNetBase = $request->chkNetBase;
+            $cuentaRegistrada->ckhNetEst = $request->ckhNetEst;
+            $cuentaRegistrada->chkNetPrem = $request->chkNetPrem;
             $cuentaRegistrada->extensionesTv = $request->extensionesTv;
             $cuentaRegistrada->extensionesTel = $request->extensionesTel;
             $cuentaRegistrada->lineaAdicional = $request->lineaAdicional;
-            $cuentaRegistrada->extGraba = $request->extGraba;
             //Datos Móvil
             $cuentaRegistrada->tipoSegmentoMovil = $request->tipoSegmentoMovil;
             $cuentaRegistrada->paqueteMovil = $request->paqueteMovil;
             $cuentaRegistrada->portabilidad = $request->portabilidad;
             $cuentaRegistrada->imei = $request->imei;
-            $cuentaRegistrada->lineaMovilAdicional = $request->lineaMovilAdicional;
+            $cuentaRegistrada->contratoAdicionalMovil = $request->contratoAdicionalMovil;
             $cuentaRegistrada->pedido = $request->pedido;
             $cuentaRegistrada->costo = $request->costo;
             $cuentaRegistrada->numeroPortarMovil = $request->numeroPortarMovil;
             //Datos Segmento
-            $cuentaRegistrada->giro = $request->giro;
             $cuentaRegistrada->fechaNacRepLegal = $request->fechaNacRepLegal;
             $cuentaRegistrada->representante = $request->representante;
             $cuentaRegistrada->rfcRepresentante = $request->rfcRepresentante;
-            $cuentaRegistrada->tipoTarjeta = $request->tipoTarjeta;
             //Datos de tarjeta
+            $cuentaRegistrada->formaPago = $request->formaPago;
+            $cuentaRegistrada->tipoTarjeta = $request->tipoTarjeta;
             $cuentaRegistrada->numTarjeta = $request->numTarjeta;
             $cuentaRegistrada->vencimiento = $request->vencimiento;
             $cuentaRegistrada->cvv = $request->cvv;
@@ -165,11 +166,9 @@ class IzziController extends Controller
             $cuentaRegistrada->observaciones = $request->observaciones;
             $cuentaRegistrada->fUltimaGestion = Carbon::now();
             $cuentaRegistrada->ultimaCampana = $request->campana;
-            //'referencia' => $request->referencia,
-            // 'adicionales' => $adicionales
-            //'observaciones' => $observaciones,
-            //'documentos' => $documentos,
-            //'generar' => $generar,
+            $cuentaRegistrada->observaciones = $request->observaciones;
+            $cuentaRegistrada->documentos = $request->documentos;
+            $cuentaRegistrada->datosGenerados = $request->datosGenerados;
 
 
             //Valido si la codificación es VENTA MODIFICADA o RE-VENTA
@@ -220,9 +219,8 @@ class IzziController extends Controller
                 $telecom->rfc = $request->rfc;
                 $telecom->fechaNacimiento = $request->fechaNacimiento;
                 $telecom->cuenta = $request->cuenta;
-                $telecom->EstadoIZZI = $estadoIzzi;
-                $telecom->claveElector =  $request->claveElector;
-                $telecom->claveDistribuidor = $request->claveDistribuidor;
+                $telecom->tipoIdentificacion = $request->tipoIdentificacion;
+                $telecom->claveIdentificacion = $request->claveIdentificacion;
                 //Datos domicilio
                 $telecom->calle = $request->calle;
                 $telecom->numInterior = $request->numInterior;
@@ -230,9 +228,13 @@ class IzziController extends Controller
                 $telecom->colonia = $request->colonia;
                 $telecom->cp = $request->cp;
                 $telecom->municipio = $request->municipio;
-                $telecom->estado =  $request->estado;
+                $telecom->estado = $request->estado;
                 $telecom->entreCalle1 = $request->entreCalle1;
                 $telecom->entreCalle2 = $request->entreCalle2;
+                $telecom->referencia = $request->referencia;
+                $telecom->dirCompleta = $request->dirCompleta;
+                $telecom->lat = $request->lat;
+                $telecom->lng = $request->lng;
                 //Datos paquete
                 $telecom->tipoSegmento = $request->tipoSegmento;
                 $telecom->tipoLinea = $request->tipoLinea;
@@ -242,43 +244,40 @@ class IzziController extends Controller
                 $telecom->precio = $request->precio;
                 $telecom->numeroPortar = $request->numeroPortar;
                 //Datos adicionales
-                $telecom->chkPremium = $request->chkPremium;
+                $telecom->chkHdPlus = $request->chkHdPlus;
                 $telecom->chkHbo = $request->chkHbo;
-                $telecom->chkGolden = $request->chkGolden;
-                $telecom->chkFox = $request->chkFox;
                 $telecom->chkInternacional = $request->chkInternacional;
-                $telecom->chkIzziHd = $request->chkIzziHd;
-                $telecom->chkNoggin = $request->chkNoggin;
                 $telecom->chkHotPack = $request->chkHotPack;
+                $telecom->chkComboPlus = $request->chkComboPlus;
                 $telecom->chkAfizzionados = $request->chkAfizzionados;
                 $telecom->chkParamount = $request->chkParamount;
-                $telecom->chkDog = $request->chkDog;
-                $telecom->chkBlim = $request->chkBlim;
-                $telecom->chkAcorn = $request->chkAcorn;
-                $telecom->chkStarz = $request->chkStarz;
+                $telecom->chkUniPlus = $request->chkUniPlus;
+                $telecom->ckhStarPlus = $request->ckhStarPlus;
                 $telecom->chkDisney = $request->chkDisney;
-                $telecom->chkNetEst = $request->chkNetEst;
-                $telecom->chkNetPre = $request->chkNetPre;
+                $telecom->chkVixPlus = $request->chkVixPlus;
+                $telecom->chkGolden = $request->chkGolden;
+                $telecom->chkNetBase = $request->chkNetBase;
+                $telecom->ckhNetEst = $request->ckhNetEst;
+                $telecom->chkNetPrem = $request->chkNetPrem;
                 $telecom->extensionesTv = $request->extensionesTv;
                 $telecom->extensionesTel = $request->extensionesTel;
                 $telecom->lineaAdicional = $request->lineaAdicional;
-                $telecom->extGraba = $request->extGraba;
                 //Datos Móvil
                 $telecom->tipoSegmentoMovil = $request->tipoSegmentoMovil;
                 $telecom->paqueteMovil = $request->paqueteMovil;
                 $telecom->portabilidad = $request->portabilidad;
                 $telecom->imei = $request->imei;
-                $telecom->lineaMovilAdicional = $request->lineaMovilAdicional;
+                $telecom->contratoAdicionalMovil = $request->contratoAdicionalMovil;
                 $telecom->pedido = $request->pedido;
                 $telecom->costo = $request->costo;
                 $telecom->numeroPortarMovil = $request->numeroPortarMovil;
                 //Datos segmento
-                $telecom->giro = $request->giro;
                 $telecom->fechaNacRepLegal = $request->fechaNacRepLegal;
                 $telecom->representante = $request->representante;
                 $telecom->rfcRepresentante = $request->rfcRepresentante;
-                $telecom->tipoTarjeta = $request->tipoTarjeta;
                 //Datos de tarjeta
+                $telecom->formaPago = $request->formaPago;
+                $telecom->tipoTarjeta = $request->tipoTarjeta;
                 $telecom->numTarjeta = $request->numTarjeta;
                 $telecom->vencimiento = $request->vencimiento;
                 $telecom->cvv = $request->cvv;
@@ -288,6 +287,8 @@ class IzziController extends Controller
                 $telecom->observaciones = $request->observaciones;
                 $telecom->fUltimaGestion = Carbon::now();
                 $telecom->ultimaCampana = $request->campana;
+                $telecom->documentos = $request->documentos;
+                $telecom->datosGenerados = $request->datosGenerados;
                 $telecom->save();
 
                 $this->addHistory($telecom,'INGRESO DE VENTA');
